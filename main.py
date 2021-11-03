@@ -10,7 +10,7 @@ use_asap = True
 
 if use_asap:
     from asap3 import EMT
-    size = 10
+    size = 11
 else:
     from ase.calculators.emt import EMT
     size = 3
