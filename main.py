@@ -4,9 +4,13 @@ from ase.lattice.cubic import FaceCenteredCubic
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from ase import units
+import yaml
+
+config_file = open("config.yaml")
+parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 # Use Asap for a huge performance increase if it is installed
-use_asap = True
+use_asap = False
 
 if use_asap:
     from asap3 import EMT
@@ -14,10 +18,9 @@ if use_asap:
 else:
     from ase.calculators.emt import EMT
     size = 3
-
 # Set up a crystal
-atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-                          symbol="Cu",
+atoms = FaceCenteredCubic(directions=parsed_config_file["directions"],
+                          symbol=parsed_config_file["symbol"],
                           size=(size, size, size),
                           pbc=True)
 
@@ -25,7 +28,7 @@ atoms = FaceCenteredCubic(directions=[[1, 0, 0], [0, 1, 0], [0, 0, 1]],
 atoms.calc = EMT()
 
 # Set the momenta corresponding to T=300K
-MaxwellBoltzmannDistribution(atoms, temperature_K=300)
+MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
 
 # We want to run MD with constant energy using the VelocityVerlet algorithm.
 dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
