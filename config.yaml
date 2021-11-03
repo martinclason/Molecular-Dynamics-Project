@@ -9,3 +9,6 @@ symbol : "Cu"
 temperature_K : 300
 run_density: True
 run_MD: True
+directions : [[1,0,0], [0,1,0], [0,0,1]]
+symbol : "Cu"
+temperature_K : 300
