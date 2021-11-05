@@ -33,6 +33,8 @@ def density():
 
     print('The density of ' + Element + ' is: ' + str(density) + " g/cm^3")
 
+    return density
+    
 def MD():
     use_asap = args.asap
 
