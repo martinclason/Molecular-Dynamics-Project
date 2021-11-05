@@ -6,7 +6,7 @@ from ase.md.verlet import VelocityVerlet
 from ase import units
 
 # Use Asap for a huge performance increase if it is installed
-use_asap = True
+use_asap = False
 
 if use_asap:
     from asap3 import EMT
