@@ -21,6 +21,7 @@ config_file = open("config.yaml")
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 # Use Asap for a huge performance increase if it is installed
+
 def density():
     Element = parsed_config_file["Element"]
     #Properties for element
