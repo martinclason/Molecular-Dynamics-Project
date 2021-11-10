@@ -2,7 +2,7 @@
 generated documentation can be created using
 the embedded documentation"""
 
-def foo(bar)
+def foo(bar) :
     """This function takes the argument 'bar' and returns it"""
     return bar
 
