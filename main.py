@@ -186,17 +186,31 @@ def createAtoms() :
                                                    'beta' : latticeconstants[4],
                                                    'gamma' : latticeconstants[5]})
      if(structure == "H") :
+        if(len(directions) != 4) :
+            print("Incorrect number of directional indices for hexagonal structure, use the 4" +
+            "-index Miller-Bravais notation, creating SC-lattice instead")
+            return SimpleCubic(directions = directions,
+                                    symbol = symbol,
+                                    size = size, pbc = pbc,
+                                    latticeconstant = latticeconstants[0])
         return Hexagonal(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'c' : latticeconstants[2]})
      if(structure == "HCP") :
+        if(len(directions) != 4) :
+             print("Incorrect number of directional indices for hexagonal structure, use the 4" +
+             "-index Miller-Bravais notation, creating SC-lattice instead")
+             return SimpleCubic(directions = directions,
+                                     symbol = symbol,
+                                     size = size, pbc = pbc,
+                                     latticeconstant = latticeconstants[0])
         return HexagonalClosedPacked(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'c' : latticeconstants[2]})
+                                        symbol = symbol,
+                                        size = size, pbc = pbc,
+                                        latticeconstant = {'a' : latticeconstants[0],
+                                                           'c' : latticeconstants[2]})
 
 
 main()
