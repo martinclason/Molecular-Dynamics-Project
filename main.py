@@ -3,6 +3,7 @@
 from ase.lattice.cubic import FaceCenteredCubic
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
+from asap3 import Trajectory
 from ase import units
 
 import argparse
@@ -58,6 +59,9 @@ def MD():
     MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+    if parsed_config_file["make_traj"]:
+        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms)
+        dyn.attach(traj.write, interval=10)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -71,6 +75,10 @@ def MD():
     dyn.attach(printenergy, interval=10)
     printenergy()
     dyn.run(200)
+    if parsed_config_file["make_traj"]:
+        traj.close()
+        traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
+        print(traj_read[0].get_positions()[0])
 
 def main():
     run_density = parsed_config_file["run_density"]
