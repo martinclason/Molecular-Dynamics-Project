@@ -6,6 +6,7 @@ Na: 6.023E+23 #avogadros constant
 a: 3.569E-8 #Lattice constant
 directions : [[1,0,0], [0,1,0], [0,0,1]]
 symbol : "Cu"
+make_traj: False
 temperature_K : 300
 run_density: True
 run_MD: True
