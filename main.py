@@ -7,6 +7,13 @@ from ase import units
 
 import argparse
 
+"""There is a parser for passing flags from the command line to the MD which enables
+or disables the use of asap on the current run with the flags '--asap' for enable-
+ing it and '--no-asap' to disable it.
+
+Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
+in the terminal since some machines cannot run the current version of ASAP which
+is used in this project. """
 
 # Adds parser so user can choose if to use asap or not with flags from terminal
 parser = argparse.ArgumentParser()
@@ -23,6 +30,10 @@ parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 # Use Asap for a huge performance increase if it is installed
 
 def density():
+    """The function 'density()' takes no argument and calculates the density
+    of the material defined in 'config.yaml' with the lattice constant and 
+    element defined in that file."""
+
     Element = parsed_config_file["Element"]
     #Properties for element
     Z = parsed_config_file["Z"] #Number of atoms
@@ -37,6 +48,11 @@ def density():
     return density
     
 def MD():
+    """The function 'MD()' runs defines the ASE and ASAP enviroment to run the 
+    molecular dynamics simulation with. The elements and configuration to run
+    the MD simulation is defined in the 'config.yaml' file which needs to be 
+    present in the same directory as the MD program (the 'main.py' file)."""
+    
     use_asap = args.asap
 
     if use_asap:
@@ -73,6 +89,12 @@ def MD():
     dyn.run(200)
 
 def main():
+    """The 'main()' function runs the 'MD()' function which runs the simulation. 
+    'main()' also prints out the density or other properties of the material at 
+    hand (which is to be implemented in future versions of this program, as of 
+    only density excists). What to print out during the run is defined in the 
+    'config.yaml' file."""
+
     run_density = parsed_config_file["run_density"]
     run_MD = parsed_config_file["run_MD"]
     if run_density :
