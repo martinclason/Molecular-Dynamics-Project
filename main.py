@@ -77,4 +77,6 @@ def main():
     if run_MD :
         MD()
 
+        view(atoms)
+
 main()
