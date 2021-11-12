@@ -8,6 +8,7 @@ latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gam
 structure : "HCP"
 directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
 symbol : "Cu"
+make_traj: False
 pbc : True
 size : 2
 temperature_K : 300
