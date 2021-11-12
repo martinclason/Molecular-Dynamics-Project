@@ -7,6 +7,8 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
+import matplotlib.pyplot as plt
+
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.md.verlet import VelocityVerlet
 from asap3 import Trajectory
@@ -76,15 +78,36 @@ def MD():
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
+    def MSD(t,atom_list):
+        r0 = atom_list[0].get_positions()
+        rt = atom_list[t].get_positions()
+        N = len(r0)
+        diff= rt-r0
+        squareddiff = diff**2
+        summ = sum(sum(squareddiff))
+        return (1/N)*summ
 
+
+    def MSD_plot(time,atom_list):
+        MSD_data = []
+        for t in range(time):
+            MSD_data.append(MSD(t,atom_list))
+        plt.plot(range(time),MSD_data)
+        plt.ylabel("MSD-[Å]")
+        plt.xlabel("Measured time step")
+        plt.title("Mean Square Displacement")
+        plt.show()
+        
     # Now run the dynamics
     dyn.attach(printenergy, interval=10)
     printenergy()
-    dyn.run(200)
+    dyn.run(500)
     if parsed_config_file["make_traj"]:
         traj.close()
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
-        print(traj_read[0].get_positions()[0])
+        print(len(traj_read[0].get_positions()))
+        print(MSD(0,traj_read))
+        MSD_plot(len(traj_read),traj_read)
 
 
 def main():

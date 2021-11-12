@@ -5,12 +5,12 @@ M: 12 #Molar mass
 Na: 6.023E+23 #avogadros constant
 a : 3.569E-8 #Lattice constant (for diamond currently)
 latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gamma]
-structure : "HCP"
+structure : "FCC"
 directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
 symbol : "Cu"
-make_traj: False
+make_traj: True
 pbc : True
-size : 2
-temperature_K : 300
+size : 5
+temperature_K : 3000000
 run_density: False
 run_MD: True
