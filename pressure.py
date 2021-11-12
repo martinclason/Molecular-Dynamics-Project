@@ -1,6 +1,8 @@
 from ase.lattice.cubic import FaceCenteredCubic
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
-from ase.md.verlet import VelocityVerlet
+# from ase.md.verlet import VelocityVerlet
+from asap3.md.verlet import VelocityVerlet
+
 from ase import units
 from ase.visualize import view
 from asap3 import Trajectory
@@ -48,14 +50,14 @@ MaxwellBoltzmannDistribution(atoms, temperature_K=3000)
 dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
 
 
-traj = Trajectory("cu.traj", "w", atoms)
+traj = Trajectory("cu.traj", "w", atoms, properties="forces")
 dyn.attach(traj.write, interval=10)
 dyn.run(100)
 
 traj.close()
 traj_read = Trajectory("cu.traj")
 
-atoms_volume_final = traj_read[10].get_volume()
+atoms_volume_final = traj_read[9].get_volume()
 
 
 #print ("atoms_volume_final = " + str(atoms_volume_final))
@@ -69,4 +71,4 @@ print("Second position of first atom: " + str(traj_read[1].get_positions()[0]))
 print("Kinetic energy after 10 timesteps: " + str(traj_read[1].get_kinetic_energy()))
 print("Kinetic energy after 20 timesteps: " + str(traj_read[2].get_kinetic_energy()))
 
-print("Initial forces on first atom: " + str(traj_read[1].get_forces(apply_constraint = False)[1]))
+print("Initial forces on first atom: " + str(traj_read[1].get_forces()[1]))
