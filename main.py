@@ -12,7 +12,12 @@ from ase.md.verlet import VelocityVerlet
 from asap3 import Trajectory
 from ase import units
 
+import os
+import sys
 import argparse
+import yaml
+
+root_d = os.path.dirname(__file__)
 
 """There is a parser for passing flags from the command line to the MD which enables
 or disables the use of asap on the current run with the flags '--asap' for enable-
@@ -22,16 +27,17 @@ Passing this flag is to avoid getting the error 'illegal instruction (core dumpe
 in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
-# Adds parser so user can choose if to use asap or not with flags from terminal
+# # Adds parser so user can choose if to use asap or not with flags from terminal
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--asap', dest='asap', action='store_true')
-parser.add_argument('--no-asap', dest='asap', action='store_false')
-parser.set_defaults(feature=True)
-args = parser.parse_args()
 
-import yaml
+# parser.add_argument('--asap', dest='asap', action='store_true')
+# parser.add_argument('--no-asap', dest='asap', action='store_false')
+# parser.set_defaults(feature=True)
+# args = parser.parse_args()
 
-config_file = open("config.yaml")
+# Could be changed to current working directory
+config_file = open(os.path.join(root_d, "config.yaml"))
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 # Use Asap for a huge performance increase if it is installed
@@ -235,4 +241,12 @@ def createAtoms() :
                                                            'c' : latticeconstants[2]})
 
 
-main()
+if __name__ == "__main__":
+    # Adds parser so user can choose if to use asap or not with flags from terminal
+
+    parser.add_argument('--asap', dest='asap', action='store_true')
+    parser.add_argument('--no-asap', dest='asap', action='store_false')
+    parser.set_defaults(feature=True)
+    args = parser.parse_args()
+
+    main()
