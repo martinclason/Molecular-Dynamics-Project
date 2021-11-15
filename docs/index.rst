@@ -13,6 +13,7 @@ Welcome to Molecular Dynamics Project's documentation!
 This is the documentation for the Molecular Dynamics Project in the course 
 TFYA99 CDIO Project in Applied Physics.
 
+.. contents:: Table of contents
 
 Indices and tables
 ==================
