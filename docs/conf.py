@@ -26,7 +26,8 @@ author = 'Anton Olsson, Daniel Stannelind, Daniel Spegel-Lexne, Martin Clason, G
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.mathjax",
+"sphinx.ext.viewcode", "sphinx.ext.githubpages"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
