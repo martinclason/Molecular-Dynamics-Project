@@ -24,7 +24,7 @@ args = parser.parse_args()
 
 import yaml
 
-config_file = open("config.yaml")
+config_file = open("config_ar.yaml")
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 # Use Asap for a huge performance increase if it is installed
@@ -47,19 +47,38 @@ def density():
 def MD():
     use_asap = args.asap
 
+    use_asap = True
+
+    atomic_number = parsed_config_file["atomic_number"]
+    epsilon = parsed_config_file["epsilon"] * units.eV
+    sigma = parsed_config_file["sigma"] * units.Ang
+    cutoff = parsed_config_file["cutoff"] * units.Ang
+    iterations = parsed_config_file["iterations"] if parsed_config_file["iterations"] else 200
+    interval = parsed_config_file["interval"] if parsed_config_file["interval"] else 10
+
     if use_asap:
         print("Running with asap")
         from asap3 import EMT
+        from asap3 import LennardJones
         size = parsed_config_file["size"]
     else:
         print("Running with ase")
         from ase.calculators.emt import EMT
+        from ase.calculators.emt import LennardJones
         size = parsed_config_file["size"]
     # Set up a crystal
     atoms = createAtoms()
 
     # Describe the interatomic interactions with the Effective Medium Theory
-    atoms.calc = EMT()
+
+    potential = parsed_config_file["potential"]
+    known_potentials = {
+      'EMT' : EMT(),
+      'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
+                    rCut=cutoff, modified=True,),
+    }
+
+    atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
@@ -67,7 +86,7 @@ def MD():
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if parsed_config_file["make_traj"]:
         traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms)
-        dyn.attach(traj.write, interval=10)
+        dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -78,9 +97,9 @@ def MD():
 
 
     # Now run the dynamics
-    dyn.attach(printenergy, interval=10)
+    dyn.attach(printenergy, interval=interval)
     printenergy()
-    dyn.run(200)
+    dyn.run(iterations)
     if parsed_config_file["make_traj"]:
         traj.close()
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
@@ -101,23 +120,23 @@ def createAtoms() :
      size=(parsed_config_file["size"],
      parsed_config_file["size"],parsed_config_file["size"])
      pbc= parsed_config_file["pbc"]
-     latticeconstants = parsed_config_file["latticeconstants"]
+     latticeconstants = parsed_config_file.get("latticeconstants")
      structure = parsed_config_file["structure"]
      if(structure == "SC") :
         return SimpleCubic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                                latticeconstant = latticeconstants[0] if latticeconstants else None)
      if(structure == "BCC") :
         return BodyCenteredCubic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                                latticeconstant = latticeconstants[0] if latticeconstants else None)
      if(structure == "FCC") :
         return FaceCenteredCubic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                                latticeconstant = latticeconstants[0] if latticeconstants else None)
      if(structure == "ST") :
         return SimpleTetragonal(directions = directions,
                                 symbol = symbol,
