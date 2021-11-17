@@ -10,7 +10,7 @@ directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
 symbol : "Cu"
 make_traj: True
 pbc : True
-size : 5
-temperature_K : 3000000
+size : 3
+temperature_K : 300
 run_density: False
 run_MD: True
