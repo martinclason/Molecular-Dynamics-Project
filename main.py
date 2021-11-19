@@ -27,7 +27,7 @@ Passing this flag is to avoid getting the error 'illegal instruction (core dumpe
 in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
-# # Adds parser so user can choose if to use asap or not with flags from terminal
+# Adds parser so user can choose if to use asap or not with flags from terminal
 
 parser = argparse.ArgumentParser()
 

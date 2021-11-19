@@ -13,6 +13,15 @@ Welcome to Molecular Dynamics Project's documentation!
 This is the documentation for the Molecular Dynamics Project in the course 
 TFYA99 CDIO Project in Applied Physics.
 
+Update the documentation
+========================
+Cd to the docs directory and run 'sphinx-build . _build'
+
+Read documentation
+==================
+To read the documentation cd to the docs directory and run
+'<web-browser-name> index.html>' in the terminal.
+
 .. contents:: Table of contents
 
 Indices and tables
