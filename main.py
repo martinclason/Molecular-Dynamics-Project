@@ -35,7 +35,7 @@ parser = argparse.ArgumentParser()
 # parser.set_defaults(feature=True)
 # args = parser.parse_args()
 
-config_file = open("config_ar.yaml")
+config_file = open("config.yaml")
 # Could be changed to current working directory
 #config_file = open(os.path.join(root_d, "config.yaml"))
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
@@ -62,8 +62,7 @@ def density():
     return density
 
 
-def pressure(forces, volume, positions, temperature,
-    number_of_atoms, kinetic_energy):
+def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
 
     forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
 
@@ -72,7 +71,7 @@ def pressure(forces, volume, positions, temperature,
 
     print("The instant pressure is: " + str(instant_pressure))
 
-    return pressure
+    return instant_pressure
 
 
 def MD():
@@ -176,8 +175,14 @@ def main():
 
     if run_pressure :
 
-        pressure(atoms_forces, atoms_volume, atoms_positions, atoms_temperature,
-        atoms_number_of_atoms, atoms_kinetic_energy)
+        pressure(
+            atoms_forces,
+            atoms_volume,
+            atoms_positions,
+            atoms_temperature,
+            atoms_number_of_atoms,
+            atoms_kinetic_energy
+        )
 
 
 def createAtoms() :
