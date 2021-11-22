@@ -19,7 +19,7 @@ k_B = 1.380649e-23
 T = 40
 
 # Heat capacity []
-C_v = 1/(k_B*T) * var_e
+C_v = 1/(k_B*T**2) * var_e
 
 print("Heat capacity for Ar:")
 print(C_v)
