@@ -7,10 +7,16 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+
+import matplotlib.pyplot as plt
+import math
+
+from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 from ase.md.verlet import VelocityVerlet
+
 from asap3 import Trajectory
 from ase import units
+import numpy as np
 
 import os
 import sys
@@ -28,7 +34,6 @@ in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
 # Adds parser so user can choose if to use asap or not with flags from terminal
-
 parser = argparse.ArgumentParser()
 
 # parser.add_argument('--asap', dest='asap', action='store_true')
@@ -36,18 +41,19 @@ parser = argparse.ArgumentParser()
 # parser.set_defaults(feature=True)
 # args = parser.parse_args()
 
+config_file = open("config.yaml")
 # Could be changed to current working directory
-config_file = open(os.path.join(root_d, "config.yaml"))
+#config_file = open(os.path.join(root_d, "config.yaml"))
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 # Use Asap for a huge performance increase if it is installed
 
 def density():
-    atoms = createAtoms() #
     """The function 'density()' takes no argument and calculates the density
     of the material defined in 'config.yaml' with the lattice constant and
     element defined in that file."""
 
+    atoms = createAtoms()
     Element = parsed_config_file["Element"]
     #Properties for element
     Z = parsed_config_file["Z"] #Number of atoms
@@ -61,6 +67,19 @@ def density():
 
     return density
 
+
+def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
+
+    forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
+
+    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms * kinetic_energy)
+                            + forces_times_positions)
+
+    print("The instant pressure is: " + str(instant_pressure))
+
+    return instant_pressure
+
+
 def MD():
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
     molecular dynamics simulation with. The elements and configuration to run
@@ -69,27 +88,52 @@ def MD():
 
     use_asap = args.asap
 
+    use_asap = False
+
+    atomic_number = parsed_config_file["atomic_number"]
+    epsilon = parsed_config_file["epsilon"] * units.eV
+    sigma = parsed_config_file["sigma"] * units.Ang
+    cutoff = parsed_config_file["cutoff"] * units.Ang
+    iterations = parsed_config_file["iterations"] if parsed_config_file["iterations"] else 200
+    interval = parsed_config_file["interval"] if parsed_config_file["interval"] else 10
+
     if use_asap:
         print("Running with asap")
         from asap3 import EMT
-        size = parsed_config_file["size"]
+        from asap3.md.verlet import VelocityVerlet
+        from asap3 import LennardJones
     else:
         print("Running with ase")
         from ase.calculators.emt import EMT
-        size = parsed_config_file["size"]
+        from ase.calculators.lj import LennardJones
+        from ase.md.verlet import VelocityVerlet
+
+    size = parsed_config_file["size"]
+
     # Set up a crystal
     atoms = createAtoms()
 
     # Describe the interatomic interactions with the Effective Medium Theory
-    atoms.calc = EMT()
+
+    potential = parsed_config_file["potential"]
+    if potential :
+        known_potentials = {
+        'EMT' : EMT(),
+        'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
+                    rCut=cutoff, modified=True,),
+        }
+
+    atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
+    Stationary(atoms)
+    ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if parsed_config_file["make_traj"]:
-        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms)
-        dyn.attach(traj.write, interval=10)
+        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="forces")
+        dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -98,15 +142,41 @@ def MD():
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
+#Calculates MSD for one time step from .traj file
+    def MSD(t,atom_list):
+        r0 = atom_list[0].get_positions()
+        rt = atom_list[t].get_positions()
+        N = len(r0)
+        diff= rt-r0
+        squareddiff = diff**2
+        summ = sum(sum(squareddiff))
+        normsum = (1/N) * summ
+        #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
+        return normsum
+#Calculates MSD for all the time steps and plots them
+    def MSD_plot(time,atom_list):
+        MSD_data = []
+        for t in range(time):
+            MSD_data.append(MSD(t,atom_list))
+        plt.plot(range(time),MSD_data)
+        plt.ylabel("MSD-[Å]")
+        plt.xlabel("Measured time step")
+        plt.title("Mean Square Displacement")
+        plt.show()
 
     # Now run the dynamics
-    dyn.attach(printenergy, interval=10)
+    dyn.attach(printenergy, interval=interval)
     printenergy()
-    dyn.run(200)
+    dyn.run(iterations)
     if parsed_config_file["make_traj"]:
         traj.close()
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
-        print(traj_read[0].get_positions()[0])
+        print(len(traj_read[0].get_positions()))
+        print(MSD(0,traj_read))
+        MSD_plot(len(traj_read),traj_read)
+
+        # TODO: Should this be here?
+        return traj_read
 
 
 def main():
@@ -118,40 +188,67 @@ def main():
 
     run_density = parsed_config_file["run_density"]
     run_MD = parsed_config_file["run_MD"]
+    run_pressure = parsed_config_file["run_pressure"]
+
     if run_density :
         density()
+
     if run_MD :
-        MD()
+
+        traj_results = MD()
+
+        atoms_volume = traj_results[1].get_volume()
+        atoms_positions = traj_results[1].get_positions()
+        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
+        atoms_forces = traj_results[1].get_forces()
+        atoms_temperature = traj_results[1].get_temperature()
+        atoms_number_of_atoms = len(atoms_positions)
+        print("Number of atoms: " + str(atoms_number_of_atoms))
+
+    if run_pressure :
+
+        pressure(
+            atoms_forces,
+            atoms_volume,
+            atoms_positions,
+            atoms_temperature,
+            atoms_number_of_atoms,
+            atoms_kinetic_energy
+        )
+
 
 def createAtoms() :
     """createAtoms() loads material parameters from the config.yaml file and
-    returns a solid slab of a material in the form of an Atoms object with 
-    one of the 14 bravais lattice structures. The HCP and H structures 
+    returns a solid slab of a material in the form of an Atoms object with
+    one of the 14 bravais lattice structures. The HCP and H structures
     require a 4-index input for each direction (Miller-Bravais-notation) and
     will return a SC atoms object if the user fails to use the correct input
     for those structures."""
-    directions=parsed_config_file["directions"]
-    symbol=parsed_config_file["symbol"]
-    size=(parsed_config_file["size"],
-    parsed_config_file["size"],parsed_config_file["size"])
-    pbc= parsed_config_file["pbc"]
+
+    directions = parsed_config_file["directions"]
+    symbol = parsed_config_file["symbol"]
+    size = (parsed_config_file["size"], parsed_config_file["size"], parsed_config_file["size"])
+    pbc = parsed_config_file["pbc"]
     latticeconstants = parsed_config_file["latticeconstants"]
     structure = parsed_config_file["structure"]
     if(structure == "SC") :
         return SimpleCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                           symbol = symbol,
+                           size = size,
+                           pbc = pbc,
+                           latticeconstant = latticeconstants[0] if latticeconstants else None)
     if(structure == "BCC") :
         return BodyCenteredCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                                 symbol = symbol,
+                                 size = size,
+                                 pbc = pbc,
+                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
     if(structure == "FCC") :
         return FaceCenteredCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
+                                 symbol = symbol,
+                                 size = size,
+                                 pbc = pbc,
+                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
     if(structure == "ST") :
         return SimpleTetragonal(directions = directions,
                                 symbol = symbol,
