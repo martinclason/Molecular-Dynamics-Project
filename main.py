@@ -83,7 +83,8 @@ def MD():
 
     # Set the momenta corresponding to T=300K
     t = parsed_config_file["temperature_K"]
-    #MaxwellBoltzmannDistribution(atoms, temperature_K=t)
+
+    MaxwellBoltzmannDistribution(atoms, temperature_K=t)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     # dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     # Langevin dynamics for NVT dynamics

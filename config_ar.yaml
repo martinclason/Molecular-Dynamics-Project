@@ -19,5 +19,5 @@ temperature_K : 40
 potential: 'LJ'
 run_density: False
 run_MD: True
-iterations: 2000
+iterations: 4000
 interval: 100
