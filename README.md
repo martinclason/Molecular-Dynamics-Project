@@ -10,7 +10,7 @@ Install ASAP:
 $ pip install asap3
 
 Run main.py:
-	
+
 $ python3 main.py
 
 
