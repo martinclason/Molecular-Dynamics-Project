@@ -33,7 +33,7 @@ Passing this flag is to avoid getting the error 'illegal instruction (core dumpe
 in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
-# # Adds parser so user can choose if to use asap or not with flags from terminal
+# Adds parser so user can choose if to use asap or not with flags from terminal
 parser = argparse.ArgumentParser()
 
 # parser.add_argument('--asap', dest='asap', action='store_true')
@@ -163,7 +163,7 @@ def MD():
         plt.xlabel("Measured time step")
         plt.title("Mean Square Displacement")
         plt.show()
-        
+
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
@@ -218,69 +218,78 @@ def main():
 
 
 def createAtoms() :
-     directions=parsed_config_file["directions"]
-     symbol=parsed_config_file["symbol"]
-     size=(parsed_config_file["size"],
-     parsed_config_file["size"],parsed_config_file["size"])
-     pbc= parsed_config_file["pbc"]
-     latticeconstants = parsed_config_file.get("latticeconstants")
-     structure = parsed_config_file["structure"]
-     if(structure == "SC") :
+    """createAtoms() loads material parameters from the config.yaml file and
+    returns a solid slab of a material in the form of an Atoms object with
+    one of the 14 bravais lattice structures. The HCP and H structures
+    require a 4-index input for each direction (Miller-Bravais-notation) and
+    will return a SC atoms object if the user fails to use the correct input
+    for those structures."""
+
+    directions = parsed_config_file["directions"]
+    symbol = parsed_config_file["symbol"]
+    size = (parsed_config_file["size"], parsed_config_file["size"], parsed_config_file["size"])
+    pbc = parsed_config_file["pbc"]
+    latticeconstants = parsed_config_file["latticeconstants"]
+    structure = parsed_config_file["structure"]
+    if(structure == "SC") :
         return SimpleCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0] if latticeconstants else None)
-     if(structure == "BCC") :
+                           symbol = symbol,
+                           size = size,
+                           pbc = pbc,
+                           latticeconstant = latticeconstants[0] if latticeconstants else None)
+    if(structure == "BCC") :
         return BodyCenteredCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0] if latticeconstants else None)
-     if(structure == "FCC") :
+                                 symbol = symbol,
+                                 size = size,
+                                 pbc = pbc,
+                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
+    if(structure == "FCC") :
         return FaceCenteredCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0] if latticeconstants else None)
-     if(structure == "ST") :
+                                 symbol = symbol,
+                                 size = size,
+                                 pbc = pbc,
+                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
+    if(structure == "ST") :
         return SimpleTetragonal(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'c' : latticeconstants[2]})
-     if(structure == "CT") :
+    if(structure == "CT") :
         return CenteredTetragonal(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'c' : latticeconstants[2]})
-     if(structure == "SO") :
+    if(structure == "SO") :
         return SimpleOrthorhombic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2]})
-     if(structure == "BaCO") :
+    if(structure == "BaCO") :
         return BaseCenteredOrthorhombic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2]})
-     if(structure == "FCO") :
+    if(structure == "FCO") :
         return FaceCenteredOrthorhombic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2]})
-     if(structure == "BCO") :
+    if(structure == "BCO") :
         return BodyCenteredOrthorhombic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2]})
-     if(structure == "SM") :
+    if(structure == "SM") :
         return SimpleMonoclinic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
@@ -288,7 +297,7 @@ def createAtoms() :
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2],
                                                    'alpha' : latticeconstants[3]})
-     if(structure == "BCM") :
+    if(structure == "BCM") :
         return BaseCenteredMonoclinic(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
@@ -296,7 +305,7 @@ def createAtoms() :
                                                    'b' : latticeconstants[1],
                                                    'c' : latticeconstants[2],
                                                    'alpha' : latticeconstants[3]})
-     if(structure == "T") :
+    if(structure == "T") :
         print("Triclinic")
         return Triclinic(directions = directions,
                                 symbol = symbol,
@@ -307,7 +316,7 @@ def createAtoms() :
                                                    'alpha' : latticeconstants[3],
                                                    'beta' : latticeconstants[4],
                                                    'gamma' : latticeconstants[5]})
-     if(structure == "H") :
+    if(structure == "H") :
         if(len(directions) != 4) :
             print("Incorrect number of directional indices for hexagonal structure, use the 4" +
             "-index Miller-Bravais notation, creating SC-lattice instead")
@@ -320,7 +329,7 @@ def createAtoms() :
                                 size = size, pbc = pbc,
                                 latticeconstant = {'a' : latticeconstants[0],
                                                    'c' : latticeconstants[2]})
-     if(structure == "HCP") :
+    if(structure == "HCP") :
         if(len(directions) != 4) :
              print("Incorrect number of directional indices for hexagonal structure, use the 4" +
              "-index Miller-Bravais notation, creating SC-lattice instead")
