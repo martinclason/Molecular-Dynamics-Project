@@ -11,12 +11,12 @@ a : 5.256E-10 # Lattice constant
 latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gamma]
 structure : "FCC"
 directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
-symbol : "Ar"
+symbol : "Cu"
 make_traj: True
 pbc : True
-size : 4
+size : 1
 temperature_K : 40
-potential: 'LJ'
+potential: #leave empty if using ASE for now
 run_density: False
 run_MD: True
 run_pressure: True
