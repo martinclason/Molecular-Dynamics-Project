@@ -12,6 +12,7 @@ from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 from asap3 import Trajectory
 from ase import units
+from numpy import Statistics
 
 import argparse
 
@@ -47,27 +48,22 @@ def density():
 
 #Calculates the square of the kinetic energy diff for one time step
 #from .traj file
-def sqKineticEnergyDiff(t,atom_list):
-    r0 = atom_list[0].get_positions()
-    rt = atom_list[t].get_positions()
-    N = len(r0)
-    diff= rt-r0
-    squareddiff = diff**2
-    summ = sum(sum(squareddiff))
-    normsum = (1/N) * summ
-    #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
-    return normsum
+def calcHeatCapacity(t,time,atom_list):
+    kineticEnergies = atom_list.get_kinetic_energy()
+    N = len(kineticEnergies)
+    T = atom_list.get_temperature()
+    T = numpy.mean(T)
+    stdDevKE = numpy.std(kineticEnergies)
+    kB = ase.units.kB
     
-#Calculates standard deviation for the simulation
-def stdDeviation(time,atom_list):
-    MSD_data = []
-    for t in range(time):
-        SD_data.append(MSD(t,atom_list))
-    plt.plot(range(time),MSD_data)
-    plt.ylabel("MSD-[Å]")
-    plt.xlabel("Measured time step")
-    plt.title("Mean Square Displacement")
-    plt.show()
+    heatCapacity = ((3*N*kB)/2)*(1-(2/(3*kB^2*T^2))*stdDevKE^2)^(-1)
+#     N = len(r0)
+#     diff= rt-r0
+#     squareddiff = diff**2
+#     summ = sum(sum(squareddiff))
+#     normsum = (1/N) * summ
+    #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
+    return heatCapacity
 
 def MD():
     use_asap = args.asap
