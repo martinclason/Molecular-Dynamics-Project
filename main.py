@@ -7,7 +7,13 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
-from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+
+import matplotlib.pyplot as plt
+import math
+
+from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
+from ase.md.verlet import VelocityVerlet
+
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -121,6 +127,8 @@ def MD():
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
+    Stationary(atoms)
+    ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if parsed_config_file["make_traj"]:
@@ -134,7 +142,28 @@ def MD():
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-
+#Calculates MSD for one time step from .traj file
+    def MSD(t,atom_list):
+        r0 = atom_list[0].get_positions()
+        rt = atom_list[t].get_positions()
+        N = len(r0)
+        diff= rt-r0
+        squareddiff = diff**2
+        summ = sum(sum(squareddiff))
+        normsum = (1/N) * summ
+        #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
+        return normsum
+#Calculates MSD for all the time steps and plots them
+    def MSD_plot(time,atom_list):
+        MSD_data = []
+        for t in range(time):
+            MSD_data.append(MSD(t,atom_list))
+        plt.plot(range(time),MSD_data)
+        plt.ylabel("MSD-[Å]")
+        plt.xlabel("Measured time step")
+        plt.title("Mean Square Displacement")
+        plt.show()
+        
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
@@ -142,7 +171,9 @@ def MD():
     if parsed_config_file["make_traj"]:
         traj.close()
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
-        print(traj_read[0].get_positions()[0])
+        print(len(traj_read[0].get_positions()))
+        print(MSD(0,traj_read))
+        MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
         return traj_read
