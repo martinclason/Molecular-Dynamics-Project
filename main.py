@@ -8,9 +8,9 @@ from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
-from ase.md.verlet import VelocityVerlet
 from asap3 import Trajectory
 from ase import units
+import numpy as np
 
 import os
 import sys
@@ -28,7 +28,6 @@ in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
 # # Adds parser so user can choose if to use asap or not with flags from terminal
-
 parser = argparse.ArgumentParser()
 
 # parser.add_argument('--asap', dest='asap', action='store_true')
@@ -36,7 +35,7 @@ parser = argparse.ArgumentParser()
 # parser.set_defaults(feature=True)
 # args = parser.parse_args()
 
-config_file = open("config_ar.yaml")
+config_file = open("config.yaml")
 # Could be changed to current working directory
 #config_file = open(os.path.join(root_d, "config.yaml"))
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
@@ -44,11 +43,11 @@ parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 # Use Asap for a huge performance increase if it is installed
 
 def density():
-    atoms = createAtoms() #
     """The function 'density()' takes no argument and calculates the density
     of the material defined in 'config.yaml' with the lattice constant and
     element defined in that file."""
 
+    atoms = createAtoms()
     Element = parsed_config_file["Element"]
     #Properties for element
     Z = parsed_config_file["Z"] #Number of atoms
@@ -61,6 +60,19 @@ def density():
     print('The density of ' + Element + ' is: ' + str(density) + " g/cm^3")
 
     return density
+
+
+def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
+
+    forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
+
+    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms * kinetic_energy)
+                            + forces_times_positions)
+
+    print("The instant pressure is: " + str(instant_pressure))
+
+    return instant_pressure
+
 
 def MD():
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -82,13 +94,16 @@ def MD():
     if use_asap:
         print("Running with asap")
         from asap3 import EMT
+        from asap3.md.verlet import VelocityVerlet
         from asap3 import LennardJones
-        size = parsed_config_file["size"]
     else:
         print("Running with ase")
         from ase.calculators.emt import EMT
         from ase.calculators.emt import LennardJones
-        size = parsed_config_file["size"]
+        from ase.md.verlet import VelocityVerlet
+
+    size = parsed_config_file["size"]
+
     # Set up a crystal
     atoms = createAtoms()
 
@@ -108,7 +123,7 @@ def MD():
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if parsed_config_file["make_traj"]:
-        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms)
+        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="forces")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -128,6 +143,9 @@ def MD():
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
         print(traj_read[0].get_positions()[0])
 
+        # TODO: Should this be here?
+        return traj_read
+
 
 def main():
     """The 'main()' function runs the 'MD()' function which runs the simulation.
@@ -138,10 +156,34 @@ def main():
 
     run_density = parsed_config_file["run_density"]
     run_MD = parsed_config_file["run_MD"]
+    run_pressure = parsed_config_file["run_pressure"]
+
     if run_density :
         density()
+
     if run_MD :
-        MD()
+
+        traj_results = MD()
+
+        atoms_volume = traj_results[1].get_volume()
+        atoms_positions = traj_results[1].get_positions()
+        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
+        atoms_forces = traj_results[1].get_forces()
+        atoms_temperature = traj_results[1].get_temperature()
+        atoms_number_of_atoms = len(atoms_positions)
+        print("Number of atoms: " + str(atoms_number_of_atoms))
+
+    if run_pressure :
+
+        pressure(
+            atoms_forces,
+            atoms_volume,
+            atoms_positions,
+            atoms_temperature,
+            atoms_number_of_atoms,
+            atoms_kinetic_energy
+        )
+
 
 def createAtoms() :
      directions=parsed_config_file["directions"]

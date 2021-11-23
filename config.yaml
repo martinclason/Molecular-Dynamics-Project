@@ -1,16 +1,24 @@
 ---
-Element: 'diamond'
-Z: 8 #Number of atoms
-M: 12 #Molar mass
-Na: 6.023E+23 #avogadros constant
-a : 3.569E-8 #Lattice constant (for diamond currently)
+Element: 'argon'
+Z: 4 # Number of atoms
+M: 1 # Molar mass
+atomic_number: 18
+epsilon: 0.010323 # eV
+sigma: 3.40 # Å
+cutoff: 6.625 # Å
+Na: 6.023E+23 # avogadros constant
+a : 5.256E-10 # Lattice constant
 latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gamma]
-structure : "HCP"
+structure : "FCC"
 directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
-symbol : "Cu"
-make_traj: False
+symbol : "Ar"
+make_traj: True
 pbc : True
-size : 2
-temperature_K : 300
+size : 4
+temperature_K : 40
+potential: 'LJ'
 run_density: False
 run_MD: True
+run_pressure: True
+iterations: 2000
+interval: 100
