@@ -82,7 +82,7 @@ def MD():
 
     use_asap = args.asap
 
-    use_asap = True
+    use_asap = False
 
     atomic_number = parsed_config_file["atomic_number"]
     epsilon = parsed_config_file["epsilon"] * units.eV
@@ -99,7 +99,7 @@ def MD():
     else:
         print("Running with ase")
         from ase.calculators.emt import EMT
-        from ase.calculators.emt import LennardJones
+        from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
     size = parsed_config_file["size"]
@@ -110,11 +110,12 @@ def MD():
     # Describe the interatomic interactions with the Effective Medium Theory
 
     potential = parsed_config_file["potential"]
-    known_potentials = {
-      'EMT' : EMT(),
-      'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
+    if potential :
+        known_potentials = {
+        'EMT' : EMT(),
+        'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
                     rCut=cutoff, modified=True,),
-    }
+        }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
 
