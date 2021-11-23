@@ -45,6 +45,30 @@ def density():
 
     return density
 
+#Calculates the square of the kinetic energy diff for one time step
+#from .traj file
+def sqKineticEnergyDiff(t,atom_list):
+    r0 = atom_list[0].get_positions()
+    rt = atom_list[t].get_positions()
+    N = len(r0)
+    diff= rt-r0
+    squareddiff = diff**2
+    summ = sum(sum(squareddiff))
+    normsum = (1/N) * summ
+    #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
+    return normsum
+    
+#Calculates standard deviation for the simulation
+def stdDeviation(time,atom_list):
+    MSD_data = []
+    for t in range(time):
+        SD_data.append(MSD(t,atom_list))
+    plt.plot(range(time),MSD_data)
+    plt.ylabel("MSD-[Å]")
+    plt.xlabel("Measured time step")
+    plt.title("Mean Square Displacement")
+    plt.show()
+
 def MD():
     use_asap = args.asap
 
