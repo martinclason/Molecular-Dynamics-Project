@@ -16,6 +16,7 @@ make_traj: True
 pbc : True
 size : 1
 temperature_K : 300
+# Leave potential empty if running ASE, will resort to using EMT as potential.
 potential:
 run_density: False
 run_MD: True
