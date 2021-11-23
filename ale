@@ -3,3 +3,8 @@
 import sys
 print(sys.version)
 
+from command_line_arg_parser import parser
+
+args = parser.parse_args()
+
+print(f'Use asap: {args.use_asap}')
