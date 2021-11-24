@@ -48,22 +48,22 @@ def density():
 
 #Calculates the square of the kinetic energy diff for one time step
 #from .traj file
-def calcHeatCapacity(t,time,atom_list):
-    kineticEnergies = atom_list.get_kinetic_energy()
-    N = len(kineticEnergies)
-    T = atom_list.get_temperature()
-    T = numpy.mean(T)
-    stdDevKE = numpy.std(kineticEnergies)
-    kB = ase.units.kB
+# def calcHeatCapacity(t,time,atom_list):
+#     kineticEnergies = atom_list.get_kinetic_energy()
+#     N = len(kineticEnergies)
+#     T = atom_list.get_temperature()
+#     T = numpy.mean(T)
+#     stdDevKE = numpy.std(kineticEnergies)
+#     kB = ase.units.kB
     
-    heatCapacity = ((3*N*kB)/2)*(1-(2/(3*kB^2*T^2))*stdDevKE^2)^(-1)
-#     N = len(r0)
-#     diff= rt-r0
-#     squareddiff = diff**2
-#     summ = sum(sum(squareddiff))
-#     normsum = (1/N) * summ
-    #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
-    return heatCapacity
+#     heatCapacity = ((3*N*kB)/2)*(1-(2/(3*kB^2*T^2))*stdDevKE^2)^(-1)
+# #     N = len(r0)
+# #     diff= rt-r0
+# #     squareddiff = diff**2
+# #     summ = sum(sum(squareddiff))
+# #     normsum = (1/N) * summ
+#     #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
+#     return heatCapacity
 
 def MD():
     use_asap = args.asap
