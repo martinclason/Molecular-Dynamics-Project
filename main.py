@@ -227,7 +227,11 @@ def main():
 
 def createAtoms() :
     """createAtoms() loads material parameters from the config.yaml file and
-
+   returns a solid slab of a material in the form of an Atoms object with
+   one of the 14 bravais lattice structures. The HCP and H structures
+   require a 4-index input for each direction (Miller-Bravais-notation) and
+   will return a SC atoms object if the user fails to use the correct input
+   for those structures."""
     directions = parsed_config_file["directions"]
     symbol = parsed_config_file["symbol"]
     size = (parsed_config_file["size"], parsed_config_file["size"], parsed_config_file["size"])
