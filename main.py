@@ -13,6 +13,7 @@ import math
 
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 from ase.md.verlet import VelocityVerlet
+from ase.md.langevin import Langevin
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -66,7 +67,6 @@ def density():
 
     return density
 
-<<<<<<< HEAD
 #Calculates the square of the kinetic energy diff for one time step
 #from .traj file
 # def calcHeatCapacity(t,time,atom_list):
@@ -76,7 +76,7 @@ def density():
 #     T = numpy.mean(T)
 #     stdDevKE = numpy.std(kineticEnergies)
 #     kB = ase.units.kB
-    
+
 #     heatCapacity = ((3*N*kB)/2)*(1-(2/(3*kB^2*T^2))*stdDevKE^2)^(-1)
 # #     N = len(r0)
 # #     diff= rt-r0
@@ -85,7 +85,6 @@ def density():
 # #     normsum = (1/N) * summ
 #     #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
 #     return heatCapacity
-=======
 
 def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
 
@@ -98,7 +97,6 @@ def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_en
 
     return instant_pressure
 
->>>>>>> develop
 
 def MD():
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -149,11 +147,8 @@ def MD():
     t = parsed_config_file["temperature_K"]
 
     MaxwellBoltzmannDistribution(atoms, temperature_K=t)
-=======
-    MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
     Stationary(atoms)
     ZeroRotation(atoms)
->>>>>>> develop
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     # dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     # Langevin dynamics for NVT dynamics
