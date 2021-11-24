@@ -67,7 +67,6 @@ def density():
 
     return density
 
-
 def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
 
     forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
@@ -164,6 +163,14 @@ def MD():
         plt.title("Mean Square Displacement")
         plt.show()
 
+    def self_diffusion_coefficient(t, atom_list) : #for liquids only
+        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the 
+        self diffusion coefficient for a liquid. The function takes two arguments, the time
+        t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
+        MSD. The self diffusion coefficient is then taken as the slope of the 
+        mean-square-displacement."""
+        return 1/(6*t) * MSD(t, atom_list)
+      
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
@@ -173,6 +180,7 @@ def MD():
         traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
         print(len(traj_read[0].get_positions()))
         print(MSD(0,traj_read))
+        print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
         MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
@@ -219,12 +227,11 @@ def main():
 
 def createAtoms() :
     """createAtoms() loads material parameters from the config.yaml file and
-    returns a solid slab of a material in the form of an Atoms object with
-    one of the 14 bravais lattice structures. The HCP and H structures
-    require a 4-index input for each direction (Miller-Bravais-notation) and
-    will return a SC atoms object if the user fails to use the correct input
-    for those structures."""
-
+   returns a solid slab of a material in the form of an Atoms object with
+   one of the 14 bravais lattice structures. The HCP and H structures
+   require a 4-index input for each direction (Miller-Bravais-notation) and
+   will return a SC atoms object if the user fails to use the correct input
+   for those structures."""
     directions = parsed_config_file["directions"]
     symbol = parsed_config_file["symbol"]
     size = (parsed_config_file["size"], parsed_config_file["size"], parsed_config_file["size"])
@@ -306,29 +313,29 @@ def createAtoms() :
                                                    'c' : latticeconstants[2],
                                                    'alpha' : latticeconstants[3]})
     if(structure == "T") :
-        print("Triclinic")
         return Triclinic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2],
-                                                   'alpha' : latticeconstants[3],
-                                                   'beta' : latticeconstants[4],
-                                                   'gamma' : latticeconstants[5]})
+                            symbol = symbol,
+                            size = size, pbc = pbc,
+                            latticeconstant = {'a' : latticeconstants[0],
+                                               'b' : latticeconstants[1],
+                                               'c' : latticeconstants[2],
+                                               'alpha' : latticeconstants[3],
+                                               'beta' : latticeconstants[4],
+                                               'gamma' : latticeconstants[5]})
     if(structure == "H") :
         if(len(directions) != 4) :
             print("Incorrect number of directional indices for hexagonal structure, use the 4" +
             "-index Miller-Bravais notation, creating SC-lattice instead")
             return SimpleCubic(directions = directions,
-                                    symbol = symbol,
-                                    size = size, pbc = pbc,
-                                    latticeconstant = latticeconstants[0])
-        return Hexagonal(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'c' : latticeconstants[2]})
+                                latticeconstant = latticeconstants[0])
+        return Hexagonal(directions = directions,
+                         symbol = symbol,
+                         size = size, pbc = pbc,
+                         latticeconstant = {'a' : latticeconstants[0],
+                                            'c' : latticeconstants[2]})
+  
     if(structure == "HCP") :
         if(len(directions) != 4) :
              print("Incorrect number of directional indices for hexagonal structure, use the 4" +
