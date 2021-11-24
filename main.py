@@ -12,7 +12,6 @@ from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 from asap3 import Trajectory
 from ase import units
-from numpy import Statistics
 
 import argparse
 
