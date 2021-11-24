@@ -13,11 +13,6 @@ import math
 
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 from ase.md.verlet import VelocityVerlet
-<<<<<<< HEAD
-from ase.md.langevin import Langevin
-=======
-
->>>>>>> develop
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -151,7 +146,6 @@ def MD():
     atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
-<<<<<<< HEAD
     t = parsed_config_file["temperature_K"]
 
     MaxwellBoltzmannDistribution(atoms, temperature_K=t)
