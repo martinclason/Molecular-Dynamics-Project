@@ -2,6 +2,7 @@
 
 from command_line_arg_parser import parser
 from md_config_reader import config_parser as config_file_parser
+from main import main
 
 args = parser.parse_args()
 parsed_config_file = config_file_parser(args.config_file)
@@ -13,3 +14,4 @@ print(f'Use asap: {options["use_asap"]}')
 print(options["Element"])
 print(options["Z"])
 
+main(options)
