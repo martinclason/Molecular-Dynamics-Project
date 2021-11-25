@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+ode import matplotlib.pyplot as plt
 import math
 
 def MSD(t,atom_list):

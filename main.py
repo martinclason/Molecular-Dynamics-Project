@@ -67,14 +67,8 @@ def MD(options):
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
-    pbc = options["pbc"]
-    symbol = options["symbol"]
-    size = options["size"]
-    latticeconstants = options["latticeconstants"]
-    bravaislattice = options["bravaislattice"]
-
     # Set up a crystal
-    atoms = createAtoms(options,symbol, size, pbc, latticeconstants, bravaislattice)
+    atoms = createAtoms(options)
 
     # Describe the interatomic interactions with the Effective Medium Theory
 

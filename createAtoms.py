@@ -2,14 +2,19 @@ from ase.lattice.cubic import SimpleCubic, BodyCenteredCubic, FaceCenteredCubic
 from ase import Atoms
 
 
-def createAtoms(options,symbol, size, pbc, latticeconstants, bravaislattice):
-    """createAtoms takes 5 arguements. Symbol is the chemical notation (string), 
-    size is repetitions of the cell in (x,y,z) directions (int,int,int), pbc is True
-    or False for periodic boundary conditions (bool), bravaislattice is the structure
-    of the unit cell (currently SC, BCC and FCC supported) (string). The function
-    returns an atoms/lattice object that can be used for simulations."""
+def createAtoms(options):
+    """createAtoms(options) takes the argument options which is the key to read from the 
+    configuration files. Parameters are loaded from the config.yaml file and the function
+    then returns an Atoms/lattice object with the chosen parameters that can be used 
+    for simulations."""
+    pbc = options["pbc"]
+    symbol = options["symbol"]
+    size = options["size"]
+    latticeconstants = options["latticeconstants"]
+    bravaislattice = options["bravaislattice"]
+
     if bravaislattice:
-        atoms = createBravaislattice(options,symbol, size, pbc, latticeconstants, bravaislattice)
+        atoms = createBravaislattice(options)
     else :
         cell = options["cell"]
         cell = [[x*latticeconstants[0] for x in y] for y in cell]
@@ -19,13 +24,17 @@ def createAtoms(options,symbol, size, pbc, latticeconstants, bravaislattice):
         atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
     return atoms
 
-def createBravaislattice(options,symbol, size, pbc, latticeconstants, bravaislattice):
-    """createBravaislattice takes 5 arguements. Symbol is the element (string), 
-    size is repetitions of the cell in (x,y,z) directions (int,int,int), pbc is True
-    or False for periodic boundary conditions (bool), bravaislattice is the lattice 
-    structure of the unit cell (currently SC, BCC and FCC supported) (string). The function 
-    returns a lattice object."""
+def createBravaislattice(options):
+    """createBravaislattice takes the argument options which is the key to read from the 
+    configuration files. Parameters are loaded from the config.yaml file and the function
+    then returns a lattice object with the chosen parameters that can be used 
+    for simulations."""
     directions = options["directions"]
+    pbc = options["pbc"]
+    symbol = options["symbol"]
+    size = options["size"]
+    latticeconstants = options["latticeconstants"]
+    bravaislattice = options["bravaislattice"]
     if(bravaislattice == "SC") :
         return SimpleCubic(directions = directions,
                             symbol = symbol,
