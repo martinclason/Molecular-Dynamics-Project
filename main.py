@@ -22,7 +22,7 @@ def density(options):
     of the material defined in 'config.yaml' with the lattice constant and
     element defined in that file."""
 
-    atoms = createAtoms()
+    atoms = createAtoms(options)
     Element = options["Element"]
     #Properties for element
     Z = options["Z"] #Number of atoms
@@ -343,7 +343,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--asap', dest='use_asap', action='store_true')
     parser.add_argument('--no-asap', dest='use_asap', action='store_false')
-    parser.set_defaults(feature=True)
+    parser.set_defaults(use_asap=True)
     args = parser.parse_args()
 
     # Parsing yaml config_file
