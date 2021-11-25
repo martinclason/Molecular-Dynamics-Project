@@ -1,17 +1,13 @@
 """Demonstrates molecular dynamics with constant energy."""
-
-from ase.lattice.cubic import SimpleCubic, BodyCenteredCubic, FaceCenteredCubic
-from ase import Atoms
-
-import matplotlib.pyplot as plt
-import math
-
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 from ase.md.verlet import VelocityVerlet
 
 from asap3 import Trajectory
 from ase import units
 import numpy as np
+
+from createAtoms import createAtoms
+from MSD import MSD, MSD_plot, self_diffusion_coefficient
 
 def density(options):
     """The function 'density()' takes no argument and calculates the density
@@ -119,35 +115,7 @@ def MD(options):
 
          print("The instant pressure is: " + str(instant_pressure))
 
-#Calculates MSD for one time step from .traj file
-    def MSD(t,atom_list):
-        r0 = atom_list[0].get_positions()
-        rt = atom_list[t].get_positions()
-        N = len(r0)
-        diff= rt-r0
-        squareddiff = diff**2
-        summ = sum(sum(squareddiff))
-        normsum = (1/N) * summ
-        #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
-        return normsum
-#Calculates MSD for all the time steps and plots them
-    def MSD_plot(time,atom_list):
-        MSD_data = []
-        for t in range(time):
-            MSD_data.append(MSD(t,atom_list))
-        plt.plot(range(time),MSD_data)
-        plt.ylabel("MSD-[Å]")
-        plt.xlabel("Measured time step")
-        plt.title("Mean Square Displacement")
-        plt.show()
 
-    def self_diffusion_coefficient(t, atom_list) : #for liquids only
-        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
-        self diffusion coefficient for a liquid. The function takes two arguments, the time
-        t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
-        MSD. The self diffusion coefficient is then taken as the slope of the
-        mean-square-displacement."""
-        return 1/(6*t) * MSD(t, atom_list)
 
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
@@ -205,46 +173,6 @@ def main(options):
         )
 
 
-def createAtoms(options,symbol, size, pbc, latticeconstants, bravaislattice):
-    """createAtoms takes 5 arguements. Symbol is the chemical notation (string), 
-    size is repetitions of the cell in (x,y,z) directions (int,int,int), pbc is True
-    or False for periodic boundary conditions (bool), bravaislattice is the structure
-    of the unit cell (currently SC, BCC and FCC supported) (string). The function
-    returns an atoms/lattice object that can be used for simulations."""
-    if bravaislattice:
-        atoms = createBravaislattice(symbol, size, pbc, latticeconstants, bravaislattice)
-    else :
-        cell = options["cell"]
-        cell = [[x*latticeconstants[0] for x in y] for y in cell]
-        atoms = Atoms(symbol,
-            cell=cell,
-            pbc=pbc)
-        atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
-    return atoms
-
-def createBravaislattice(options,symbol, size, pbc, latticeconstants, bravaislattice):
-    """createBravaislattice takes 5 arguements. Symbol is the element (string), 
-    size is repetitions of the cell in (x,y,z) directions (int,int,int), pbc is True
-    or False for periodic boundary conditions (bool), bravaislattice is the lattice 
-    structure of the unit cell (currently SC, BCC and FCC supported) (string). The function 
-    returns a lattice object."""
-    directions = options["directions"]
-    if(bravaislattice == "SC") :
-        return SimpleCubic(directions = directions,
-                            symbol = symbol,
-                            size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
-    if(bravaislattice == "BCC") :
-        return BodyCenteredCubic(directions = directions,
-                            symbol = symbol,
-                            size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
-    if(bravaislattice == "FCC") :
-        return FaceCenteredCubic(directions = directions,
-                            symbol = symbol,
-                            size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
- 
 
 
 if __name__ == "__main__":
