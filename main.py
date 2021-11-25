@@ -7,7 +7,6 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
-
 import matplotlib.pyplot as plt
 import math
 
@@ -17,36 +16,6 @@ from ase.md.verlet import VelocityVerlet
 from asap3 import Trajectory
 from ase import units
 import numpy as np
-
-import os
-import sys
-import argparse
-import yaml
-
-root_d = os.path.dirname(__file__)
-
-"""There is a parser for passing flags from the command line to the MD which enables
-or disables the use of asap on the current run with the flags '--asap' for enable-
-ing it and '--no-asap' to disable it.
-
-Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
-in the terminal since some machines cannot run the current version of ASAP which
-is used in this project. """
-
-# Adds parser so user can choose if to use asap or not with flags from terminal
-parser = argparse.ArgumentParser()
-
-# parser.add_argument('--asap', dest='asap', action='store_true')
-# parser.add_argument('--no-asap', dest='asap', action='store_false')
-# parser.set_defaults(feature=True)
-# args = parser.parse_args()
-
-config_file = open("config.yaml")
-# Could be changed to current working directory
-#config_file = open(os.path.join(root_d, "config.yaml"))
-parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
-
-# Use Asap for a huge performance increase if it is installed
 
 def density(options):
     """The function 'density()' takes no argument and calculates the density
@@ -85,7 +54,8 @@ def MD(options):
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
-
+    
+    # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
     atomic_number = options["atomic_number"]
@@ -343,11 +313,24 @@ def createAtoms(options):
 
 
 if __name__ == "__main__":
-    # Adds parser so user can choose if to use asap or not with flags from terminal
+    import os
+    import sys
+    import argparse
+    import yaml
 
-    parser.add_argument('--asap', dest='asap', action='store_true')
-    parser.add_argument('--no-asap', dest='asap', action='store_false')
+    # Adds parser so user can choose if to use asap or not with flags from terminal
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--asap', dest='use_asap', action='store_true')
+    parser.add_argument('--no-asap', dest='use_asap', action='store_false')
     parser.set_defaults(feature=True)
     args = parser.parse_args()
+
+    # Parsing yaml config_file
+    config_file = open("config.yaml")
+    # Could be changed to current working directory
+    #root_d = os.path.dirname(__file__)
+    #config_file = open(os.path.join(root_d, "config.yaml"))
+    parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
+    parsed_config_file["use_asap"] = args.use_asap
 
     main(parsed_config_file)
