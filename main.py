@@ -87,7 +87,7 @@ def MD():
 
     use_asap = args.asap
 
-    use_asap = False
+    use_asap = True
 
     atomic_number = parsed_config_file["atomic_number"]
     epsilon = parsed_config_file["epsilon"] * units.eV
@@ -141,6 +141,16 @@ def MD():
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
+    def printpressure(b=atoms):
+         """Function to calculate and print the instant pressure in XXX for every timestep """
+         forces_times_positions = sum(np.dot(x,y) for x, y in
+                                zip(b.get_positions(), b.get_forces()))
+
+         instant_pressure = ((1/(3 * b.get_volume())) * ((2 * len(b) *
+         b.get_kinetic_energy()) + forces_times_positions))
+
+         print("The instant pressure is: " + str(instant_pressure))
+
 #Calculates MSD for one time step from .traj file
     def MSD(t,atom_list):
         r0 = atom_list[0].get_positions()
@@ -164,16 +174,18 @@ def MD():
         plt.show()
 
     def self_diffusion_coefficient(t, atom_list) : #for liquids only
-        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the 
+        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
         self diffusion coefficient for a liquid. The function takes two arguments, the time
         t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
-        MSD. The self diffusion coefficient is then taken as the slope of the 
+        MSD. The self diffusion coefficient is then taken as the slope of the
         mean-square-displacement."""
         return 1/(6*t) * MSD(t, atom_list)
-      
+
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
+    dyn.attach(printpressure, interval =interval)
+    printpressure()
     dyn.run(iterations)
     if parsed_config_file["make_traj"]:
         traj.close()
@@ -335,7 +347,7 @@ def createAtoms() :
                          size = size, pbc = pbc,
                          latticeconstant = {'a' : latticeconstants[0],
                                             'c' : latticeconstants[2]})
-  
+
     if(structure == "HCP") :
         if(len(directions) != 4) :
              print("Incorrect number of directional indices for hexagonal structure, use the 4" +
