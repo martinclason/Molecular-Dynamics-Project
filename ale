@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+from command_line_arg_parser import parser
+from md_config_reader import config_parser as config_file_parser
+from main import main
+"""There is a parser for passing flags from the command line to the MD which enables
+or disables the use of asap on the current run with the flags '--asap' for enable-
+ing it and '--no-asap' to disable it.
+
+Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
+in the terminal since some machines cannot run the current version of ASAP which
+is used in this project. """
+
+args = parser.parse_args()
+parsed_config_file = config_file_parser(args.config_file)
+
+options = parsed_config_file
+options['use_asap'] = args.use_asap
+
+print(f'Use asap: {options["use_asap"]}')
+print(options["Element"])
+print(options["Z"])
+
+main(options)

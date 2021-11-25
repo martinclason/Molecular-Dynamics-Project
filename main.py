@@ -7,7 +7,6 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
-
 import matplotlib.pyplot as plt
 import math
 
@@ -18,48 +17,18 @@ from asap3 import Trajectory
 from ase import units
 import numpy as np
 
-import os
-import sys
-import argparse
-import yaml
-
-root_d = os.path.dirname(__file__)
-
-"""There is a parser for passing flags from the command line to the MD which enables
-or disables the use of asap on the current run with the flags '--asap' for enable-
-ing it and '--no-asap' to disable it.
-
-Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
-in the terminal since some machines cannot run the current version of ASAP which
-is used in this project. """
-
-# Adds parser so user can choose if to use asap or not with flags from terminal
-parser = argparse.ArgumentParser()
-
-# parser.add_argument('--asap', dest='asap', action='store_true')
-# parser.add_argument('--no-asap', dest='asap', action='store_false')
-# parser.set_defaults(feature=True)
-# args = parser.parse_args()
-
-config_file = open("config.yaml")
-# Could be changed to current working directory
-#config_file = open(os.path.join(root_d, "config.yaml"))
-parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
-
-# Use Asap for a huge performance increase if it is installed
-
-def density():
+def density(options):
     """The function 'density()' takes no argument and calculates the density
     of the material defined in 'config.yaml' with the lattice constant and
     element defined in that file."""
 
-    atoms = createAtoms()
-    Element = parsed_config_file["Element"]
+    atoms = createAtoms(options)
+    Element = options["Element"]
     #Properties for element
-    Z = parsed_config_file["Z"] #Number of atoms
-    M = parsed_config_file["M"] #Molar mass
-    Na = parsed_config_file["Na"] #avogadros constant
-    a = parsed_config_file["a"] # Lattice constant
+    Z = options["Z"] #Number of atoms
+    M = options["M"] #Molar mass
+    Na = options["Na"] #avogadros constant
+    a = options["a"] # Lattice constant
     unitCellVolume = a**3
     density = Z * M / (Na * unitCellVolume)
 
@@ -79,22 +48,21 @@ def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_en
     return instant_pressure
 
 
-def MD():
+def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
+    
+    # Use Asap for a huge performance increase if it is installed
+    use_asap = options["use_asap"]
 
-    use_asap = args.asap
-
-    use_asap = True
-
-    atomic_number = parsed_config_file["atomic_number"]
-    epsilon = parsed_config_file["epsilon"] * units.eV
-    sigma = parsed_config_file["sigma"] * units.Ang
-    cutoff = parsed_config_file["cutoff"] * units.Ang
-    iterations = parsed_config_file["iterations"] if parsed_config_file["iterations"] else 200
-    interval = parsed_config_file["interval"] if parsed_config_file["interval"] else 10
+    atomic_number = options["atomic_number"]
+    epsilon = options["epsilon"] * units.eV
+    sigma = options["sigma"] * units.Ang
+    cutoff = options["cutoff"] * units.Ang
+    iterations = options["iterations"] if options["iterations"] else 200
+    interval = options["interval"] if options["interval"] else 10
 
     if use_asap:
         print("Running with asap")
@@ -107,14 +75,14 @@ def MD():
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
-    size = parsed_config_file["size"]
+    size = options["size"]
 
     # Set up a crystal
-    atoms = createAtoms()
+    atoms = createAtoms(options)
 
     # Describe the interatomic interactions with the Effective Medium Theory
 
-    potential = parsed_config_file["potential"]
+    potential = options["potential"]
     if potential :
         known_potentials = {
         'EMT' : EMT(),
@@ -125,13 +93,13 @@ def MD():
     atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, temperature_K=parsed_config_file["temperature_K"])
+    MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
     Stationary(atoms)
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
-    if parsed_config_file["make_traj"]:
-        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="forces")
+    if options["make_traj"]:
+        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="forces")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -187,9 +155,9 @@ def MD():
     dyn.attach(printpressure, interval =interval)
     printpressure()
     dyn.run(iterations)
-    if parsed_config_file["make_traj"]:
+    if options["make_traj"]:
         traj.close()
-        traj_read = Trajectory(parsed_config_file["symbol"]+".traj")
+        traj_read = Trajectory(options["symbol"]+".traj")
         print(len(traj_read[0].get_positions()))
         print(MSD(0,traj_read))
         print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
@@ -199,23 +167,23 @@ def MD():
         return traj_read
 
 
-def main():
+def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.
     'main()' also prints out the density or other properties of the material at
     hand (which is to be implemented in future versions of this program, as of
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
-    run_density = parsed_config_file["run_density"]
-    run_MD = parsed_config_file["run_MD"]
-    run_pressure = parsed_config_file["run_pressure"]
+    run_density = options["run_density"]
+    run_MD = options["run_MD"]
+    run_pressure = options["run_pressure"]
 
     if run_density :
         density()
 
     if run_MD :
 
-        traj_results = MD()
+        traj_results = MD(options)
 
         atoms_volume = traj_results[1].get_volume()
         atoms_positions = traj_results[1].get_positions()
@@ -237,19 +205,21 @@ def main():
         )
 
 
-def createAtoms() :
+def createAtoms(options):
     """createAtoms() loads material parameters from the config.yaml file and
-   returns a solid slab of a material in the form of an Atoms object with
-   one of the 14 bravais lattice structures. The HCP and H structures
-   require a 4-index input for each direction (Miller-Bravais-notation) and
-   will return a SC atoms object if the user fails to use the correct input
-   for those structures."""
-    directions = parsed_config_file["directions"]
-    symbol = parsed_config_file["symbol"]
-    size = (parsed_config_file["size"], parsed_config_file["size"], parsed_config_file["size"])
-    pbc = parsed_config_file["pbc"]
-    latticeconstants = parsed_config_file["latticeconstants"]
-    structure = parsed_config_file["structure"]
+    returns a solid slab of a material in the form of an Atoms object with
+    one of the 14 bravais lattice structures. The HCP and H structures
+    require a 4-index input for each direction (Miller-Bravais-notation) and
+    will return a SC atoms object if the user fails to use the correct input
+    for those structures."""
+
+    directions = options["directions"]
+    symbol = options["symbol"]
+    size = (options["size"], options["size"], options["size"])
+    pbc = options["pbc"]
+    latticeconstants = options["latticeconstants"]
+    structure = options["structure"]
+
     if(structure == "SC") :
         return SimpleCubic(directions = directions,
                            symbol = symbol,
@@ -364,11 +334,24 @@ def createAtoms() :
 
 
 if __name__ == "__main__":
-    # Adds parser so user can choose if to use asap or not with flags from terminal
+    import os
+    import sys
+    import argparse
+    import yaml
 
-    parser.add_argument('--asap', dest='asap', action='store_true')
-    parser.add_argument('--no-asap', dest='asap', action='store_false')
-    parser.set_defaults(feature=True)
+    # Adds parser so user can choose if to use asap or not with flags from terminal
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--asap', dest='use_asap', action='store_true')
+    parser.add_argument('--no-asap', dest='use_asap', action='store_false')
+    parser.set_defaults(use_asap=True)
     args = parser.parse_args()
 
-    main()
+    # Parsing yaml config_file
+    config_file = open("config.yaml")
+    # Could be changed to current working directory
+    #root_d = os.path.dirname(__file__)
+    #config_file = open(os.path.join(root_d, "config.yaml"))
+    parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
+    parsed_config_file["use_asap"] = args.use_asap
+
+    main(parsed_config_file)
