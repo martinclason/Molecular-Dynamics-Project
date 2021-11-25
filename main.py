@@ -36,7 +36,6 @@ def density(options):
 
     return density
 
-
 def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
 
     forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
@@ -110,6 +109,16 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
+    def printpressure(b=atoms):
+         """Function to calculate and print the instant pressure in XXX for every timestep """
+         forces_times_positions = sum(np.dot(x,y) for x, y in
+                                zip(b.get_positions(), b.get_forces()))
+
+         instant_pressure = ((1/(3 * b.get_volume())) * ((2 * len(b) *
+         b.get_kinetic_energy()) + forces_times_positions))
+
+         print("The instant pressure is: " + str(instant_pressure))
+
 #Calculates MSD for one time step from .traj file
     def MSD(t,atom_list):
         r0 = atom_list[0].get_positions()
@@ -132,15 +141,26 @@ def MD(options):
         plt.title("Mean Square Displacement")
         plt.show()
 
+    def self_diffusion_coefficient(t, atom_list) : #for liquids only
+        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
+        self diffusion coefficient for a liquid. The function takes two arguments, the time
+        t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
+        MSD. The self diffusion coefficient is then taken as the slope of the
+        mean-square-displacement."""
+        return 1/(6*t) * MSD(t, atom_list)
+
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
+    dyn.attach(printpressure, interval =interval)
+    printpressure()
     dyn.run(iterations)
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
         print(len(traj_read[0].get_positions()))
         print(MSD(0,traj_read))
+        print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
         MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
@@ -199,6 +219,7 @@ def createAtoms(options):
     pbc = options["pbc"]
     latticeconstants = options["latticeconstants"]
     structure = options["structure"]
+
     if(structure == "SC") :
         return SimpleCubic(directions = directions,
                            symbol = symbol,
@@ -274,29 +295,29 @@ def createAtoms(options):
                                                    'c' : latticeconstants[2],
                                                    'alpha' : latticeconstants[3]})
     if(structure == "T") :
-        print("Triclinic")
         return Triclinic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2],
-                                                   'alpha' : latticeconstants[3],
-                                                   'beta' : latticeconstants[4],
-                                                   'gamma' : latticeconstants[5]})
+                            symbol = symbol,
+                            size = size, pbc = pbc,
+                            latticeconstant = {'a' : latticeconstants[0],
+                                               'b' : latticeconstants[1],
+                                               'c' : latticeconstants[2],
+                                               'alpha' : latticeconstants[3],
+                                               'beta' : latticeconstants[4],
+                                               'gamma' : latticeconstants[5]})
     if(structure == "H") :
         if(len(directions) != 4) :
             print("Incorrect number of directional indices for hexagonal structure, use the 4" +
             "-index Miller-Bravais notation, creating SC-lattice instead")
             return SimpleCubic(directions = directions,
-                                    symbol = symbol,
-                                    size = size, pbc = pbc,
-                                    latticeconstant = latticeconstants[0])
-        return Hexagonal(directions = directions,
                                 symbol = symbol,
                                 size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'c' : latticeconstants[2]})
+                                latticeconstant = latticeconstants[0])
+        return Hexagonal(directions = directions,
+                         symbol = symbol,
+                         size = size, pbc = pbc,
+                         latticeconstant = {'a' : latticeconstants[0],
+                                            'c' : latticeconstants[2]})
+
     if(structure == "HCP") :
         if(len(directions) != 4) :
              print("Incorrect number of directional indices for hexagonal structure, use the 4" +
