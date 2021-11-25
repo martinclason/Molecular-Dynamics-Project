@@ -8,16 +8,20 @@ sigma: 3.40 # Å
 cutoff: 6.625 # Å
 Na: 6.023E+23 # avogadros constant
 a : 5.256E-10 # Lattice constant
-latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gamma]
-structure : "FCC"
-directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
+# Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
+latticeconstants : [3.569,None,None,None,None,None] #[a, b, c, alpha, beta, gamma]
+#bravaislattice currently only supports "SC", "FCC", "BCC" 
+bravaislattice : "FCC" #(conventional unit cell)
+#Customizable primitive unit cell, leave bravaislattice empty if cell is used. 
+cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
+directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
 symbol : "Cu"
 make_traj: True
-pbc : True
-size : 1
+pbc : True #periodic boundary conditions
+size : [2,2,2]
 temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
-potential:
+potential: "EMT"
 run_density: False
 run_MD: True
 run_pressure: True

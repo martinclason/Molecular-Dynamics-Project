@@ -1,21 +1,13 @@
 """Demonstrates molecular dynamics with constant energy."""
-
-from ase.lattice.cubic import SimpleCubic, BodyCenteredCubic, FaceCenteredCubic,Diamond
-from ase.lattice.tetragonal import SimpleTetragonal, CenteredTetragonal
-from ase.lattice.orthorhombic import SimpleOrthorhombic, BaseCenteredOrthorhombic,FaceCenteredOrthorhombic, BodyCenteredOrthorhombic
-from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
-from ase.lattice.triclinic import Triclinic
-from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
-
-import matplotlib.pyplot as plt
-import math
-
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 from ase.md.verlet import VelocityVerlet
 
 from asap3 import Trajectory
 from ase import units
 import numpy as np
+
+from createAtoms import createAtoms
+from MSD import MSD, MSD_plot, self_diffusion_coefficient
 
 def density(options):
     """The function 'density()' takes no argument and calculates the density
@@ -75,8 +67,6 @@ def MD(options):
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
-    size = options["size"]
-
     # Set up a crystal
     atoms = createAtoms(options)
 
@@ -119,35 +109,7 @@ def MD(options):
 
          print("The instant pressure is: " + str(instant_pressure))
 
-#Calculates MSD for one time step from .traj file
-    def MSD(t,atom_list):
-        r0 = atom_list[0].get_positions()
-        rt = atom_list[t].get_positions()
-        N = len(r0)
-        diff= rt-r0
-        squareddiff = diff**2
-        summ = sum(sum(squareddiff))
-        normsum = (1/N) * summ
-        #return math.sqrt(normsum[0]**2 + normsum[1]**2 + normsum[2]**2)
-        return normsum
-#Calculates MSD for all the time steps and plots them
-    def MSD_plot(time,atom_list):
-        MSD_data = []
-        for t in range(time):
-            MSD_data.append(MSD(t,atom_list))
-        plt.plot(range(time),MSD_data)
-        plt.ylabel("MSD-[Å]")
-        plt.xlabel("Measured time step")
-        plt.title("Mean Square Displacement")
-        plt.show()
 
-    def self_diffusion_coefficient(t, atom_list) : #for liquids only
-        """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
-        self diffusion coefficient for a liquid. The function takes two arguments, the time
-        t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
-        MSD. The self diffusion coefficient is then taken as the slope of the
-        mean-square-displacement."""
-        return 1/(6*t) * MSD(t, atom_list)
 
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
@@ -205,132 +167,6 @@ def main(options):
         )
 
 
-def createAtoms(options):
-    """createAtoms() loads material parameters from the config.yaml file and
-    returns a solid slab of a material in the form of an Atoms object with
-    one of the 14 bravais lattice structures. The HCP and H structures
-    require a 4-index input for each direction (Miller-Bravais-notation) and
-    will return a SC atoms object if the user fails to use the correct input
-    for those structures."""
-
-    directions = options["directions"]
-    symbol = options["symbol"]
-    size = (options["size"], options["size"], options["size"])
-    pbc = options["pbc"]
-    latticeconstants = options["latticeconstants"]
-    structure = options["structure"]
-
-    if(structure == "SC") :
-        return SimpleCubic(directions = directions,
-                           symbol = symbol,
-                           size = size,
-                           pbc = pbc,
-                           latticeconstant = latticeconstants[0] if latticeconstants else None)
-    if(structure == "BCC") :
-        return BodyCenteredCubic(directions = directions,
-                                 symbol = symbol,
-                                 size = size,
-                                 pbc = pbc,
-                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
-    if(structure == "FCC") :
-        return FaceCenteredCubic(directions = directions,
-                                 symbol = symbol,
-                                 size = size,
-                                 pbc = pbc,
-                                 latticeconstant = latticeconstants[0] if latticeconstants else None)
-    if(structure == "ST") :
-        return SimpleTetragonal(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "CT") :
-        return CenteredTetragonal(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "SO") :
-        return SimpleOrthorhombic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "BaCO") :
-        return BaseCenteredOrthorhombic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "FCO") :
-        return FaceCenteredOrthorhombic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "BCO") :
-        return BodyCenteredOrthorhombic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2]})
-    if(structure == "SM") :
-        return SimpleMonoclinic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2],
-                                                   'alpha' : latticeconstants[3]})
-    if(structure == "BCM") :
-        return BaseCenteredMonoclinic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = {'a' : latticeconstants[0],
-                                                   'b' : latticeconstants[1],
-                                                   'c' : latticeconstants[2],
-                                                   'alpha' : latticeconstants[3]})
-    if(structure == "T") :
-        return Triclinic(directions = directions,
-                            symbol = symbol,
-                            size = size, pbc = pbc,
-                            latticeconstant = {'a' : latticeconstants[0],
-                                               'b' : latticeconstants[1],
-                                               'c' : latticeconstants[2],
-                                               'alpha' : latticeconstants[3],
-                                               'beta' : latticeconstants[4],
-                                               'gamma' : latticeconstants[5]})
-    if(structure == "H") :
-        if(len(directions) != 4) :
-            print("Incorrect number of directional indices for hexagonal structure, use the 4" +
-            "-index Miller-Bravais notation, creating SC-lattice instead")
-            return SimpleCubic(directions = directions,
-                                symbol = symbol,
-                                size = size, pbc = pbc,
-                                latticeconstant = latticeconstants[0])
-        return Hexagonal(directions = directions,
-                         symbol = symbol,
-                         size = size, pbc = pbc,
-                         latticeconstant = {'a' : latticeconstants[0],
-                                            'c' : latticeconstants[2]})
-
-    if(structure == "HCP") :
-        if(len(directions) != 4) :
-             print("Incorrect number of directional indices for hexagonal structure, use the 4" +
-             "-index Miller-Bravais notation, creating SC-lattice instead")
-             return SimpleCubic(directions = directions,
-                                     symbol = symbol,
-                                     size = size, pbc = pbc,
-                                     latticeconstant = latticeconstants[0])
-        return HexagonalClosedPacked(directions = directions,
-                                        symbol = symbol,
-                                        size = size, pbc = pbc,
-                                        latticeconstant = {'a' : latticeconstants[0],
-                                                           'c' : latticeconstants[2]})
 
 
 if __name__ == "__main__":
