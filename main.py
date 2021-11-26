@@ -106,7 +106,7 @@ def MD():
 
     use_asap = args.asap
 
-    use_asap = False
+    use_asap = True
 
     atomic_number = parsed_config_file["atomic_number"]
     epsilon = parsed_config_file["epsilon"] * units.eV
@@ -137,7 +137,7 @@ def MD():
     if potential :
         known_potentials = {
         'EMT' : EMT(),
-        'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
+        'LJ' : LennardJones(atomic_number, epsilon, sigma,
                     rCut=cutoff, modified=True,),
         }
 

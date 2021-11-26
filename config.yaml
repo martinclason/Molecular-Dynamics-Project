@@ -1,23 +1,23 @@
 ---
 Element: 'argon'
 Z: 4 # Number of atoms
-M: 1 # Molar mass
+M: 39.9 # Molar mass
 atomic_number: 18
 epsilon: 0.010323 # eV
 sigma: 3.40 # Å
-cutoff: 6.625 # Å
+cutoff: 10 # Å
 Na: 6.023E+23 # avogadros constant
 a : 5.256E-10 # Lattice constant
 latticeconstants : [3.569, 4.569, 5.569, 50, 60, 70] #[a, b, c, alpha, beta, gamma]
 structure : "FCC"
 directions : [[1,0,0], [0,1,0], [0,0,1]] #use Miller-Bravais for hex-structure
-symbol : "Cu"
+symbol : "Ar"
 make_traj: True
 pbc : True
 size : 1
-temperature_K : 300
+temperature_K : 40
 # Leave potential empty if running ASE, will resort to using EMT as potential.
-potential:
+potential: LJ
 run_density: False
 run_MD: True
 run_pressure: True
