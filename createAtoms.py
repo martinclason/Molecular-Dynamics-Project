@@ -12,13 +12,15 @@ def createAtoms(options):
     size = options["size"]
     latticeconstants = options["latticeconstants"]
     bravaislattice = options["bravaislattice"]
+    positions = options["positions"]
 
     if bravaislattice:
         atoms = createBravaislattice(options)
     else :
         cell = options["cell"]
         cell = [[x*latticeconstants[0] for x in y] for y in cell]
-        atoms = Atoms(symbol,
+        atoms = Atoms(symbol, 
+            positions = positions,
             cell=cell,
             pbc=pbc)
         atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
