@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y software-properties-common
 RUN add-apt-repository ppa:openkim/latest
 RUN apt-get install -y libkim-api-dev openkim-models
 RUN python -m pip install --upgrade pip
-RUN pip install flake8 pytest wheel numpy scipy ase pyyaml kimpy
+RUN pip install flake8 pytest wheel numpy scipy ase pyyaml
 RUN pip install asap3
 RUN flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 RUN flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
