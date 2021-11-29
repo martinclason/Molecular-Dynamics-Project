@@ -22,8 +22,9 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
+        apt-get install libkim-api-dev openkim-models
         python -m pip install --upgrade pip
-        pip install flake8 pytest wheel numpy scipy ase pyyaml kim kimpy
+        pip install flake8 pytest wheel numpy scipy ase pyyaml
         pip install asap3
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
