@@ -26,12 +26,13 @@ def MSD_plot(time,atom_list):
     plt.title("Mean Square Displacement")
     plt.show()
 
-def self_diffusion_coefficient(t, atom_list) : #for liquids only
+def self_diffusion_coefficient(t, atom_list) :
     """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
-    self diffusion coefficient for a liquid. The function takes two arguments, the time
-    t and an atom_list which it sends to the MSD(t,atom_list) function to retrieve the
-    MSD. The self diffusion coefficient is then taken as the slope of the
-    mean-square-displacement."""
+    self diffusion coefficient. The function takes two arguments, the time t and an 
+    atom_list which it sends to the MSD(t,atom_list) function to retrieve the MSD. 
+    The Lindemann_critertion() first checks if the element is a solid or liquid. For
+    solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
+    diffusion coefficient is taken as the slope of the mean-square-displacement."""
     if Lindemann_criterion(t, atom_list) :
         return 0
     else :
