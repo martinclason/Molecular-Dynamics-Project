@@ -24,6 +24,14 @@ Run main.py:
 
 $ python3 main.py
 
+Run ale:
+$ ale
+
+Without asap and special config
+```
+$ ale --no-asap my_config.yaml
+```
+
 # Documenation
 
 ## Update the doucmentation
