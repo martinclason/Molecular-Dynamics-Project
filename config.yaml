@@ -1,5 +1,5 @@
 ---
-Element: 'argon'
+Element: 'Copper'
 Z: 4 # Number of atoms
 M: 39.9 # Molar mass
 atomic_number: 18
@@ -19,11 +19,11 @@ symbol : "Cu"
 make_traj: True
 pbc : True #periodic boundary conditions
 size : [2,2,2]
-temperature_K : 300
+temperature_K : 30
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "EMT"
-run_density: False
+run_density: True
 run_MD: True
 run_pressure: True
 iterations: 2000
-interval: 100
+interval: 1

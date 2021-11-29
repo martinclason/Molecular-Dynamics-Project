@@ -141,7 +141,7 @@ def main(options):
     run_pressure = options["run_pressure"]
 
     if run_density :
-        density()
+        density(options)
 
     if run_MD :
 
@@ -191,3 +191,4 @@ if __name__ == "__main__":
     parsed_config_file["use_asap"] = args.use_asap
 
     main(parsed_config_file)
+    
