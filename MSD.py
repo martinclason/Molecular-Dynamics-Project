@@ -33,3 +33,6 @@ def self_diffusion_coefficient(t, atom_list) : #for liquids only
     MSD. The self diffusion coefficient is then taken as the slope of the
     mean-square-displacement."""
     return 1/(6*t) * MSD(t, atom_list)
+
+def Lindemann_criterion(t,atom_list) :
+    pass
