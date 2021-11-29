@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import math
+import csv
+import os
 
 def MSD(t,atom_list):
     """The MSD(t,atom:list) function calculates and returns the mean square displacement for one time t.
@@ -20,6 +22,8 @@ def MSD_plot(time,atom_list):
     MSD_data = []
     for t in range(time):
         MSD_data.append(MSD(t,atom_list))
+    write_to_csv("results","MSD",MSD_data,1)
+    print(read_from_csv("results1.csv"))
     plt.plot(range(time),MSD_data)
     plt.ylabel("MSD-[Å]")
     plt.xlabel("Measured time step")
@@ -33,3 +37,26 @@ def self_diffusion_coefficient(t, atom_list) : #for liquids only
     MSD. The self diffusion coefficient is then taken as the slope of the
     mean-square-displacement."""
     return 1/(6*t) * MSD(t, atom_list)
+
+def write_to_csv(name, data_type, data, counter):
+    if os.path.isfile(name + ".csv"):
+        with open(name + ".csv",'a') as file:
+            writer = csv.writer(file)
+            writer.writerow([data_type])
+            writer.writerows(map(lambda x: [x], data))
+    #if os.path.isfile(name + str(counter) + ".csv"):
+     #   write_to_csv(name, data_type, data, counter+1)
+    else:
+        with open(name + ".csv", 'w', newline ='') as file:
+            writer = csv.writer(file)
+            writer.writerow([data_type])
+            writer.writerows(map(lambda x: [x], data))
+
+def read_from_csv(filename):
+    rows = []
+    with open(filename,'r') as file:
+        csvreader = csv.reader(file)
+        header = next(csvreader)
+        for row in csvreader:
+            rows.append(row)
+    return header,rows
