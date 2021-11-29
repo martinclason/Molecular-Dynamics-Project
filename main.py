@@ -89,7 +89,7 @@ def MD(options):
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if options["make_traj"]:
-        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="forces")
+        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="forces, total_energy")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -120,10 +120,10 @@ def MD(options):
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
-        print(len(traj_read[0].get_positions()))
-        print(MSD(0,traj_read))
-        print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        MSD_plot(len(traj_read),traj_read)
+        # print(len(traj_read[0].get_positions()))
+        # print(MSD(0,traj_read))
+        # print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+        # MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
         return traj_read

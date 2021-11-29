@@ -1,6 +1,6 @@
 from ase.io.trajectory import Trajectory
 import numpy as np
-from ase import units
+from ase import atoms, units
 
 def eV_to_J(eV):
   return eV*1.60218e-19
@@ -15,6 +15,8 @@ dir(traj)
 # k_B = 1.380649e-23
 # Boltzmann [eV/K]
 # k_B = 8.617333262145e-5
+# Atomic mass unit
+u = 1.66e-27 #kg
 
 total_energies = [atoms.get_kinetic_energy() for atoms in traj]
 squared_total_energies = [energy**2 for energy in total_energies]
@@ -25,12 +27,13 @@ time_avg_var_e = time_avg_energies_squared - time_avg_energies**2
 # Temperature [K]
 T = 300
 N = len(total_energies)
+m = np.sum([atoms.get_masses() for atoms in traj]) * u
 
 # # Heat capacity [] if the NVT ensamble is used
 # C_v = 1/(units.kB*T**2) * var_e
 
 # # Heat capacity [] if the NVE ensamble is used
-C_v = ((3*N*units.kB)/2) * ((1- (2/(3*(units.kB*T)**2))*time_avg_var_e)**-1)
+C_v = ((3*N*units.kB)/(2*m)) * ((1- (2/(3*(units.kB*T)**2))*time_avg_var_e)**-1)
 
 print("Heat capacity for Cu:")
 print(C_v)

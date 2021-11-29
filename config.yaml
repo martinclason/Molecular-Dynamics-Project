@@ -19,9 +19,10 @@ symbol : "Cu"
 make_traj: True
 pbc : True #periodic boundary conditions
 size : [2,2,2]
-temperature_K : 30
+temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "EMT"
+ensamble : "NVT"
 run_density: True
 run_MD: True
 run_pressure: True
