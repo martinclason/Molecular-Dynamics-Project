@@ -1,5 +1,6 @@
 # Get the python 3.9 base docker image
 FROM python:3.9
+RUN add-apt-repository ppa:openkim/latest
 RUN apt-get install libkim-api-dev openkim-models
 RUN python -m pip install --upgrade pip
 RUN pip install flake8 pytest wheel numpy scipy ase pyyaml kimpy
