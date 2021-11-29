@@ -15,16 +15,17 @@ bravaislattice : #(conventional unit cell)
 directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
 #Customizable primitive unit cell, leave bravaislattice empty if cell is used.
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0],[0,0,1]] #Set position of each atom in the molecule
-symbol : "CuAl"
+positions : [[0,0,0]] #Set position of each atom in the molecule
+symbol : "Cu" 
 make_traj: True
 pbc : True #periodic boundary conditions
 size : [2,2,2]
 temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
-potential:
+potential: "openKIM"
 run_density: False
 run_MD: True
 run_pressure: True
 iterations: 2000
 interval: 100
+openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
