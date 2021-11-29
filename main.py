@@ -7,6 +7,8 @@ from ase.lattice.monoclinic import SimpleMonoclinic, BaseCenteredMonoclinic
 from ase.lattice.triclinic import Triclinic
 from ase.lattice.hexagonal import Hexagonal, HexagonalClosedPacked, Graphite
 
+from pressure import pressure, printpressure
+
 
 import matplotlib.pyplot as plt
 import math
@@ -67,16 +69,7 @@ def density():
 
     return density
 
-def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
 
-    forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
-
-    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms * kinetic_energy)
-                            + forces_times_positions)
-
-    print("The instant pressure is: " + str(instant_pressure))
-
-    return instant_pressure
 
 
 def MD():
@@ -131,7 +124,7 @@ def MD():
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
     if parsed_config_file["make_traj"]:
-        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="forces")
+        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -141,15 +134,7 @@ def MD():
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-    def printpressure(b=atoms):
-         """Function to calculate and print the instant pressure in XXX for every timestep """
-         forces_times_positions = sum(np.dot(x,y) for x, y in
-                                zip(b.get_positions(), b.get_forces()))
 
-         instant_pressure = ((1/(3 * b.get_volume())) * ((2 * len(b) *
-         b.get_kinetic_energy()) + forces_times_positions))
-
-         print("The instant pressure is: " + str(instant_pressure))
 
 #Calculates MSD for one time step from .traj file
     def MSD(t,atom_list):
@@ -184,8 +169,6 @@ def MD():
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
-    dyn.attach(printpressure, interval =interval)
-    printpressure()
     dyn.run(iterations)
     if parsed_config_file["make_traj"]:
         traj.close()
