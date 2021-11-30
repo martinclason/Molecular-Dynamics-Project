@@ -61,6 +61,19 @@ def MD(options):
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
+    def LJ(use_asap=use_asap):
+        if use_asap:
+            return LennardJones(
+                [atomic_number], 
+                [epsilon], 
+                [sigma],
+                rCut=cutoff, 
+                modified=True)
+        else:
+            return LennardJones(
+                epsilon=epsilon, 
+                sigma=sigma)
+
     # Set up a crystal
     atoms = createAtoms(options)
 
@@ -70,8 +83,7 @@ def MD(options):
     if potential :
         known_potentials = {
         'EMT' : EMT(),
-        'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
-                    rCut=cutoff, modified=True,),
+        'LJ' : LJ(use_asap),
         'openKIM' : KIM(options["openKIMid"]) if "openKIMid" in options else None,
         }
 
