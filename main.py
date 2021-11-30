@@ -87,7 +87,7 @@ def MD(options):
     Stationary(atoms)
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+    dyn = VelocityVerlet(atoms, 1 * units.fs)  # 5 fs time step.
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="forces, total_energy")
         dyn.attach(traj.write, interval=interval)
