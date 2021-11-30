@@ -84,7 +84,7 @@ def MD(options):
         known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
-        'openKIM' : KIM(options["openKIMid"]) if "openKIMid" in options else None,
+        #'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
