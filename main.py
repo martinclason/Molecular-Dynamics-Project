@@ -39,7 +39,7 @@ def MD(options):
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
-    
+
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
@@ -64,14 +64,14 @@ def MD(options):
     def LJ(use_asap=use_asap):
         if use_asap:
             return LennardJones(
-                [atomic_number], 
-                [epsilon], 
+                [atomic_number],
+                [epsilon],
                 [sigma],
-                rCut=cutoff, 
+                rCut=cutoff,
                 modified=True)
         else:
             return LennardJones(
-                epsilon=epsilon, 
+                epsilon=epsilon,
                 sigma=sigma)
 
     # Set up a crystal
@@ -84,7 +84,7 @@ def MD(options):
         known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
-        #'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
+        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
