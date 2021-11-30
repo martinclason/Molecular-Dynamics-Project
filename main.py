@@ -72,7 +72,7 @@ def MD(options):
         'EMT' : EMT(),
         'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
                     rCut=cutoff, modified=True,),
-        'openKIM' : KIM(options["openKIMid"]),
+        'openKIM' : KIM(options["openKIMid"]) if "openKIMid" in options else None,
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()

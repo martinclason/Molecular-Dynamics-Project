@@ -28,4 +28,4 @@ run_MD: True
 run_pressure: True
 iterations: 20
 interval: 1
-openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+#openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
