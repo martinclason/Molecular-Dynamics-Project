@@ -8,7 +8,9 @@ import numpy as np
 
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
-from MSD import MSD, MSD_plot, self_diffusion_coefficient
+from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
+
+from ase.calculators.kim.kim import KIM
 
 def density(options):
     """The function 'density()' takes no argument and calculates the density
@@ -70,6 +72,7 @@ def MD(options):
         'EMT' : EMT(),
         'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
                     rCut=cutoff, modified=True,),
+        'openKIM' : KIM(options["openKIMid"]),
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
@@ -100,7 +103,8 @@ def MD(options):
         traj_read = Trajectory(options["symbol"]+".traj")
         print(len(traj_read[0].get_positions()))
         print(MSD(0,traj_read))
-        print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+        #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+        print("Lindemann:", Lindemann_criterion(10, traj_read))
         MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
