@@ -39,7 +39,7 @@ def MD(options):
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
-    
+
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
@@ -61,6 +61,19 @@ def MD(options):
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
+    def LJ(use_asap=use_asap):
+        if use_asap:
+            return LennardJones(
+                [atomic_number],
+                [epsilon],
+                [sigma],
+                rCut=cutoff,
+                modified=True)
+        else:
+            return LennardJones(
+                epsilon=epsilon,
+                sigma=sigma)
+
     # Set up a crystal
     atoms = createAtoms(options)
 
@@ -70,9 +83,8 @@ def MD(options):
     if potential :
         known_potentials = {
         'EMT' : EMT(),
-        'LJ' : LennardJones([atomic_number], [epsilon], [sigma],
-                    rCut=cutoff, modified=True,),
-        'openKIM' : KIM(options["openKIMid"]),
+        'LJ' : LJ(use_asap),
+        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
@@ -83,8 +95,8 @@ def MD(options):
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
-    if parsed_config_file["make_traj"]:
-        traj = Trajectory(parsed_config_file["symbol"]+".traj", "w", atoms, properties="energy, forces")
+    if options["make_traj"]:
+        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -105,7 +117,7 @@ def MD(options):
         print(MSD(0,traj_read))
         #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
         print("Lindemann:", Lindemann_criterion(10, traj_read))
-        MSD_plot(len(traj_read),traj_read)
+        #MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
         return traj_read
