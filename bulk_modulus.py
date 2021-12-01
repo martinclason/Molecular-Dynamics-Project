@@ -6,7 +6,7 @@ from asap3 import Trajectory
 
 
 
-configs = Trajectory('Pt.traj')
+configs = Trajectory('Ag.traj')
 
 
 
@@ -18,7 +18,8 @@ eos = EquationOfState(volumes, energies)
 v0, e0, B = eos.fit()
 print(B / kJ * 1.0e24, 'GPa')
 eos.plot('Pt-eos.png', show = False)
-a0 = m.sqrt(v0)
+a0 = (4 * v0)**(1/3)
+#a0 = m.pow(v0, 1/3) * m.sqrt(2)
 #print(B)
 print("Optimal volume is: " + str(v0))
 print("Optimal lattice constant is: " + str(a0))
