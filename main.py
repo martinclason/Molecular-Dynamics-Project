@@ -84,6 +84,7 @@ def MD(options):
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
+    # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
