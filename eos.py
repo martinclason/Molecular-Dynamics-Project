@@ -4,6 +4,12 @@ from asap3 import Atoms
 from asap3 import Trajectory
 from asap3 import EMT
 
+"""
+This function creates atoms objects with varying lattice constants from a guessed
+value, a, of the chosen element. Using the linspace function to choose range
+and number of variations created, and saves them all in a traj file.
+
+"""
 
 a = 4.0  # approximate lattice constant
 b = a / 2
