@@ -1,15 +1,11 @@
 ---
-Element: 'argon'
-Z: 4 # Number of atoms
-M: 1 # Molar mass
 atomic_number: 18
 epsilon: 0.010323 # eV
 sigma: 3.40 # Å
 cutoff: 6.625 # Å
-Na: 6.023E+23 # avogadros constant
 a : 5.256E-10 # Lattice constant
 # Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [3.569,None,None,None,None,None] #[a, b, c, alpha, beta, gamma]
+latticeconstants : [3.6147,None,None,None,None,None] #[a, b, c, alpha, beta, gamma]
 #bravaislattice currently only supports "SC", "FCC", "BCC" 
 bravaislattice : #(conventional unit cell)
 directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
@@ -19,13 +15,14 @@ positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Cu" 
 make_traj: True
 pbc : True #periodic boundary conditions
-size : [2,2,2]
-temperature_K : 300
+size : [4,4,4]
+temperature_K : 0
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 run_density: False
+run_density_plot: False
 run_MD: True
 run_pressure: True
-iterations: 2000
-interval: 100
-openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+iterations: 200
+interval: 10
+openKIMid: "EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
