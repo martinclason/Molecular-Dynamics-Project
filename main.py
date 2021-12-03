@@ -114,40 +114,12 @@ def main(options):
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
-    run_density = options["run_density"]
-    run_density_plot = options["run_density_plot"]
     run_MD = options["run_MD"]
-    run_pressure = options["run_pressure"]
-
-
 
     if run_MD :
 
         traj_results = MD(options)
-
-        if run_density:
-            density(1,traj_results,options)
-            if run_density_plot:
-                density_plot(len(traj_results),traj_results,options)
-
-        atoms_volume = traj_results[1].get_volume()
-        atoms_positions = traj_results[1].get_positions()
-        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
-        atoms_forces = traj_results[1].get_forces()
-        atoms_temperature = traj_results[1].get_temperature()
-        atoms_number_of_atoms = len(atoms_positions)
-        print("Number of atoms: " + str(atoms_number_of_atoms))
-
-    if run_pressure :
-
-        pressure(
-            atoms_forces,
-            atoms_volume,
-            atoms_positions,
-            atoms_temperature,
-            atoms_number_of_atoms,
-            atoms_kinetic_energy
-        )
+        
 
 
 
