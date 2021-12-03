@@ -6,38 +6,16 @@ from asap3 import Trajectory
 from ase import units
 import numpy as np
 
+from pressure import pressure, printpressure
 from createAtoms import createAtoms
-from MSD import MSD, MSD_plot, self_diffusion_coefficient
+from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 
-def density(options):
-    """The function 'density()' takes no argument and calculates the density
-    of the material defined in 'config.yaml' with the lattice constant and
-    element defined in that file."""
+from ase.calculators.kim.kim import KIM
 
-    atoms = createAtoms(options)
-    Element = options["Element"]
-    #Properties for element
-    Z = options["Z"] #Number of atoms
-    M = options["M"] #Molar mass
-    Na = options["Na"] #avogadros constant
-    a = options["a"] # Lattice constant
-    unitCellVolume = a**3
-    density = Z * M / (Na * unitCellVolume)
+from density import density, density_plot
 
-    print('The density of ' + Element + ' is: ' + str(density) + " g/cm^3")
 
-    return density
 
-def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
-
-    forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
-
-    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms * kinetic_energy)
-                            + forces_times_positions)
-
-    print("The instant pressure is: " + str(instant_pressure))
-
-    return instant_pressure
 
 
 def MD(options):
@@ -45,7 +23,7 @@ def MD(options):
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
-    
+
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
@@ -67,6 +45,19 @@ def MD(options):
         from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
 
+    def LJ(use_asap=use_asap):
+        if use_asap:
+            return LennardJones(
+                [atomic_number],
+                [epsilon],
+                [sigma],
+                rCut=cutoff,
+                modified=True)
+        else:
+            return LennardJones(
+                epsilon=epsilon,
+                sigma=sigma)
+
     # Set up a crystal
     atoms = createAtoms(options)
 
@@ -76,8 +67,8 @@ def MD(options):
     if potential :
         known_potentials = {
         'EMT' : EMT(),
-        'LJ' : LennardJones(atomic_number, epsilon, sigma,
-                    rCut=cutoff, modified=True,),
+        'LJ' : LJ(use_asap),
+        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
@@ -90,7 +81,7 @@ def MD(options):
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, 1 * units.fs)  # 5 fs time step.
     if options["make_traj"]:
-        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="forces, total_energy")
+        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
@@ -100,31 +91,18 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-    def printpressure(b=atoms):
-         """Function to calculate and print the instant pressure in XXX for every timestep """
-         forces_times_positions = sum(np.dot(x,y) for x, y in
-                                zip(b.get_positions(), b.get_forces()))
-
-         instant_pressure = ((1/(3 * b.get_volume())) * ((2 * len(b) *
-         b.get_kinetic_energy()) + forces_times_positions))
-
-         print("The instant pressure is: " + str(instant_pressure))
-
-
-
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
-    dyn.attach(printpressure, interval =interval)
-    printpressure()
     dyn.run(iterations)
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
-        # print(len(traj_read[0].get_positions()))
-        # print(MSD(0,traj_read))
-        # print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        # MSD_plot(len(traj_read),traj_read)
+        print(len(traj_read[0].get_positions()))
+        print(MSD(0,traj_read))
+        #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+        print("Lindemann:", Lindemann_criterion(10, traj_read))
+        #MSD_plot(len(traj_read),traj_read)
 
         # TODO: Should this be here?
         return traj_read
@@ -138,15 +116,19 @@ def main(options):
     'config.yaml' file."""
 
     run_density = options["run_density"]
+    run_density_plot = options["run_density_plot"]
     run_MD = options["run_MD"]
     run_pressure = options["run_pressure"]
 
-    if run_density :
-        density(options)
 
     if run_MD :
 
         traj_results = MD(options)
+
+        if run_density:
+            density(1,traj_results,options)
+            if run_density_plot:
+                density_plot(len(traj_results),traj_results,options)
 
         atoms_volume = traj_results[1].get_volume()
         atoms_positions = traj_results[1].get_positions()
