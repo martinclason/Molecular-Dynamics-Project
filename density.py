@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import math
 
 
-def density(t,atom_list,options):
+def density(atom_list,t,options):
     """The function 'density()' takes a time t, a list of atoms from .traj file 
     and config options as argument and calculates the density of the chosen 
     time step t. Prints and returns density in g/cm^3"""
