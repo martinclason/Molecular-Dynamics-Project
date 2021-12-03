@@ -22,6 +22,9 @@ temperature_K : 0
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 iterations: 200
+output:
+  - temperature
+  - volume
 interval: 10
 openKIMid: "EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
 

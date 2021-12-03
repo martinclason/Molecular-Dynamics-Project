@@ -13,6 +13,7 @@ from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
 
+from outputSimulationData import outputGenericFromTraj
 
 def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -115,11 +116,11 @@ def main(options):
     run_MD = options["run_MD"]
     run_pressure = options["run_pressure"]
 
+
     if run_density :
         pass #density()
 
     if run_MD :
-
         traj_results = MD(options)
 
         atoms_volume = traj_results[1].get_volume()
@@ -129,6 +130,9 @@ def main(options):
         atoms_temperature = traj_results[1].get_temperature()
         atoms_number_of_atoms = len(atoms_positions)
         #print("Number of atoms: " + str(atoms_number_of_atoms))
+
+        if options['output']:
+            output_properties_to_file(options['output'], traj_results)
 
     if run_pressure :
 
@@ -141,7 +145,31 @@ def main(options):
             atoms_kinetic_energy
         )
 
+def output_properties_to_file(properties, traj):
+    """ Outputs the chosen properties from a traj file to
+        json-file.
+    """
+    with open('out.json', 'w+') as f:
+        known_property_outputters = {
+            'temperature' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'temperature',
+                    lambda atoms: atoms.get_temperature(),
+                ),
+            'volume' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'volume',
+                    lambda atoms: atoms.get_volume(),
+                ),
+        }
 
+        for prop in properties:
+            if prop in known_property_outputters:
+                known_property_outputters[prop]()
 
 
 if __name__ == "__main__":
