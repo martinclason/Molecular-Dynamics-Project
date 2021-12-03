@@ -18,7 +18,6 @@ options = parsed_config_file
 options['use_asap'] = args.use_asap
 
 print(f'Use asap: {options["use_asap"]}')
-print(options["Element"])
-print(options["Z"])
+print(options["symbol"])
 
 main(options)

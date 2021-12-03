@@ -12,17 +12,17 @@ directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure)
 #Customizable primitive unit cell, leave bravaislattice empty if cell is used.
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 positions : [[0,0,0]] #Set position of each atom in the molecule
-symbol : "Cu" 
+symbol : "Ar" 
 make_traj: True
 pbc : True #periodic boundary conditions
-size : [4,4,4]
-temperature_K : 0
+size : [15,15,15]
+temperature_K : 80
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 run_density: False
 run_density_plot: False
 run_MD: True
 run_pressure: True
-iterations: 200
-interval: 10
-openKIMid: "EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
+iterations: 20000
+interval: 400
+openKIMid: "Exp6_KongChakrabarty_1973_ArNe__MO_946046425752_002"
