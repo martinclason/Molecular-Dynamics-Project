@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
-
+from outputSimulationData import outputGenericFromTraj
 
 #Temporarely here until ale_analyse is implemented ----------------------#
 from command_line_arg_parser import parser
@@ -59,5 +59,34 @@ def analyse_main(options,traj_read):
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(self_diffusion_coefficient_time, traj_read)
 
+    # Output specified data to outfile
+    if options['output']:
+        output_properties_to_file(options['output'], traj_read)
+
+def output_properties_to_file(properties, traj):
+    """ Outputs the chosen properties from a traj file to
+        json-file.
+    """
+    with open('out.json', 'w+') as f:
+        known_property_outputters = {
+            'temperature' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'temperature',
+                    lambda atoms: atoms.get_temperature(),
+                ),
+            'volume' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'volume',
+                    lambda atoms: atoms.get_volume(),
+                ),
+        }
+
+        for prop in properties:
+            if prop in known_property_outputters:
+                known_property_outputters[prop]()
 
 analyse_main(options,traj_read)
