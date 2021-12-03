@@ -5,7 +5,7 @@ import yaml
 
 # Parsing ySaml config_file
 config_file = open("config.yaml")
-traj_read = Trajectory("test/test.traj")
+traj_read = Trajectory("cu.traj")
 # Could be changed to current working directory
 #root_d = os.path.dirname(__file__)
 #config_file = open(os.path.join(root_d, "config.yaml"))
