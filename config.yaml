@@ -27,4 +27,4 @@ run_density: False
 run_MD: True
 run_pressure: False
 iterations: 20000
-interval: 100
+interval: 400
