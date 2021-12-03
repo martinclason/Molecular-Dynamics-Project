@@ -24,6 +24,7 @@ temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "EMT"
 run_density: False
+run_density_plot: False
 run_MD: True
 run_pressure: True
 iterations: 20
