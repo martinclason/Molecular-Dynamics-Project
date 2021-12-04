@@ -2,29 +2,39 @@ import argparse
 
 # Adds parser so user can choose if to use asap or not with flags from terminal
 
-def CreateParser(default, simulate, analyze, visualize):
-  
-  parser = argparse.ArgumentParser()
-  subparsers = parser.add_subparsers()
+class CreateParser():
+    def __init__(self, default, simulate, analyze, visualize):
+        self.parser = argparse.ArgumentParser()
+        self.subparsers = self.parser.add_subparsers()
 
-  parser.add_argument('--asap', dest='use_asap', action='store_true')
-  parser.add_argument('--no-asap', dest='use_asap', action='store_false')
-  parser.set_defaults(use_asap=True)
+        self.parser.add_argument('--asap', dest='use_asap', action='store_true')
+        self.parser.add_argument('--no-asap', dest='use_asap', action='store_false')
+        self.parser.set_defaults(use_asap=True)
 
-  parser.add_argument('config_file',
-                      nargs='?',
-                      type=argparse.FileType('r'),
-                      default='./config.yaml')
+        self.parser.add_argument(
+                          '-c',
+                          '--config',
+                          nargs='?',
+                          type=argparse.FileType('r'),
+                          dest='config_file',
+                          default='./config.yaml')
 
-  parser.set_defaults(sub_command=default)
+        self.parser.set_defaults(sub_command=default)
 
-  parser_simulate = subparsers.add_parser('simulate')
-  parser_simulate.set_defaults(sub_command=simulate)
+        parser_simulate = self.subparsers.add_parser('simulate')
+        parser_simulate.set_defaults(sub_command=simulate)
 
-  parser_analyze = subparsers.add_parser('analyze')
-  parser_analyze.set_defaults(sub_command=analyze)
+        parser_analyze = self.subparsers.add_parser('analyze')
+        parser_analyze.set_defaults(sub_command=analyze)
 
-  parser_visualize = subparsers.add_parser('visualize')
-  parser_visualize.set_defaults(sub_command=visualize)
+        parser_visualize = self.subparsers.add_parser('visualize')
+        parser_visualize.set_defaults(sub_command=visualize)
 
-  return parser
+    def parse_args(self):
+        # multipass strategy: 
+        # https://stackoverflow.com/questions/46962065/add-top-level-argparse-arguments-after-subparser-args
+        args = self.parser.parse_known_args()
+        print('pass 1: ', args)
+        args = self.parser.parse_args(args[1], args[0])
+        print('pass 2:', args)
+        return args
