@@ -31,7 +31,13 @@ def visualize():
   print("Should visualize with:")
   pp.pprint(options)
 
-parser = CreateParser(default, simulate, analyze, visualize)
+parser = CreateParser(
+              default, 
+              subcommands={
+                'simulate' : simulate,
+                'analyze' : analyze,
+                'visualize' : visualize,
+              })
 
 args = parser.parse_args()
 
