@@ -25,9 +25,19 @@ class CreateParser():
             cmd = self.subparsers.add_parser(command)
             cmd.set_defaults(sub_command=subcommands[command])
 
-    def parse_args(self):
-        # multipass strategy: 
-        # https://stackoverflow.com/questions/46962065/add-top-level-argparse-arguments-after-subparser-args
-        args = self.parser.parse_known_args()
-        args = self.parser.parse_args(args[1], args[0])
-        return args
+    def parse_args(self, args=None):
+        if args:
+            # Handle if caller passes explicit args list
+            parsed_args = self.parser.parse_known_args(args)
+            parsed_args = self.parser.parse_args(parsed_args[1], parsed_args[0])
+            return parsed_args
+        else:
+            # multipass strategy: 
+            # https://stackoverflow.com/questions/46962065/add-top-level-argparse-arguments-after-subparser-args
+            args = self.parser.parse_known_args()
+            args = self.parser.parse_args(args[1], args[0])
+            return args
+
+
+nop = lambda: None
+parser = CreateParser(nop, {})
