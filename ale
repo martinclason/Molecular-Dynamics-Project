@@ -3,6 +3,9 @@
 from command_line_arg_parser import CreateParser
 from md_config_reader import config_parser as config_file_parser
 from main import main
+from analyse_main import analyse_main
+from asap3 import Trajectory
+
 import pprint
 """There is a parser for passing flags from the command line to the MD which enables
 or disables the use of asap on the current run with the flags '--asap' for enable-
@@ -24,8 +27,8 @@ def simulate():
   main(options)
 
 def analyze():
-  print("Should analyze with:")
-  pp.pprint(options)
+  traj_read = Trajectory(options["symbol"]+".traj")
+  analyse_main(options,traj_read)
 
 def visualize():
   print("Should visualize with:")

@@ -3,22 +3,6 @@ from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
 from outputSimulationData import outputGenericFromTraj
 
-#Temporarely here until ale_analyse is implemented ----------------------#
-from command_line_arg_parser import parser
-from md_config_reader import config_parser as config_file_parser
-
-from asap3 import Trajectory
-
-args = parser.parse_args()
-parsed_config_file = config_file_parser(args.config_file)
-
-options = parsed_config_file
-options['use_asap'] = args.use_asap
-
-traj_read = Trajectory(options["symbol"]+".traj")
-
-#------------------------------------------------------------------------#
-
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
     options for analysing the simulated material. It is specified in config file exactly what 
@@ -89,4 +73,17 @@ def output_properties_to_file(properties, traj):
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
 
-analyse_main(options,traj_read)
+if __name__=="__main__":
+    from command_line_arg_parser import parser
+    from md_config_reader import config_parser as config_file_parser
+
+    from asap3 import Trajectory
+
+    args = parser.parse_args()
+    parsed_config_file = config_file_parser(args.config_file)
+
+    options = parsed_config_file
+    options['use_asap'] = args.use_asap
+
+    traj_read = Trajectory(options["symbol"]+".traj")
+    analyse_main(options,traj_read)
