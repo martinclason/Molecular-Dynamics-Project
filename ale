@@ -17,20 +17,24 @@ is used in this project. """
 
 pp = pprint.PrettyPrinter(indent=4)
 
-def default():
+def default(options):
   print("Running default")
-  simulate()
-  analyze()
+  simulate(options)
+  analyze(options)
 
-def simulate():
+def simulate(options):
   print(f'Use asap: {options["use_asap"]}')
   main(options)
 
-def analyze():
-  traj_read = Trajectory(options["symbol"]+".traj")
+def analyze(options):
+  if 'traj_file_name' in options:
+    print("Using supplied traj_file")
+    traj_read = Trajectory(options['traj_file_name'])
+  else:
+    traj_read = Trajectory(options["symbol"]+".traj")
   analyse_main(options,traj_read)
 
-def visualize():
+def visualize(options):
   print("Should visualize with:")
   pp.pprint(options)
 
@@ -48,5 +52,7 @@ parsed_config_file = config_file_parser(args.config_file)
 
 options = parsed_config_file
 options['use_asap'] = args.use_asap
+if args.traj_file_name:
+  options['traj_file_name'] = args.traj_file_name
 
-args.sub_command()
+args.sub_command(options)

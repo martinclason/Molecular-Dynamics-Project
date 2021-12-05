@@ -19,6 +19,17 @@ class CreateParser():
                           dest='config_file',
                           default='./config.yaml')
 
+        # traj file name passed as str since it is possible
+        # the file hasn't been created yet when calling ale -t Cu.traj
+        # since it is created when simulate is run.
+        self.parser.add_argument(
+                          '-t',
+                          '--traj',
+                          nargs='?',
+                          type=str,
+                          dest='traj_file_name',
+                          default=None)
+
         self.parser.set_defaults(sub_command=default)
 
         for command in subcommands:

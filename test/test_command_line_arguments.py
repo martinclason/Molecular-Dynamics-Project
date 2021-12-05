@@ -73,6 +73,12 @@ class TestParserSubcommands():
         assert args.use_asap == False
         assert args.config_file.name == 'config_small_test.yaml'
 
+def test_traj_file_argument():
+    args = parser.parse_args(['-t', 'Cu.traj'])
+    assert args.traj_file_name == 'Cu.traj'
+    
+    args = parser.parse_args(['--traj', 'Cu.traj'])
+    assert args.traj_file_name == 'Cu.traj'
 
 
 # TODO: Add test for custom config files
