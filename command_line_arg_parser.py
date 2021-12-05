@@ -1,15 +1,24 @@
 import argparse
+from argparse import RawTextHelpFormatter
 
 # Adds parser so user can choose if to use asap or not with flags from terminal
 
 class CreateParser():
     def __init__(self, default, subcommands):
         description = "A program to run molecular dynamics calculations."
-        self.parser = argparse.ArgumentParser(description=description)
+        self.parser = argparse.ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
         self.subparsers = self.parser.add_subparsers()
 
-        self.parser.add_argument('--asap', dest='use_asap', action='store_true')
-        self.parser.add_argument('--no-asap', dest='use_asap', action='store_false')
+        self.parser.add_argument(
+                          '--asap', 
+                          dest='use_asap', 
+                          action='store_true',
+                          help="use asap to greatly accelerate calculations (this is default)")
+        self.parser.add_argument(
+                          '--no-asap', 
+                          dest='use_asap', 
+                          action='store_false',
+                          help="don't use asap to accelerate calculations (useful if asap isn't available)")
         self.parser.set_defaults(use_asap=True)
 
         self.parser.add_argument(
@@ -18,7 +27,9 @@ class CreateParser():
                           nargs='?',
                           type=argparse.FileType('r'),
                           dest='config_file',
-                          default='./config.yaml')
+                          default='./config.yaml',
+                          help='where to read the configuration for the calculations (default: config.yaml)',
+                          metavar='config_file')
 
         # traj file name passed as str since it is possible
         # the file hasn't been created yet when calling ale -t Cu.traj
@@ -29,7 +40,12 @@ class CreateParser():
                           nargs='?',
                           type=str,
                           dest='traj_file_name',
-                          default=None)
+                          default=None,
+                          help="""where to output the simulated trajectory data (default: <Symbol>.traj)
+The .traj-format is a binary format used by the ase library and contains 
+data about the atoms for time steps in the simulation.
+                          """,
+                          metavar='traj_file')
 
         self.parser.add_argument(
                           '-o',
