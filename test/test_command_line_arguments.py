@@ -80,5 +80,15 @@ def test_traj_file_argument():
     args = parser.parse_args(['--traj', 'Cu.traj'])
     assert args.traj_file_name == 'Cu.traj'
 
+def test_out_file_argument():
+    args = parser.parse_args([])
+    assert args.out_file_name == 'out.json'
+
+    args = parser.parse_args(['-o', 'my_out.json'])
+    assert args.out_file_name == 'my_out.json'
+    
+    args = parser.parse_args(['--out', 'my_out.json'])
+    assert args.out_file_name == 'my_out.json'
+
 
 # TODO: Add test for custom config files

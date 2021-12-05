@@ -4,7 +4,8 @@ import argparse
 
 class CreateParser():
     def __init__(self, default, subcommands):
-        self.parser = argparse.ArgumentParser()
+        description = "A program to run molecular dynamics calculations."
+        self.parser = argparse.ArgumentParser(description=description)
         self.subparsers = self.parser.add_subparsers()
 
         self.parser.add_argument('--asap', dest='use_asap', action='store_true')
@@ -29,6 +30,16 @@ class CreateParser():
                           type=str,
                           dest='traj_file_name',
                           default=None)
+
+        self.parser.add_argument(
+                          '-o',
+                          '--out',
+                          nargs='?',
+                          type=str,
+                          dest='out_file_name',
+                          default='out.json',
+                          help='where to output the analysis data (default: out.json)',
+                          metavar='output_file')
 
         self.parser.set_defaults(sub_command=default)
 

@@ -54,5 +54,6 @@ options = parsed_config_file
 options['use_asap'] = args.use_asap
 if args.traj_file_name:
   options['traj_file_name'] = args.traj_file_name
+options['out_file_name'] = args.out_file_name
 
 args.sub_command(options)

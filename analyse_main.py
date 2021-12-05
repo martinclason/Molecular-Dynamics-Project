@@ -45,13 +45,13 @@ def analyse_main(options,traj_read):
 
     # Output specified data to outfile
     if options['output']:
-        output_properties_to_file(options['output'], traj_read)
+        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
 
-def output_properties_to_file(properties, traj):
+def output_properties_to_file(properties, traj, out_file_name='out.json'):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
-    with open('out.json', 'w+') as f:
+    with open(out_file_name, 'w+') as f:
         known_property_outputters = {
             'temperature' : 
                 outputGenericFromTraj(
