@@ -18,7 +18,9 @@ positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Cu" 
 pbc : True #periodic boundary conditions
 size : [2,2,2]
-temperature_K : 600
+ensemble: "NVT"
+NVT_friction: 0.2
+temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 # simulation time step [fs]

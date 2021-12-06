@@ -1,5 +1,9 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
+
+#from ase.md.verlet import VelocityVerlet
+from ase.md.langevin import Langevin
+
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -57,8 +61,6 @@ def MD(options):
     # Set up a crystal
     atoms = createAtoms(options)
 
-    # Describe the interatomic interactions with the Effective Medium Theory
-
     def OpenKIMPotential():
         try:
             return KIM(options["openKIMid"])
@@ -73,6 +75,8 @@ def MD(options):
         'openKIM' : OpenKIMPotential(),
         }
 
+    potential = options["potential"]
+    # Default to using EMT
     atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
@@ -80,8 +84,24 @@ def MD(options):
     # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
-    # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, options["dt"] * units.fs)  # 5 fs time step.
+    
+    time_step = options["dt"] * units.fs
+    temperature = options["temperature_K"]
+
+    # default to 0.002
+    nvt_friction = options.get("NVT_friction", 0.002)
+    print(f"nvt_friction {nvt_friction}")
+
+    dynamics_from_ensemble = {
+        # Run MD with constant energy using the VelocityVerlet algorithm
+        'NVE' : VelocityVerlet(atoms, time_step),
+        # Langevin dynamics for NVT dynamics
+        'NVT' : Langevin(atoms, time_step, temperature_K=temperature, friction=nvt_friction),
+    }
+
+    dyn = dynamics_from_ensemble[options["ensemble"] if ("ensemble" in options) else "NVE"]
+    print(f"using {options['ensemble']}", dyn)
+
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
