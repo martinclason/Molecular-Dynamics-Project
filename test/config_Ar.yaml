@@ -12,11 +12,11 @@ directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure)
 #Customizable primitive unit cell, leave bravaislattice empty if cell is used.
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 positions : [[0,0,0]] #Set position of each atom in the molecule
-symbol : "Cu" 
+symbol : "Ar" 
 make_traj: True
 pbc : True #periodic boundary conditions
 size : [13,13,13]
-temperature_K : 600
+temperature_K : 80
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 run_density: False
@@ -25,4 +25,4 @@ run_MD: True
 run_pressure: True
 iterations: 7000
 interval: 100
-openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"

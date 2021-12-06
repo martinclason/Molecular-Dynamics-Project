@@ -91,6 +91,10 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
+    atoms_positions = atoms.get_positions()
+    atoms_number_of_atoms = len(atoms_positions)
+    print("Number of atoms: " + str(atoms_number_of_atoms))
+
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
