@@ -59,12 +59,18 @@ def MD(options):
 
     # Describe the interatomic interactions with the Effective Medium Theory
 
+    def OpenKIMPotential():
+        try:
+            return KIM(options["openKIMid"])
+        except:
+            return None
+
     potential = options["potential"]
     if potential :
         known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
-        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
+        'openKIM' : OpenKIMPotential(),
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
