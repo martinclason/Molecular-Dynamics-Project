@@ -13,7 +13,7 @@ from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
 
-from outputSimulationData import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj
 
 def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
