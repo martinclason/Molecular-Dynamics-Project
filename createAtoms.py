@@ -24,6 +24,7 @@ def createAtoms(options):
             cell=cell,
             pbc=pbc)
         atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
+    atoms.set_tags(size[0])
     return atoms
 
 def createBravaislattice(options):
