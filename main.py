@@ -12,7 +12,6 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
-from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
 
@@ -27,6 +26,8 @@ def MD(options):
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
+    # TODO: Make some of these optional by creating factory function for
+    # LennardJones
     atomic_number = options["atomic_number"]
     epsilon = options["epsilon"] * units.eV
     sigma = options["sigma"] * units.Ang
@@ -67,30 +68,25 @@ def MD(options):
         except:
             return None
 
-    potential = options["potential"]
-    if potential :
-        known_potentials = {
+    known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
         'openKIM' : OpenKIMPotential(),
-        }
+    }
 
-    potential = options["potential"]
-    # Default to using EMT
-    atoms.calc = known_potentials[potential] if potential else EMT()
-
-    # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
-    # Is this where the temperature is halfed??
-    Stationary(atoms)
-    ZeroRotation(atoms)
+    potential = options.get("potential", "EMT") # Default to using EMT
+    atoms.calc = known_potentials[potential]
     
     time_step = options["dt"] * units.fs
     temperature = options["temperature_K"]
-
-    # default to 0.002
-    nvt_friction = options.get("NVT_friction", 0.002)
+    nvt_friction = options.get("NVT_friction", 0.002) # default to 0.002
     print(f"nvt_friction {nvt_friction}")
+
+    # Set the momenta corresponding to the temperature
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature)
+    # Is this where the temperature is halfed??
+    Stationary(atoms)
+    ZeroRotation(atoms)
 
     dynamics_from_ensemble = {
         # Run MD with constant energy using the VelocityVerlet algorithm
@@ -99,12 +95,20 @@ def MD(options):
         'NVT' : Langevin(atoms, time_step, temperature_K=temperature, friction=nvt_friction),
     }
 
-    dyn = dynamics_from_ensemble[options["ensemble"] if ("ensemble" in options) else "NVE"]
-    print(f"using {options['ensemble']}", dyn)
+    dyn = dynamics_from_ensemble[options.get("ensemble", "NVE")] # default to NVE
 
-    if options["make_traj"]:
-        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
-        dyn.attach(traj.write, interval=interval)
+    print("using ensemble: ", {options['ensemble']}, dyn)
+    
+    # Setup writing of simulation data to trajectory file
+    main_trajectory_file_name = options["symbol"]+".traj"
+    traj = Trajectory(
+                main_trajectory_file_name, 
+                "w", 
+                atoms, 
+                properties="energy, forces"
+            )
+    
+    dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -117,19 +121,20 @@ def MD(options):
     atoms_number_of_atoms = len(atoms_positions)
     print("Number of atoms: " + str(atoms_number_of_atoms))
 
-    # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
+
+    # Now run the dynamics
     dyn.run(iterations)
-    if options["make_traj"]:
-        traj.close()
-        traj_read = Trajectory(options["symbol"]+".traj")
-        #print(len(traj_read[0].get_positions()))
-        #   print(MSD(0,traj_read))
-        #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        #print("Lindemann:", Lindemann_criterion(10, traj_read))
-        #MSD_plot(len(traj_read),traj_read)
-        print("Debye Temperature:",debye_temperature(traj_read))
+    
+    traj.close()
+    
+    # TODO: Remove unused code
+    #print(len(traj_read[0].get_positions()))
+    #   print(MSD(0,traj_read))
+    #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+    #print("Lindemann:", Lindemann_criterion(10, traj_read))
+    #MSD_plot(len(traj_read),traj_read)
 
 
 def main(options):

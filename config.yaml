@@ -1,6 +1,5 @@
 ---
 #-----------Simulation------------#
-make_traj: True
 atomic_number: 18
 epsilon: 0.010323 # eV
 sigma: 3.40 # Å
