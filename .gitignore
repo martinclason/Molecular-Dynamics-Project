@@ -8,3 +8,6 @@ docs/_build
 **/.DS_Store
 .vscode/
 *.log
+*.json
+config_Ar.yaml
+config_Cu.yaml

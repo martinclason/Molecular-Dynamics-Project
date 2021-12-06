@@ -1,4 +1,7 @@
 ---
+#-----------Simulation------------#
+run_MD: True
+make_traj: True
 atomic_number: 18
 epsilon: 0.010323 # eV
 sigma: 3.40 # Å
@@ -13,16 +16,37 @@ directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure)
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Ar" 
-make_traj: True
 pbc : True #periodic boundary conditions
 size : [13,13,13]
-temperature_K : 80
+ensamble : "NVE"
+temperature_K : 70
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
-run_density: False
-run_density_plot: False
-run_MD: True
-run_pressure: True
+# simulation time step [fs]
+dt: 5
 iterations: 7000
+output:
+  - temperature
+  - volume
 interval: 100
 openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
+
+
+#-----------Analyse------------#
+run_density: True
+density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
+
+run_MSD: True
+MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
+
+run_self_diffusion_coefficient: True
+self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
+
+run_pressure: True
+
+
+#-----------Visualize------------#
+visualize:
+  - temperature
+run_density_plot: False
+run_MSD_plot: False
