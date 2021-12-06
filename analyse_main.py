@@ -19,7 +19,7 @@ def analyse_main(options,traj_read):
 
 
     if run_density:
-        density(traj_read,density_time,options)
+        density(traj_read,density_time)
 
     if run_MSD:
         MSD(MSD_time, traj_read)
