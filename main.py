@@ -93,8 +93,8 @@ def MD(options):
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
-        print(len(traj_read[0].get_positions()))
-        print(MSD(0,traj_read))
+        #print(len(traj_read[0].get_positions()))
+        #   print(MSD(0,traj_read))
         #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
         #print("Lindemann:", Lindemann_criterion(10, traj_read))
         #MSD_plot(len(traj_read),traj_read)
@@ -128,7 +128,7 @@ def main(options):
         atoms_forces = traj_results[1].get_forces()
         atoms_temperature = traj_results[1].get_temperature()
         atoms_number_of_atoms = len(atoms_positions)
-        print("Number of atoms: " + str(atoms_number_of_atoms))
+        #print("Number of atoms: " + str(atoms_number_of_atoms))
 
     if run_pressure :
 

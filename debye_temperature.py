@@ -17,8 +17,8 @@ def debye_temperature(atom_list) :
     N_a = 6.02214086E23
     
     #Retrieve material parameters
-    rho = density(atom_list, 0) #g/cm-3
-    rho = rho * 1E6 #convert density to g/m-3
+    rho = density(atom_list, 0) #g/cm3
+    rho = rho * 1E6 #convert density to g/m3
     M_a = atomic_masses(atom_list) #Sum of atom_masses per molecule
 
     print("Density:",rho)

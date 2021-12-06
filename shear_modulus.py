@@ -1,4 +1,4 @@
-def shearModulus(atom_list) :
+def shear_modulus(atom_list) :
     """Calculates shearModulus from a simulation by taking
     the force on an atom and dividing by the unit cell length
     times the displacement of the atom. shearModulus(atom_list)
@@ -16,9 +16,9 @@ def shearModulus(atom_list) :
     
     l = atom_list[0].get_cell_lengths_and_angles()[0] * 1E-10 #cubic unit cell length (m)
 
-    print("Force on last atom:", F_len)
-    print("Force_vector on last atom:", F_vec)
-    print("Displacement of last atom:", r_len)
-    print("Length of cell:", l)
+    # print("Force on last atom:", F_len)
+    # print("Force_vector on last atom:", F_vec)
+    # print("Displacement of last atom:", r_len)
+    # print("Length of cell:", l)
     
     return F_len / (l * r_len)
