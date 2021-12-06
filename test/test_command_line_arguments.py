@@ -58,27 +58,27 @@ class TestParserSubcommands():
         args = subcommands_parser.parse_args(['simulate'])
         assert args.config_file.name == './config.yaml'
 
-        args = subcommands_parser.parse_args(['simulate', '-c', 'config_small_test.yaml'])
+        args = subcommands_parser.parse_args(['simulate', '-c', 'test/config_small_test.yaml'])
         assert args.sub_command() == 'simulate'
-        assert args.config_file.name == 'config_small_test.yaml'
+        assert args.config_file.name == 'test/config_small_test.yaml'
 
     def test_with_asap(self, subcommands_parser):
-        args = subcommands_parser.parse_args(['--no-asap', 'simulate', '-c', 'config_small_test.yaml'])
+        args = subcommands_parser.parse_args(['--no-asap', 'simulate', '-c', 'test/config_small_test.yaml'])
         assert args.sub_command() == 'simulate'
         assert args.use_asap == False
-        assert args.config_file.name == 'config_small_test.yaml'
+        assert args.config_file.name == 'test/config_small_test.yaml'
 
-        args = subcommands_parser.parse_args(['simulate', '--no-asap', '-c', 'config_small_test.yaml'])
+        args = subcommands_parser.parse_args(['simulate', '--no-asap', '-c', 'test/config_small_test.yaml'])
         assert args.sub_command() == 'simulate'
         assert args.use_asap == False
-        assert args.config_file.name == 'config_small_test.yaml'
+        assert args.config_file.name == 'test/config_small_test.yaml'
 
 def test_traj_file_argument():
-    args = parser.parse_args(['-t', 'Cu.traj'])
-    assert args.traj_file_name == 'Cu.traj'
+    args = parser.parse_args(['-t', 'test/Cu.traj'])
+    assert args.traj_file_name == 'test/Cu.traj'
     
-    args = parser.parse_args(['--traj', 'Cu.traj'])
-    assert args.traj_file_name == 'Cu.traj'
+    args = parser.parse_args(['--traj', 'test/Cu.traj'])
+    assert args.traj_file_name == 'test/Cu.traj'
 
 def test_out_file_argument():
     args = parser.parse_args([])

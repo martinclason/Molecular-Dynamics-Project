@@ -1,6 +1,5 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
-
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -72,10 +71,11 @@ def MD(options):
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
+    # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+    dyn = VelocityVerlet(atoms, options["dt"] * units.fs)  # 5 fs time step.
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
@@ -86,6 +86,10 @@ def MD(options):
         ekin = a.get_kinetic_energy() / len(a)
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
+
+    atoms_positions = atoms.get_positions()
+    atoms_number_of_atoms = len(atoms_positions)
+    print("Number of atoms: " + str(atoms_number_of_atoms))
 
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
@@ -194,3 +198,4 @@ if __name__ == "__main__":
     parsed_config_file["use_asap"] = args.use_asap
 
     main(parsed_config_file)
+    
