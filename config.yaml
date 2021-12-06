@@ -1,6 +1,5 @@
 ---
 #-----------Simulation------------#
-run_MD: True
 make_traj: True
 atomic_number: 18
 epsilon: 0.010323 # eV

@@ -131,9 +131,6 @@ def MD(options):
         #MSD_plot(len(traj_read),traj_read)
         print("Debye Temperature:",debye_temperature(traj_read))
 
-        # TODO: Should this be here?
-        return traj_read
-
 
 def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.
@@ -142,65 +139,7 @@ def main(options):
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
-    run_density = options["run_density"]
-    run_MD = options["run_MD"]
-    run_pressure = options["run_pressure"]
-
-
-    if run_density :
-        pass #density()
-
-    if run_MD :
-        traj_results = MD(options)
-
-        atoms_volume = traj_results[1].get_volume()
-        atoms_positions = traj_results[1].get_positions()
-        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
-        atoms_forces = traj_results[1].get_forces()
-        atoms_temperature = traj_results[1].get_temperature()
-        atoms_number_of_atoms = len(atoms_positions)
-        #print("Number of atoms: " + str(atoms_number_of_atoms))
-
-        if options['output']:
-            output_properties_to_file(options['output'], traj_results)
-
-    if run_pressure :
-
-        pressure(
-            atoms_forces,
-            atoms_volume,
-            atoms_positions,
-            atoms_temperature,
-            atoms_number_of_atoms,
-            atoms_kinetic_energy
-        )
-
-def output_properties_to_file(properties, traj):
-    """ Outputs the chosen properties from a traj file to
-        json-file.
-    """
-    with open('out.json', 'w+') as f:
-        known_property_outputters = {
-            'temperature' : 
-                outputGenericFromTraj(
-                    traj,
-                    f,
-                    'temperature',
-                    lambda atoms: atoms.get_temperature(),
-                ),
-            'volume' : 
-                outputGenericFromTraj(
-                    traj,
-                    f,
-                    'volume',
-                    lambda atoms: atoms.get_volume(),
-                ),
-        }
-
-        for prop in properties:
-            if prop in known_property_outputters:
-                known_property_outputters[prop]()
-
+    MD(options)
 
 if __name__ == "__main__":
     import os
