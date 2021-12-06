@@ -1,6 +1,5 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
-from ase.md.verlet import VelocityVerlet
 
 from asap3 import Trajectory
 from ase import units
@@ -9,13 +8,10 @@ import numpy as np
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
+from density import density
+from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
-
-from density import density, density_plot
-
-
-
 
 
 def MD(options):
@@ -100,8 +96,9 @@ def MD(options):
         print(len(traj_read[0].get_positions()))
         print(MSD(0,traj_read))
         #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        print("Lindemann:", Lindemann_criterion(10, traj_read))
+        #print("Lindemann:", Lindemann_criterion(10, traj_read))
         #MSD_plot(len(traj_read),traj_read)
+        print("Debye Temperature:",debye_temperature(traj_read))
 
         # TODO: Should this be here?
         return traj_read
@@ -114,12 +111,35 @@ def main(options):
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
+    run_density = options["run_density"]
     run_MD = options["run_MD"]
+    run_pressure = options["run_pressure"]
+
+    if run_density :
+        pass #density()
 
     if run_MD :
 
         traj_results = MD(options)
-        
+
+        atoms_volume = traj_results[1].get_volume()
+        atoms_positions = traj_results[1].get_positions()
+        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
+        atoms_forces = traj_results[1].get_forces()
+        atoms_temperature = traj_results[1].get_temperature()
+        atoms_number_of_atoms = len(atoms_positions)
+        print("Number of atoms: " + str(atoms_number_of_atoms))
+
+    if run_pressure :
+
+        pressure(
+            atoms_forces,
+            atoms_volume,
+            atoms_positions,
+            atoms_temperature,
+            atoms_number_of_atoms,
+            atoms_kinetic_energy
+        )
 
 
 
