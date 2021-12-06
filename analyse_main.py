@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
-from outputSimulationData import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
