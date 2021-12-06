@@ -7,6 +7,10 @@ def s_to_fs(t):
   return t*10e-15
 
 def visualize(options, data_file_name="out.json"):
+  """This function visualizes properties specified by 
+  the user in the config-file.
+  """
+  
   print("Visualizing data")
   data = inputSimulationData(data_file_name)
   dt = options['dt']
