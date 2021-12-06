@@ -4,6 +4,8 @@ from command_line_arg_parser import CreateParser
 from md_config_reader import config_parser as config_file_parser
 from main import main
 from analyse_main import analyse_main
+from visualize_main import visualize as visualize_simulation
+
 from asap3 import Trajectory
 
 import pprint
@@ -35,8 +37,8 @@ def analyze(options):
   analyse_main(options,traj_read)
 
 def visualize(options):
-  print("Should visualize with:")
-  pp.pprint(options)
+  # pp.pprint(options)
+  visualize_simulation(options, options['out_file_name'])
 
 parser = CreateParser(
               default, 
