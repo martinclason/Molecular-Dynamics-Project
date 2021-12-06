@@ -3,7 +3,7 @@ import os
 import signal
 # from time import sleep
 
-small_test_config = "config_small_test.yaml"
+small_test_config = "test/config_small_test.yaml"
 
 def test_ale_small_simulation_ase():
     try:
