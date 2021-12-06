@@ -1,7 +1,5 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
-from ase.md.verlet import VelocityVerlet
-from ase.md.langevin import Langevin
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -9,14 +7,12 @@ import numpy as np
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
+from density import density
+from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
 
-from density import density, density_plot
-
-
-
-
+from simulationDataIO import outputGenericFromTraj
 
 def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -102,11 +98,12 @@ def MD(options):
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
-        print(len(traj_read[0].get_positions()))
-        print(MSD(0,traj_read))
+        #print(len(traj_read[0].get_positions()))
+        #   print(MSD(0,traj_read))
         #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        print("Lindemann:", Lindemann_criterion(10, traj_read))
+        #print("Lindemann:", Lindemann_criterion(10, traj_read))
         #MSD_plot(len(traj_read),traj_read)
+        print("Debye Temperature:",debye_temperature(traj_read))
 
         # TODO: Should this be here?
         return traj_read
@@ -120,19 +117,15 @@ def main(options):
     'config.yaml' file."""
 
     run_density = options["run_density"]
-    run_density_plot = options["run_density_plot"]
     run_MD = options["run_MD"]
     run_pressure = options["run_pressure"]
 
 
+    if run_density :
+        pass #density()
+
     if run_MD :
-
         traj_results = MD(options)
-
-        if run_density:
-            density(1,traj_results,options)
-            if run_density_plot:
-                density_plot(len(traj_results),traj_results,options)
 
         atoms_volume = traj_results[1].get_volume()
         atoms_positions = traj_results[1].get_positions()
@@ -140,7 +133,10 @@ def main(options):
         atoms_forces = traj_results[1].get_forces()
         atoms_temperature = traj_results[1].get_temperature()
         atoms_number_of_atoms = len(atoms_positions)
-        print("Number of atoms: " + str(atoms_number_of_atoms))
+        #print("Number of atoms: " + str(atoms_number_of_atoms))
+
+        if options['output']:
+            output_properties_to_file(options['output'], traj_results)
 
     if run_pressure :
 
@@ -153,7 +149,31 @@ def main(options):
             atoms_kinetic_energy
         )
 
+def output_properties_to_file(properties, traj):
+    """ Outputs the chosen properties from a traj file to
+        json-file.
+    """
+    with open('out.json', 'w+') as f:
+        known_property_outputters = {
+            'temperature' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'temperature',
+                    lambda atoms: atoms.get_temperature(),
+                ),
+            'volume' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'volume',
+                    lambda atoms: atoms.get_volume(),
+                ),
+        }
 
+        for prop in properties:
+            if prop in known_property_outputters:
+                known_property_outputters[prop]()
 
 
 if __name__ == "__main__":

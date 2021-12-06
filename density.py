@@ -2,15 +2,13 @@ import matplotlib.pyplot as plt
 import math
 
 
-def density(t,atom_list,options):
+def density(atom_list,t):
     """The function 'density()' takes a time t, a list of atoms from .traj file 
     and config options as argument and calculates the density of the chosen 
     time step t. Prints and returns density in g/cm^3"""
     m = sum(atom_list[t].get_masses()) * (1.6605387E-24)
     V = atom_list[t].cell.volume*10**(-24)
     density = m/V
-
-    #print('The density of ' + options["symbol"] + ' is: ' + str(density) + " g/cm^3")
 
     return density
 
