@@ -12,24 +12,8 @@ from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 
 from ase.calculators.kim.kim import KIM
 
-def density(options):
-    """The function 'density()' takes no argument and calculates the density
-    of the material defined in 'config.yaml' with the lattice constant and
-    element defined in that file."""
+from density import density, density_plot
 
-    atoms = createAtoms(options)
-    Element = options["Element"]
-    #Properties for element
-    Z = options["Z"] #Number of atoms
-    M = options["M"] #Molar mass
-    Na = options["Na"] #avogadros constant
-    a = options["a"] # Lattice constant
-    unitCellVolume = a**3
-    density = Z * M / (Na * unitCellVolume)
-
-    print('The density of ' + Element + ' is: ' + str(density) + " g/cm^3")
-
-    return density
 
 
 
@@ -130,35 +114,12 @@ def main(options):
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
-    run_density = options["run_density"]
     run_MD = options["run_MD"]
-    run_pressure = options["run_pressure"]
-
-    if run_density :
-        density()
 
     if run_MD :
 
         traj_results = MD(options)
-
-        atoms_volume = traj_results[1].get_volume()
-        atoms_positions = traj_results[1].get_positions()
-        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
-        atoms_forces = traj_results[1].get_forces()
-        atoms_temperature = traj_results[1].get_temperature()
-        atoms_number_of_atoms = len(atoms_positions)
-        print("Number of atoms: " + str(atoms_number_of_atoms))
-
-    if run_pressure :
-
-        pressure(
-            atoms_forces,
-            atoms_volume,
-            atoms_positions,
-            atoms_temperature,
-            atoms_number_of_atoms,
-            atoms_kinetic_energy
-        )
+        
 
 
 
