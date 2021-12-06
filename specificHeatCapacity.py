@@ -9,7 +9,7 @@ def specificHeatCapacity(ensamble, traj):
 
   # Calculates the number of atoms and the temperature of the simulated system.
   N = len(traj[1].get_positions()) # Number of atoms is the same as number of positions
-  T = np.sum([atoms.get_temperature() for atoms in traj])
+  T = np.sum([atoms.get_temperature() for atoms in traj[-20:]])/20 # Average of last 10 itterations
 
   if ensamble == "NVE":
     # Calculates the kinetic energy per atom and then proceeds to calculate the 
