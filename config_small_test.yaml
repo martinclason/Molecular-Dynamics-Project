@@ -29,4 +29,25 @@ run_MD: True
 run_pressure: True
 iterations: 20
 interval: 1
-#openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+#openKIMid: "EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
+
+
+#-----------Analyse------------#
+run_density: True
+density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
+
+run_MSD: True
+MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
+
+run_self_diffusion_coefficient: True
+self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
+
+run_pressure: True
+
+output:
+  - temperature
+  - volume
+
+#-----------Visualize------------#
+run_density_plot: False
+run_MSD_plot: False
