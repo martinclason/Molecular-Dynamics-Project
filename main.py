@@ -123,10 +123,10 @@ def MD(options):
 
         # Condtions for equilibrium.
         eqCheckInterval = 10
-        initIterations = 2*interval*eqCheckInterval if(interval > 100) else 2000 
+        initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000 
         iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
         eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 50) else 30
-        ensamble = options['ensemble']
+        ensamble = options.get("ensemble", "NVE") # default to NVE
         eqReached = False
         numberOfChecks = 0
 

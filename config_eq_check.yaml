@@ -17,8 +17,12 @@ cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vector
 positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Cu" 
 pbc : True #periodic boundary conditions
-size : [2,2,2]
-temperature_K : 600
+size : [15,15,15]
+# Select between NVE (Velocity Verlet) for constant energy ensemble
+# and NVT for constant temperature (Langevin) ensemble.
+ensemble: "NVT"
+NVT_friction: 0.02
+temperature_K : 300
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 # simulation time step [fs]

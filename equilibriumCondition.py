@@ -24,7 +24,7 @@ def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval):
         var_T1 = np.var(T1)
         var_T2 = np.var(T2)
 
-        # After some tests the following formula was derived to determine the 
+        # After some tests the following formula was constructed to determine the 
         # equilibirium condition.
         tolerance = meanT / 80 + 0.7
 
@@ -43,12 +43,9 @@ def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval):
         var_E1 = np.var(E1)
         var_E2 = np.var(E2)
 
-        tolerance = 10
-
-        print(var_E1)
-        print(var_E2)
-
-        print(tolerance)
+        # After some tests the following formula was constructed to determine the 
+        # equilibirium condition.
+        tolerance = 1E-8*numberOfAtoms
 
         if (np.abs(var_E1 - var_E2) < tolerance):
             eqState = True
