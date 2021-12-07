@@ -2,6 +2,7 @@ from density import density
 from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj
+from debye_temperature import debye_temperature
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -42,6 +43,8 @@ def analyse_main(options,traj_read):
 
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(self_diffusion_coefficient_time, traj_read)
+
+    print("Debye Temperature:", debye_temperature(traj_read))
 
     # Output specified data to outfile
     if options['output']:
