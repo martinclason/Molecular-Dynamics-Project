@@ -39,18 +39,23 @@ def createBravaislattice(options):
     size = options["size"]
     latticeconstants = options["latticeconstants"]
     bravaislattice = options["bravaislattice"]
+    # default latticeconstant to None
+    try:
+        latticeconstant = latticeconstants[0]
+    except IndexError:
+        latticeconstant = None
     if(bravaislattice == "SC") :
         return SimpleCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
     if(bravaislattice == "BCC") :
         return BodyCenteredCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
     if(bravaislattice == "FCC") :
         return FaceCenteredCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
