@@ -105,11 +105,24 @@ def MD(options):
     dyn.run(options["initIterations"])
 
     ensamble = "NVE" # Until NVT has been implemented.
-    
+    eqCheckInterval = options["eqCheckInterval"]
+    tolerance = options["tolerance"]
+    eqReached = False
+    eqLimit = options["checkLimit"]/interval
+    numberOfChecks = 0
+
     # Will be changed to some while or for loop to run for some time and then
     # terminate if equilibrium isn't reached or conclude that equilibirium has
     # been reached and run the simulation to gather statistics.
-    eqReached = equilibiriumCheck(initTraj,atoms_number_of_atoms,ensamble)
+    while ((not eqReached) or (numberOfChecks > eqLimit)):
+        eqReached = equilibiriumCheck(initTraj,
+                        atoms_number_of_atoms,
+                        ensamble,
+                        eqCheckInterval,
+                        tolerance)
+        
+        numberOfChecks = numberOfChecks + 1
+        dyn.run(eqCheckInterval*interval)
 
     if eqReached:
         initTraj.close()
