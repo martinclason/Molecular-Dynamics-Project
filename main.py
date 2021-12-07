@@ -1,5 +1,9 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
+
+#from ase.md.verlet import VelocityVerlet
+from ase.md.langevin import Langevin
+
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -8,8 +12,6 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
-from debye_temperature import debye_temperature
-from equilibriumCondition import equilibiriumCheck
 
 from ase.calculators.kim.kim import KIM
 
@@ -24,6 +26,8 @@ def MD(options):
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
 
+    # TODO: Make some of these optional by creating factory function for
+    # LennardJones
     atomic_number = options["atomic_number"]
     epsilon = options["epsilon"] * units.eV
     sigma = options["sigma"] * units.Ang
@@ -58,25 +62,42 @@ def MD(options):
     # Set up a crystal
     atoms = createAtoms(options)
 
-    # Describe the interatomic interactions with the Effective Medium Theory
+    def OpenKIMPotential():
+        try:
+            return KIM(options["openKIMid"])
+        except:
+            return None
 
-    potential = options["potential"]
-    if potential :
-        known_potentials = {
+    known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
-        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
-        }
+        'openKIM' : OpenKIMPotential(),
+    }
 
-    atoms.calc = known_potentials[potential] if potential else EMT()
+    potential = options.get("potential", "EMT") # Default to using EMT
+    atoms.calc = known_potentials[potential]
+    
+    time_step = options["dt"] * units.fs
+    temperature = options["temperature_K"]
+    nvt_friction = options.get("NVT_friction", 0.002) # default to 0.002
+    print(f"nvt_friction {nvt_friction}")
 
-    # Set the momenta corresponding to T=300K
-    MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
+    # Set the momenta corresponding to the temperature
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature)
     # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
-    # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, options["dt"] * units.fs)  # 5 fs time step.
+
+    dynamics_from_ensemble = {
+        # Run MD with constant energy using the VelocityVerlet algorithm
+        'NVE' : VelocityVerlet(atoms, time_step),
+        # Langevin dynamics for NVT dynamics
+        'NVT' : Langevin(atoms, time_step, temperature_K=temperature, friction=nvt_friction),
+    }
+
+    dyn = dynamics_from_ensemble[options.get("ensemble", "NVE")] # default to NVE
+
+    print(f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -89,7 +110,6 @@ def MD(options):
     atoms_number_of_atoms = len(atoms_positions)
     print("Number of atoms: " + str(atoms_number_of_atoms))
 
-    # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
 
@@ -133,25 +153,27 @@ def MD(options):
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
 
-    if options["make_traj"]:
-        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
-        dyn.attach(traj.write, interval=interval)
+    # Setup writing of simulation data to trajectory file
+    main_trajectory_file_name = options["symbol"]+".traj"
+    traj = Trajectory(
+                main_trajectory_file_name, 
+                "w", 
+                atoms, 
+                properties="energy, forces"
+            )
+    
+    dyn.attach(traj.write, interval=interval)
     
     dyn.run(iterations)
-
-    if options["make_traj"]:
-
-        traj.close()
-        # traj_read = Trajectory(options["symbol"]+".traj")
-        # #print(len(traj_read[0].get_positions()))
-        # #   print(MSD(0,traj_read))
-        # #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        # #print("Lindemann:", Lindemann_criterion(10, traj_read))
-        # #MSD_plot(len(traj_read),traj_read)
-        # # print("Debye Temperature:",debye_temperature(traj_read))
-
-        # # TODO: Should this be here?
-        # return traj_read
+    
+    traj.close()
+    
+    # TODO: Remove unused code
+    #print(len(traj_read[0].get_positions()))
+    #   print(MSD(0,traj_read))
+    #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+    #print("Lindemann:", Lindemann_criterion(10, traj_read))
+    #MSD_plot(len(traj_read),traj_read)
 
 
 def main(options):
@@ -161,65 +183,7 @@ def main(options):
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
 
-    run_density = options["run_density"]
-    run_MD = options["run_MD"]
-    run_pressure = options["run_pressure"]
-
-
-    # if run_density :
-    #     pass #density()
-
-    if run_MD :
-        traj_results = MD(options)
-
-        # atoms_volume = traj_results[1].get_volume()
-        # atoms_positions = traj_results[1].get_positions()
-        # atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
-        # atoms_forces = traj_results[1].get_forces()
-        # atoms_temperature = traj_results[1].get_temperature()
-        # atoms_number_of_atoms = len(atoms_positions)
-        # #print("Number of atoms: " + str(atoms_number_of_atoms))
-
-        # if options['output']:
-        #     output_properties_to_file(options['output'], traj_results)
-
-    # if run_pressure :
-
-    #     pressure(
-    #         atoms_forces,
-    #         atoms_volume,
-    #         atoms_positions,
-    #         atoms_temperature,
-    #         atoms_number_of_atoms,
-    #         atoms_kinetic_energy
-    #     )
-
-def output_properties_to_file(properties, traj):
-    """ Outputs the chosen properties from a traj file to
-        json-file.
-    """
-    with open('out.json', 'w+') as f:
-        known_property_outputters = {
-            'temperature' : 
-                outputGenericFromTraj(
-                    traj,
-                    f,
-                    'temperature',
-                    lambda atoms: atoms.get_temperature(),
-                ),
-            'volume' : 
-                outputGenericFromTraj(
-                    traj,
-                    f,
-                    'volume',
-                    lambda atoms: atoms.get_volume(),
-                ),
-        }
-
-        for prop in properties:
-            if prop in known_property_outputters:
-                known_property_outputters[prop]()
-
+    MD(options)
 
 if __name__ == "__main__":
     import os

@@ -18,7 +18,7 @@ positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Ar" 
 pbc : True #periodic boundary conditions
 size : [13,13,13]
-ensamble : "NVE"
+ensemble : "NVE"
 temperature_K : 70
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"

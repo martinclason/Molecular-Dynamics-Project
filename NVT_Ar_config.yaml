@@ -5,21 +5,23 @@ epsilon: 0.010323 # eV
 sigma: 3.40 # Å
 cutoff: 6.625 # Å
 # Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [10,None,None,None,None,None] #[a, b, c, alpha, beta, gamma], values in Å, leave empty to use ase default
+latticeconstants : [] #[a, b, c, alpha, beta, gamma], leave empty to use ase default
 #bravaislattice currently only supports "SC", "FCC", "BCC" 
-bravaislattice : #(conventional unit cell)
+bravaislattice : "FCC" #(conventional unit cell)
 directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
 #Customizable primitive unit cell, leave bravaislattice empty if cell is used.
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 positions : [[0,0,0]] #Set position of each atom in the molecule
-symbol : "Cu" 
+symbol : "Ar"
 pbc : True #periodic boundary conditions
-size : [2,2,2]
+size : [10,10,10]
+# Select between NVE (Velocity Verlet) for constant energy ensemble
+# and NVT for constant temperature (Langevin) ensemble.
 ensemble: "NVT"
-NVT_friction: 0.2
-temperature_K : 300
+NVT_friction: 0.02
+temperature_K : 200
 # Leave potential empty if running ASE, will resort to using EMT as potential.
-potential: "openKIM"
+potential: "LJ"
 # simulation time step [fs]
 dt: 5
 iterations: 2000
