@@ -9,6 +9,7 @@ from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
 from debye_temperature import debye_temperature
+from equilibriumCondition import equilibiriumCheck
 
 from ase.calculators.kim.kim import KIM
 
@@ -76,9 +77,6 @@ def MD(options):
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
     dyn = VelocityVerlet(atoms, options["dt"] * units.fs)  # 5 fs time step.
-    if options["make_traj"]:
-        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
-        dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -94,7 +92,35 @@ def MD(options):
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
     printenergy()
+
+    # The thought is to make two dynamic runs, one which runs at first and checks for 
+    # and then one which runs for some time to get good statistics for calculating the 
+    # user specified properties.
+
+    # Definies the initial 
+    initTraj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+    dyn.attach(initTraj.write, interval=interval)
+
+    # Runs for first couple of itterations
+    dyn.run(options["initIterations"])
+
+    ensamble = "NVE" # Until NVT has been implemented.
+    
+    # Will be changed to some while or for loop to run for some time and then
+    # terminate if equilibrium isn't reached or conclude that equilibirium has
+    # been reached and run the simulation to gather statistics.
+    eqReached = equilibiriumCheck(initTraj,atoms_number_of_atoms,ensamble)
+
+    if eqReached:
+        initTraj.close()
+
+    if options["make_traj"]:
+        traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+        dyn.attach(traj.write, interval=interval)
+    
     dyn.run(iterations)
+
+
     if options["make_traj"]:
         traj.close()
         traj_read = Trajectory(options["symbol"]+".traj")
