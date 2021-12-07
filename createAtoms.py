@@ -1,5 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, BodyCenteredCubic, FaceCenteredCubic
 from ase import Atoms
+from aleErrors import ConfigError
 
 
 def createAtoms(options):
@@ -17,6 +18,15 @@ def createAtoms(options):
     if bravaislattice:
         atoms = createBravaislattice(options)
     else :
+        try:
+            latticeconstants[0]
+        except IndexError:
+            # set error context to None to prevent printout of indexError
+            raise ConfigError(
+                    message="The latticeconstants must be set when not specifying a bravaislattice",
+                    config_properties=["latticeconstants","bravaislattice"],
+                ) from None
+
         cell = options["cell"]
         cell = [[x*latticeconstants[0] for x in y] for y in cell]
         atoms = Atoms(symbol, 

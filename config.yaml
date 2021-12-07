@@ -5,7 +5,7 @@ epsilon: 0.010323 # eV
 sigma: 3.40 # Å
 cutoff: 6.625 # Å
 # Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [] #[a, b, c, alpha, beta, gamma], leave empty to use ase default
+latticeconstants : [10,None,None,None,None,None] #[a, b, c, alpha, beta, gamma], values in Å, leave empty to use ase default
 #bravaislattice currently only supports "SC", "FCC", "BCC" 
 bravaislattice : #(conventional unit cell)
 directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
