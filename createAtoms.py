@@ -49,7 +49,7 @@ def createBravaislattice(options):
     size = options["size"]
     latticeconstants = options["latticeconstants"]
     bravaislattice = options["bravaislattice"]
-    # default latticeconstant to None
+    # default latticeconstant to None which uses ase built-in default lattice constant
     try:
         latticeconstant = latticeconstants[0]
     except IndexError:
