@@ -3,6 +3,7 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 from asap3 import Trajectory
 from ase import units
 import numpy as np
+import queue
 
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
@@ -101,9 +102,7 @@ def MD(options):
     initTraj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
     dyn.attach(initTraj.write, interval=interval)
 
-    # Runs for first couple of itterations
-    dyn.run(options["initIterations"])
-
+    # Condtions for equilibrium read from the config file.
     ensamble = "NVE" # Until NVT has been implemented.
     eqCheckInterval = options["eqCheckInterval"]
     tolerance = options["tolerance"]
@@ -111,11 +110,26 @@ def MD(options):
     eqLimit = options["checkLimit"]/interval
     numberOfChecks = 0
 
+
+    atomsArray = queue.Queue(2*eqCheckInterval)
+
+    def buildAtomsArray(atoms=atoms, atomsArray=atomsArray):
+        if atomsArray.full():
+            atomsArray.get()
+            atomsArray.put(atoms)
+        else:
+            atomsArray.put(atoms)
+    
+    dyn.attach(buildAtomsArray,interval)
+
+    # Runs for first couple of itterations
+    dyn.run(options["initIterations"])
+
     # Will be changed to some while or for loop to run for some time and then
     # terminate if equilibrium isn't reached or conclude that equilibirium has
     # been reached and run the simulation to gather statistics.
     while ((not eqReached) or (numberOfChecks > eqLimit)):
-        eqReached = equilibiriumCheck(initTraj,
+        eqReached = equilibiriumCheck(atomsArray,
                         atoms_number_of_atoms,
                         ensamble,
                         eqCheckInterval,
@@ -142,7 +156,7 @@ def MD(options):
         #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
         #print("Lindemann:", Lindemann_criterion(10, traj_read))
         #MSD_plot(len(traj_read),traj_read)
-        print("Debye Temperature:",debye_temperature(traj_read))
+        # print("Debye Temperature:",debye_temperature(traj_read))
 
         # TODO: Should this be here?
         return traj_read

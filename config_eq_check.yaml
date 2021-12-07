@@ -30,7 +30,7 @@ initIterations: 2000
 eqCheckInterval: 10 # How many saves between each equilibrium check.
 # How low the variance of energy/temperature needs to be in order to be con-
 # sidered equilibrium.
-tolerance: 0.1 
+tolerance: 1.0E-6 
 # How many timesteps the simulation should run at max when looking for equilibrium
 checkLimit: 10000
 # Number of itterations after equilibrium has been determined, these will be the timesteps
