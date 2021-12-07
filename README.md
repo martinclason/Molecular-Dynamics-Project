@@ -1,42 +1,83 @@
 # How to run the software:
 
-## On your own machine:
-Install ASE:
+## Install dependencies
 
-$ pip install ase
+### Using conda
+This oneliner could be executed:
+```
+conda create -c conda-forge -n tfya99 python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
+```
+Followed by
+```
+conda activate tfya99
+```
+
+Alternatively, the `requirements.txt` could be used instead:
+```
+conda create -c conda-forge -n tfya99 python=3
+conda install -c conda-forge --file requirements.txt
+```
+### Using pip
+Install ASE:
+```
+pip install ase
+```
 
 Install ASAP:
-
-$ pip install asap3
-
-Run main.py:
-
-$ python3 main.py
+```
+pip install asap3
+```
 
 
-## On LiU Linux lab computer:
+### On LiU Linux lab computer:
 
 Install ASE and ASAP Python modules:
-
-$ source/TFYA74/software/bin/init.sh
-
-Run main.py:
-
-$ python3 main.py
-
-Run ale:
-$ ale
-
-Without asap and special config
 ```
-$ ale --no-asap my_config.yaml
+source/TFYA74/software/bin/init.sh
 ```
 
-# Documenation
+## Running the software
+Run ale (both simulation and analyzation):
+```
+ale
+```
 
-## Update the doucmentation
-Cd to the docs directory and run 'sphinx-build . _build
+Without asap and with a special config:
+```
+ale --no-asap -c my_config.yaml
+```
+
+Only run simulation:
+```
+ale simulate -c my_config.yaml
+```
+
+Only run analyzation:
+```
+ale analyze
+```
+
+Run visualization:
+```
+ale visualize
+```
+
+# Documentation
+
+## Update the documentation
+Navigate to the docs directory and run:
+```
+sphinx-build . _build
+```
+or:
+```
+make html
+```
+
 
 ## Read documentation
-To read the documentation cd to the docs directory and run
-'<web-browser-name> index.html>' in the terminal.
+To read the documentation cd to the docs directory and run:
+```
+<web-browser-name> _build/index.html
+```
+
