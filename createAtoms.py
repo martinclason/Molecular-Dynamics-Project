@@ -25,6 +25,7 @@ def createAtoms(options):
             pbc=pbc)
         atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
     atoms.set_tags(size[0])
+    print("Initial lattice constants [Å]:", atoms.cell.cellpar()[0:3] / size)
     return atoms
 
 def createBravaislattice(options):
