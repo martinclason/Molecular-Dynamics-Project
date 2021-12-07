@@ -3,7 +3,6 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 from asap3 import Trajectory
 from ase import units
 import numpy as np
-import queue
 
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
@@ -99,8 +98,8 @@ def MD(options):
     # user specified properties.
 
     # Definies the initial 
-    initTraj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
-    dyn.attach(initTraj.write, interval=interval)
+    rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+    dyn.attach(rawTraj.write, interval=interval)
 
     # Condtions for equilibrium read from the config file.
     ensamble = "NVE" # Until NVT has been implemented.
@@ -110,36 +109,27 @@ def MD(options):
     eqLimit = options["checkLimit"]/interval
     numberOfChecks = 0
 
-
-    atomsArray = queue.Queue(2*eqCheckInterval)
-
-    def buildAtomsArray(atoms=atoms, atomsArray=atomsArray):
-        if atomsArray.full():
-            atomsArray.get()
-            atomsArray.put(atoms)
-        else:
-            atomsArray.put(atoms)
-    
-    dyn.attach(buildAtomsArray,interval)
-
     # Runs for first couple of itterations
     dyn.run(options["initIterations"])
 
     # Will be changed to some while or for loop to run for some time and then
     # terminate if equilibrium isn't reached or conclude that equilibirium has
     # been reached and run the simulation to gather statistics.
-    while ((not eqReached) or (numberOfChecks > eqLimit)):
-        eqReached = equilibiriumCheck(atomsArray,
+    while ((not eqReached) and (not (numberOfChecks > eqLimit))):
+        eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
                         atoms_number_of_atoms,
                         ensamble,
                         eqCheckInterval,
                         tolerance)
         
         numberOfChecks = numberOfChecks + 1
+
         dyn.run(eqCheckInterval*interval)
 
     if eqReached:
-        initTraj.close()
+        print("Reached equilibirium")
+    else:
+        print("Equilibrium timeout, continueing anyway")
 
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
