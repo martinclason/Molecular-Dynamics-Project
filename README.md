@@ -39,27 +39,27 @@ source/TFYA74/software/bin/init.sh
 ## Running the software
 Run ale (both simulation and analyzation):
 ```
-ale
+./ale
 ```
 
 Without asap and with a special config:
 ```
-ale --no-asap -c my_config.yaml
+./ale --no-asap -c my_config.yaml
 ```
 
 Only run simulation:
 ```
-ale simulate -c my_config.yaml
+./ale simulate -c my_config.yaml
 ```
 
 Only run analyzation:
 ```
-ale analyze
+./ale analyze
 ```
 
 Run visualization:
 ```
-ale visualize
+./ale visualize
 ```
 
 # Documentation
