@@ -15,7 +15,16 @@ TFYA99 CDIO Project in Applied Physics.
 
 Update the documentation
 ========================
-Cd to the docs directory and run 'sphinx-build . _build'
+To add files to be tracked by the automatic documentation system run the following from the top directory::
+
+    sphinx-apidoc -o docs/source/ .
+To make the documentation system regenerate the html documentation, run the following from the ``docs`` directory::
+
+    sphinx-build . _build
+
+or::
+
+    make html
 
 Read documentation
 ==================
