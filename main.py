@@ -12,6 +12,7 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
+from equilibriumCondition import equilibiriumCheck
 
 from ase.calculators.kim.kim import KIM
 
@@ -125,7 +126,7 @@ def MD(options):
         initIterations = 2*interval*eqCheckInterval if(interval > 100) else 2000 
         iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
         eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 50) else 30
-        ensamble = "NVE" # Until NVT has been implemented.
+        ensamble = options['ensemble']
         eqReached = False
         numberOfChecks = 0
 
