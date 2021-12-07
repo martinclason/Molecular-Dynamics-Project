@@ -93,43 +93,45 @@ def MD(options):
     dyn.attach(printenergy, interval=interval)
     printenergy()
 
-    # The thought is to make two dynamic runs, one which runs at first and checks for 
-    # and then one which runs for some time to get good statistics for calculating the 
-    # user specified properties.
+    # This process makes the simulation wait for equilibrium before it starts
+    # writing data to the outpul .traj-file.
+    if options["checkForEquilibrium"]:
+        # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
+        rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+        dyn.attach(rawTraj.write, interval=interval)
 
-    # Definies the initial 
-    rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
-    dyn.attach(rawTraj.write, interval=interval)
+        # Condtions for equilibrium.
+        eqCheckInterval = 10
+        initIterations = 2*interval*eqCheckInterval if(interval > 100) else 2000 
+        iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
+        eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 50) else 30
+        ensamble = "NVE" # Until NVT has been implemented.
+        eqReached = False
+        numberOfChecks = 0
 
-    # Condtions for equilibrium read from the config file.
-    ensamble = "NVE" # Until NVT has been implemented.
-    eqCheckInterval = options["eqCheckInterval"]
-    tolerance = options["tolerance"]
-    eqReached = False
-    eqLimit = options["checkLimit"]/interval
-    numberOfChecks = 0
+        # Runs for first couple of itterations
+        dyn.run(initIterations)
 
-    # Runs for first couple of itterations
-    dyn.run(options["initIterations"])
-
-    # Will be changed to some while or for loop to run for some time and then
-    # terminate if equilibrium isn't reached or conclude that equilibirium has
-    # been reached and run the simulation to gather statistics.
-    while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-        eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
-                        atoms_number_of_atoms,
-                        ensamble,
-                        eqCheckInterval,
-                        tolerance)
+        # Will be changed to some while or for loop to run for some time and then
+        # terminate if equilibrium isn't reached or conclude that equilibirium has
+        # been reached and run the simulation to gather statistics.
+        while ((not eqReached) and (not (numberOfChecks > eqLimit))):
+            eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
+                            atoms_number_of_atoms,
+                            ensamble,
+                            eqCheckInterval)
         
-        numberOfChecks = numberOfChecks + 1
+            numberOfChecks = numberOfChecks + 1
 
-        dyn.run(eqCheckInterval*interval)
+            dyn.run(iterationsBetweenChecks)
+        
+        timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
 
-    if eqReached:
-        print("Reached equilibirium")
-    else:
-        print("Equilibrium timeout, continueing anyway")
+        if eqReached:
+            print("System reached equilibirium after",timeToEquilibrium,"fs")
+        else:
+            print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
+            print("Continues")
 
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
@@ -137,19 +139,19 @@ def MD(options):
     
     dyn.run(iterations)
 
-
     if options["make_traj"]:
-        traj.close()
-        traj_read = Trajectory(options["symbol"]+".traj")
-        #print(len(traj_read[0].get_positions()))
-        #   print(MSD(0,traj_read))
-        #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-        #print("Lindemann:", Lindemann_criterion(10, traj_read))
-        #MSD_plot(len(traj_read),traj_read)
-        # print("Debye Temperature:",debye_temperature(traj_read))
 
-        # TODO: Should this be here?
-        return traj_read
+        traj.close()
+        # traj_read = Trajectory(options["symbol"]+".traj")
+        # #print(len(traj_read[0].get_positions()))
+        # #   print(MSD(0,traj_read))
+        # #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
+        # #print("Lindemann:", Lindemann_criterion(10, traj_read))
+        # #MSD_plot(len(traj_read),traj_read)
+        # # print("Debye Temperature:",debye_temperature(traj_read))
+
+        # # TODO: Should this be here?
+        # return traj_read
 
 
 def main(options):
@@ -164,33 +166,33 @@ def main(options):
     run_pressure = options["run_pressure"]
 
 
-    if run_density :
-        pass #density()
+    # if run_density :
+    #     pass #density()
 
     if run_MD :
         traj_results = MD(options)
 
-        atoms_volume = traj_results[1].get_volume()
-        atoms_positions = traj_results[1].get_positions()
-        atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
-        atoms_forces = traj_results[1].get_forces()
-        atoms_temperature = traj_results[1].get_temperature()
-        atoms_number_of_atoms = len(atoms_positions)
-        #print("Number of atoms: " + str(atoms_number_of_atoms))
+        # atoms_volume = traj_results[1].get_volume()
+        # atoms_positions = traj_results[1].get_positions()
+        # atoms_kinetic_energy = traj_results[1].get_kinetic_energy()
+        # atoms_forces = traj_results[1].get_forces()
+        # atoms_temperature = traj_results[1].get_temperature()
+        # atoms_number_of_atoms = len(atoms_positions)
+        # #print("Number of atoms: " + str(atoms_number_of_atoms))
 
-        if options['output']:
-            output_properties_to_file(options['output'], traj_results)
+        # if options['output']:
+        #     output_properties_to_file(options['output'], traj_results)
 
-    if run_pressure :
+    # if run_pressure :
 
-        pressure(
-            atoms_forces,
-            atoms_volume,
-            atoms_positions,
-            atoms_temperature,
-            atoms_number_of_atoms,
-            atoms_kinetic_energy
-        )
+    #     pressure(
+    #         atoms_forces,
+    #         atoms_volume,
+    #         atoms_positions,
+    #         atoms_temperature,
+    #         atoms_number_of_atoms,
+    #         atoms_kinetic_energy
+    #     )
 
 def output_properties_to_file(properties, traj):
     """ Outputs the chosen properties from a traj file to

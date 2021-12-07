@@ -2,9 +2,8 @@ from ase.io.trajectory import Trajectory
 import numpy as np
 from ase import atoms, units
 import sys
-import queue
 
-def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval,tolerance):
+def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval):
 
     traj = Trajectory(atomsTraj)
 
@@ -17,37 +16,26 @@ def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval,tolerance
     batch of itterations which will depend on the size of the system."""    
 
     if ensamble == "NVE":
-        # T1 = []
-        # T2 = []
-        
-        # for i in range(checkInterval):
-        #     T1.append(atomsArray.get().get_temperature())
 
-        # for i in range(checkInterval,2*checkInterval):
-        #     T2.append(atomsArray.get().get_temperature())
-
-        T1 = [atoms.get_temperature() for atoms in traj[0:checkInterval]]
+        T1 = [atoms.get_temperature() for atoms in traj[-2*checkInterval:-checkInterval]]
         T2 = [atoms.get_temperature() for atoms in traj[-checkInterval:]]
+        meanT = np.sum(T2)/checkInterval
 
         var_T1 = np.var(T1)
         var_T2 = np.var(T2)
 
-        if np.abs(var_T1 - var_T2) < tolerance:
+        # After some tests the following formula was derived to determine the 
+        # equilibirium condition.
+        tolerance = meanT / 80 + 0.7
+
+        if (np.abs(var_T1 - var_T2) < tolerance):
             eqState = True
         else:
             eqState = False
     
     elif ensamble == "NVT":
-        # E1 = []
-        # E2 = []
 
-        # for i in range(checkInterval):
-        #     E1.append(atomsArray.get().get_total_energy())
-
-        # for i in range(checkInterval,2*checkInterval):
-        #     E2.append(atomsArray.get().get_total_energy())
-
-        E1 = [atoms.get_temperature() for atoms in traj[0:checkInterval]]
+        E1 = [atoms.get_temperature() for atoms in traj[-2*checkInterval:-checkInterval]]
         E1 = [energy / numberOfAtoms for energy in E1] 
         E2 = [atoms.get_temperature() for atoms in traj[-checkInterval:]]
         E2 = [energy / numberOfAtoms for energy in E2] 
@@ -55,7 +43,14 @@ def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval,tolerance
         var_E1 = np.var(E1)
         var_E2 = np.var(E2)
 
-        if np.abs(var_E1 - var_E2) < tolerance:
+        tolerance = 10
+
+        print(var_E1)
+        print(var_E2)
+
+        print(tolerance)
+
+        if (np.abs(var_E1 - var_E2) < tolerance):
             eqState = True
         else:
             eqState = False
