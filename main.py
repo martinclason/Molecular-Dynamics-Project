@@ -97,7 +97,7 @@ def MD(options):
 
     dyn = dynamics_from_ensemble[options.get("ensemble", "NVE")] # default to NVE
 
-    print("using ensemble: ", {options['ensemble']}, dyn)
+    print(f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
     
     # Setup writing of simulation data to trajectory file
     main_trajectory_file_name = options["symbol"]+".traj"
