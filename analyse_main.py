@@ -1,23 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
-
-
-#Temporarely here until ale_analyse is implemented ----------------------#
-from command_line_arg_parser import parser
-from md_config_reader import config_parser as config_file_parser
-
-from asap3 import Trajectory
-
-args = parser.parse_args()
-parsed_config_file = config_file_parser(args.config_file)
-
-options = parsed_config_file
-options['use_asap'] = args.use_asap
-
-traj_read = Trajectory(options["symbol"]+".traj")
-
-#------------------------------------------------------------------------#
+from simulationDataIO import outputGenericFromTraj
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -35,7 +19,7 @@ def analyse_main(options,traj_read):
 
 
     if run_density:
-        density(traj_read,density_time,options)
+        density(traj_read,density_time)
 
     if run_MSD:
         MSD(MSD_time, traj_read)
@@ -59,5 +43,47 @@ def analyse_main(options,traj_read):
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(self_diffusion_coefficient_time, traj_read)
 
+    # Output specified data to outfile
+    if options['output']:
+        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
 
-analyse_main(options,traj_read)
+def output_properties_to_file(properties, traj, out_file_name='out.json'):
+    """ Outputs the chosen properties from a traj file to
+        json-file.
+    """
+    with open(out_file_name, 'w+') as f:
+        known_property_outputters = {
+            'temperature' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'temperature',
+                    lambda atoms: atoms.get_temperature(),
+                ),
+            'volume' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'volume',
+                    lambda atoms: atoms.get_volume(),
+                ),
+        }
+
+        for prop in properties:
+            if prop in known_property_outputters:
+                known_property_outputters[prop]()
+
+if __name__=="__main__":
+    from command_line_arg_parser import parser
+    from md_config_reader import config_parser as config_file_parser
+
+    from asap3 import Trajectory
+
+    args = parser.parse_args()
+    parsed_config_file = config_file_parser(args.config_file)
+
+    options = parsed_config_file
+    options['use_asap'] = args.use_asap
+
+    traj_read = Trajectory(options["symbol"]+".traj")
+    analyse_main(options,traj_read)

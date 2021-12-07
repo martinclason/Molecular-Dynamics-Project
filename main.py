@@ -1,6 +1,5 @@
 """Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
-
 from asap3 import Trajectory
 from ase import units
 import numpy as np
@@ -13,6 +12,7 @@ from debye_temperature import debye_temperature
 
 from ase.calculators.kim.kim import KIM
 
+from simulationDataIO import outputGenericFromTraj
 
 def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -59,22 +59,29 @@ def MD(options):
 
     # Describe the interatomic interactions with the Effective Medium Theory
 
+    def OpenKIMPotential():
+        try:
+            return KIM(options["openKIMid"])
+        except:
+            return None
+
     potential = options["potential"]
     if potential :
         known_potentials = {
         'EMT' : EMT(),
         'LJ' : LJ(use_asap),
-        'openKIM' : KIM(options["openKIMid"]) if ("openKIMid" in options) else None,
+        'openKIM' : OpenKIMPotential(),
         }
 
     atoms.calc = known_potentials[potential] if potential else EMT()
 
     # Set the momenta corresponding to T=300K
     MaxwellBoltzmannDistribution(atoms, temperature_K=options["temperature_K"])
+    # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
     # We want to run MD with constant energy using the VelocityVerlet algorithm.
-    dyn = VelocityVerlet(atoms, 5 * units.fs)  # 5 fs time step.
+    dyn = VelocityVerlet(atoms, options["dt"] * units.fs)  # 5 fs time step.
     if options["make_traj"]:
         traj = Trajectory(options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(traj.write, interval=interval)
@@ -85,6 +92,10 @@ def MD(options):
         ekin = a.get_kinetic_energy() / len(a)
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
+
+    atoms_positions = atoms.get_positions()
+    atoms_number_of_atoms = len(atoms_positions)
+    print("Number of atoms: " + str(atoms_number_of_atoms))
 
     # Now run the dynamics
     dyn.attach(printenergy, interval=interval)
@@ -115,11 +126,11 @@ def main(options):
     run_MD = options["run_MD"]
     run_pressure = options["run_pressure"]
 
+
     if run_density :
         pass #density()
 
     if run_MD :
-
         traj_results = MD(options)
 
         atoms_volume = traj_results[1].get_volume()
@@ -129,6 +140,9 @@ def main(options):
         atoms_temperature = traj_results[1].get_temperature()
         atoms_number_of_atoms = len(atoms_positions)
         #print("Number of atoms: " + str(atoms_number_of_atoms))
+
+        if options['output']:
+            output_properties_to_file(options['output'], traj_results)
 
     if run_pressure :
 
@@ -141,7 +155,31 @@ def main(options):
             atoms_kinetic_energy
         )
 
+def output_properties_to_file(properties, traj):
+    """ Outputs the chosen properties from a traj file to
+        json-file.
+    """
+    with open('out.json', 'w+') as f:
+        known_property_outputters = {
+            'temperature' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'temperature',
+                    lambda atoms: atoms.get_temperature(),
+                ),
+            'volume' : 
+                outputGenericFromTraj(
+                    traj,
+                    f,
+                    'volume',
+                    lambda atoms: atoms.get_volume(),
+                ),
+        }
 
+        for prop in properties:
+            if prop in known_property_outputters:
+                known_property_outputters[prop]()
 
 
 if __name__ == "__main__":
@@ -166,3 +204,4 @@ if __name__ == "__main__":
     parsed_config_file["use_asap"] = args.use_asap
 
     main(parsed_config_file)
+    
