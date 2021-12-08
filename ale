@@ -19,16 +19,24 @@ is used in this project. """
 
 pp = pprint.PrettyPrinter(indent=4)
 
-def default(options):
+def default(options, args=None):
   print("Running default")
   simulate(options)
   analyze(options)
 
-def simulate(options):
+def multi(options, args):
+  print("Should run multiple simulations and analyzations parallelized on multiple cores")
+  multi_config_file = args.multi_config_file
+  print(f"multi_config_file: {multi_config_file}")
+  # TODO: Parse multi config file
+  simulate(options)
+  analyze(options)
+
+def simulate(options, args=None):
   print(f'Use asap: {options["use_asap"]}')
   main(options)
 
-def analyze(options):
+def analyze(options, args=None):
   if 'traj_file_name' in options:
     print("Using supplied traj_file")
     traj_read = Trajectory(options['traj_file_name'])
@@ -36,17 +44,17 @@ def analyze(options):
     traj_read = Trajectory(options["symbol"]+".traj")
   analyse_main(options,traj_read)
 
-def visualize(options):
+def visualize(options, args=None):
   # pp.pprint(options)
   visualize_simulation(options, options['out_file_name'])
 
 parser = CreateParser(
-              default, 
-              subcommands={
-                'simulate' : simulate,
-                'analyze' : analyze,
-                'visualize' : visualize,
-              })
+              default=default,
+              multi=multi,
+              simulate=simulate,
+              analyze=analyze,
+              visualize=visualize,
+         )
 
 args = parser.parse_args()
 
@@ -58,4 +66,4 @@ if args.traj_file_name:
   options['traj_file_name'] = args.traj_file_name
 options['out_file_name'] = args.out_file_name
 
-args.sub_command(options)
+args.sub_command(options, args)

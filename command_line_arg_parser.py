@@ -4,7 +4,7 @@ from argparse import RawTextHelpFormatter
 # Adds parser so user can choose if to use asap or not with flags from terminal
 
 class CreateParser():
-    def __init__(self, default, subcommands):
+    def __init__(self, default, multi, simulate, analyze, visualize):
         description = "A program to run molecular dynamics calculations."
         self.parser = argparse.ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
         self.subparsers = self.parser.add_subparsers()
@@ -59,9 +59,28 @@ data about the atoms for time steps in the simulation.
 
         self.parser.set_defaults(sub_command=default)
 
-        for command in subcommands:
-            cmd = self.subparsers.add_parser(command)
-            cmd.set_defaults(sub_command=subcommands[command])
+
+        # multi
+        multi_parser = self.subparsers.add_parser('multi')
+        multi_parser.set_defaults(sub_command=multi)
+        multi_parser.add_argument(
+                    type=argparse.FileType('r'),
+                    dest='multi_config_file',
+                    help='config for how a collection of simulations should be run and what to vary.',
+                    metavar='multi_config_file',
+              )
+
+        # simulate
+        simulate_parser = self.subparsers.add_parser('simulate')
+        simulate_parser.set_defaults(sub_command=simulate)
+
+        # analyze
+        analyze_parser = self.subparsers.add_parser('analyze')
+        analyze_parser.set_defaults(sub_command=analyze)
+
+        # visualize
+        visualize_parser = self.subparsers.add_parser('visualize')
+        visualize_parser.set_defaults(sub_command=visualize)
 
     def parse_args(self, args=None):
         if args:
@@ -78,4 +97,4 @@ data about the atoms for time steps in the simulation.
 
 
 nop = lambda: None
-parser = CreateParser(nop, {})
+parser = CreateParser(nop, nop, nop, nop, nop)
