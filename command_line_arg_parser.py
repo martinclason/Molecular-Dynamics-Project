@@ -69,6 +69,11 @@ data about the atoms for time steps in the simulation.
                     help='config for how a collection of simulations should be run and what to vary.',
                     metavar='multi_config_file',
               )
+        multi_parser.add_argument(
+                    dest='out_dir',
+                    help='relative path to where simulation output files should be written.',
+                    metavar='out_dir',
+          )
 
         # simulate
         simulate_parser = self.subparsers.add_parser('simulate')

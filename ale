@@ -5,6 +5,7 @@ from md_config_reader import config_parser as config_file_parser
 from main import main
 from analyse_main import analyse_main
 from visualize_main import visualize as visualize_simulation
+import os
 
 from asap3 import Trajectory
 
@@ -29,6 +30,17 @@ def multi(options, args):
   multi_config_file = args.multi_config_file
   print(f"multi_config_file: {multi_config_file}")
   # TODO: Parse multi config file
+  output_dir = args.out_dir
+  
+  # Setup correct traj file
+  # default to <symbol>.traj
+  traj_file_name = options.get('traj_file_name', f"{options['symbol']}.traj")
+  options['traj_file_name'] = os.path.join(output_dir, traj_file_name)
+
+  # Setup correct out data file (JSON)
+  out_file_name = options['out_file_name']
+  options['out_file_name'] = os.path.join(output_dir, out_file_name)
+
   simulate(options)
   analyze(options)
 
@@ -48,22 +60,29 @@ def visualize(options, args=None):
   # pp.pprint(options)
   visualize_simulation(options, options['out_file_name'])
 
-parser = CreateParser(
-              default=default,
-              multi=multi,
-              simulate=simulate,
-              analyze=analyze,
-              visualize=visualize,
-         )
+def run(arguments=None):
+  parser = CreateParser(
+                default=default,
+                multi=multi,
+                simulate=simulate,
+                analyze=analyze,
+                visualize=visualize,
+           )
 
-args = parser.parse_args()
+  if arguments:
+    args = parser.parse_args(arguments.split(" "))
+  else:
+    args = parser.parse_args()
 
-parsed_config_file = config_file_parser(args.config_file)
+  parsed_config_file = config_file_parser(args.config_file)
 
-options = parsed_config_file
-options['use_asap'] = args.use_asap
-if args.traj_file_name:
-  options['traj_file_name'] = args.traj_file_name
-options['out_file_name'] = args.out_file_name
+  options = parsed_config_file
+  options['use_asap'] = args.use_asap
+  if args.traj_file_name:
+    options['traj_file_name'] = args.traj_file_name
+  options['out_file_name'] = args.out_file_name
 
-args.sub_command(options, args)
+  args.sub_command(options, args)
+
+if __name__=="__main__":
+  run("multi m_config.yaml out")
