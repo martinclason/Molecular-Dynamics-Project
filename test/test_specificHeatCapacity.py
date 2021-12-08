@@ -19,15 +19,15 @@ def test_specificHeatCapacity_Cu():
     assert (C_v_Cu >= 0.1) and (C_v_Cu <= 0.6)
 
 # Tests if the function throws an exception when an unsupported 
-# ensamble is specified.
-def test_ensamble_exception():
+# ensemble is specified.
+def test_ensemble_exception():
    try:
-       specificHeatCapacity("Not an ensamble","Ar.traj")
+       specificHeatCapacity("Not an ensemble","Ar.traj")
    except:
        pass
 
 # Tests if the function throws an exception when an unsupported 
-# ensamble is specified.
+# ensemble is specified.
 def test_trajectory_file_exception():
    try:
        specificHeatCapacity("NVE","not_a_file.file")
