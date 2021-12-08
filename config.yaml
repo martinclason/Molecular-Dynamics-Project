@@ -46,5 +46,8 @@ run_pressure: True
 #-----------Visualize------------#
 visualize:
   - temperature
+  - scatter
+scatter_type_d1: "temperature"
+scatter_type_d2: "volume"
 run_density_plot: False
 run_MSD_plot: False

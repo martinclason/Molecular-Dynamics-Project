@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from scatter import scatter_plot
+
 from simulationDataIO import inputSimulationData
 
 def s_to_fs(t):
@@ -21,6 +23,7 @@ def visualize(options, data_file_name="out.json"):
 
   known_visualizers = {
     'temperature' : make_temperature_plotter(data, dt),
+    'scatter' : scatter_plot(data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }
 
   for visualizer_name, visualizer in known_visualizers.items():
