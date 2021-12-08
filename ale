@@ -31,10 +31,10 @@ def multi(options, args):
   print(f"multi_config_file: {multi_config_file}")
   # TODO: Parse multi config file
   output_dir = args.out_dir
-  
+
   # Setup correct traj file
   # default to <symbol>.traj
-  traj_file_name = options.get('traj_file_name', f"{options['symbol']}.traj")
+  traj_file_name = options['traj_file_name']
   options['traj_file_name'] = os.path.join(output_dir, traj_file_name)
 
   # Setup correct out data file (JSON)
@@ -46,14 +46,11 @@ def multi(options, args):
 
 def simulate(options, args=None):
   print(f'Use asap: {options["use_asap"]}')
+  print("Using traj:", options['traj_file_name'])
   main(options)
 
 def analyze(options, args=None):
-  if 'traj_file_name' in options:
-    print("Using supplied traj_file")
-    traj_read = Trajectory(options['traj_file_name'])
-  else:
-    traj_read = Trajectory(options["symbol"]+".traj")
+  traj_read = Trajectory(options['traj_file_name'])
   analyse_main(options,traj_read)
 
 def visualize(options, args=None):
@@ -79,10 +76,17 @@ def run(arguments=None):
   options = parsed_config_file
   options['use_asap'] = args.use_asap
   if args.traj_file_name:
+    print("Using supplied traj_file")
     options['traj_file_name'] = args.traj_file_name
+  else:
+    # default to <symbol>.traj
+    options['traj_file_name'] = f"{options['symbol']}.traj"
+  print(options)
   options['out_file_name'] = args.out_file_name
 
   args.sub_command(options, args)
 
 if __name__=="__main__":
-  run("multi m_config.yaml out")
+  run()
+  # Use this to run some specific command with args when debugging
+  #run("multi m_config.yaml out")
