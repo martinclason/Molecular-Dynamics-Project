@@ -125,17 +125,16 @@ def MD(options):
         eqCheckInterval = 10
         initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000 
         iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
-        eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 50) else 30
+        eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 30) else 30
         ensamble = options.get("ensemble", "NVE") # default to NVE
+
+        # Variables that are updated in the process
         eqReached = False
         numberOfChecks = 0
 
         # Runs for first couple of itterations
         dyn.run(initIterations)
 
-        # Will be changed to some while or for loop to run for some time and then
-        # terminate if equilibrium isn't reached or conclude that equilibirium has
-        # been reached and run the simulation to gather statistics.
         while ((not eqReached) and (not (numberOfChecks > eqLimit))):
             eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
                             atoms_number_of_atoms,
@@ -146,6 +145,10 @@ def MD(options):
 
             dyn.run(iterationsBetweenChecks)
         
+        # When equilibrium is or isn't reached the elapsed time is calculated
+        # and a statement is written in the terminal on wheter the system reached
+        # equilibrium and how long it took or how long the simulation waited.
+        # TODO: Store this information together with the calculate quantities.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
 
         if eqReached:
@@ -168,13 +171,6 @@ def MD(options):
     dyn.run(iterations)
     
     traj.close()
-    
-    # TODO: Remove unused code
-    #print(len(traj_read[0].get_positions()))
-    #   print(MSD(0,traj_read))
-    #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-    #print("Lindemann:", Lindemann_criterion(10, traj_read))
-    #MSD_plot(len(traj_read),traj_read)
 
 
 def main(options):

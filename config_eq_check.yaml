@@ -32,12 +32,12 @@ dt: 5
 checkForEquilibrium : True
 # Number of iterations after equilibrium has been reached or timeout in the equilibrium
 # check
-iterations: 10 
+iterations: 12000 
 output:
   - temperature
   - volume
 # Number of timesteps between each save to the .traj file
-interval: 20
+interval: 100
 openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 
 
