@@ -5,7 +5,7 @@ import signal
 
 small_test_config = "test/config_small_test.yaml"
 
-def test_ale_small_simulation_ase():
+def test_ale_small_simulation_ase():    
     try:
         process = subprocess.run(
                         f"./ale --no-asap -c {small_test_config}",
@@ -63,4 +63,3 @@ def test_ale_visualize():
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except:
         assert False, "ale visualize couldn't run"
-    
