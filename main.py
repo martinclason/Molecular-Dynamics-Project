@@ -100,7 +100,7 @@ def MD(options):
     print(f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
     
     # Setup writing of simulation data to trajectory file
-    main_trajectory_file_name = options["symbol"]+".traj"
+    main_trajectory_file_name = options['traj_file_name']
     traj = Trajectory(
                 main_trajectory_file_name, 
                 "w", 
