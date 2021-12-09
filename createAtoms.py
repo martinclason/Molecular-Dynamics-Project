@@ -1,5 +1,6 @@
 from ase.lattice.cubic import SimpleCubic, BodyCenteredCubic, FaceCenteredCubic
 from ase import Atoms
+from aleErrors import ConfigError
 
 
 def createAtoms(options):
@@ -17,6 +18,15 @@ def createAtoms(options):
     if bravaislattice:
         atoms = createBravaislattice(options)
     else :
+        try:
+            latticeconstants[0]
+        except IndexError:
+            # set error context to None to prevent printout of indexError
+            raise ConfigError(
+                    message="The latticeconstants must be set when not specifying a bravaislattice",
+                    config_properties=["latticeconstants","bravaislattice"],
+                ) from None
+
         cell = options["cell"]
         cell = [[x*latticeconstants[0] for x in y] for y in cell]
         atoms = Atoms(symbol, 
@@ -25,6 +35,7 @@ def createAtoms(options):
             pbc=pbc)
         atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
     atoms.set_tags(size[0])
+    print("Initial lattice constants [Å]:", atoms.cell.cellpar()[0:3] / size)
     return atoms
 
 def createBravaislattice(options):
@@ -38,18 +49,23 @@ def createBravaislattice(options):
     size = options["size"]
     latticeconstants = options["latticeconstants"]
     bravaislattice = options["bravaislattice"]
+    # default latticeconstant to None which uses ase built-in default lattice constant
+    try:
+        latticeconstant = latticeconstants[0]
+    except IndexError:
+        latticeconstant = None
     if(bravaislattice == "SC") :
         return SimpleCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
     if(bravaislattice == "BCC") :
         return BodyCenteredCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
     if(bravaislattice == "FCC") :
         return FaceCenteredCubic(directions = directions,
                             symbol = symbol,
                             size = size, pbc = pbc,
-                            latticeconstant = latticeconstants[0] if latticeconstants else None)
+                            latticeconstant = latticeconstant)
