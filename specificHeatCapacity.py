@@ -24,7 +24,6 @@ def specificHeatCapacity(ensemble, traj):
   elif ensemble == "NVT":
     # Calculates the variance in the total energy per atom
     total_energies = [atoms.get_total_energy() for atoms in traj]
-    total_energies = [energy / N for energy in total_energies] 
     var_e = np.var(total_energies)
 
     # Calculates the specific heat capacity when the NVT ensemble has been simulated.
