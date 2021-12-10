@@ -10,6 +10,8 @@ size : 13 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as la
 
 
 #-----------Simulation Setup------------#
+make_traj: True
+run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
