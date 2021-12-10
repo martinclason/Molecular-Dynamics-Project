@@ -15,7 +15,7 @@ directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure)
 #Customizable primitive unit cell, leave bravaislattice empty if cell is used.
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 positions : [[0,0,0]] #Set position of each atom in the molecule
-symbol : "Cu" 
+symbol : "Ar" 
 pbc : True #periodic boundary conditions
 size : [15,15,15]
 # Select between NVE (Velocity Verlet) for constant energy ensemble
@@ -32,13 +32,13 @@ dt: 5
 checkForEquilibrium : True
 # Number of iterations after equilibrium has been reached or timeout in the equilibrium
 # check
-iterations: 12000 
+iterations: 5000 
 output:
   - temperature
   - volume
 # Number of timesteps between each save to the .traj file
 interval: 100
-openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
 
 
 #-----------Analyse------------#
