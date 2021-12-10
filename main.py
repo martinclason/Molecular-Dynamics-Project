@@ -12,6 +12,7 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
+from shear_modulus import shear_modulus
 
 from ase.calculators.kim.kim import KIM
 
@@ -86,6 +87,9 @@ def MD(options):
     dyn.run(iterations)
     
     traj.close()
+    traj_read = Trajectory(options["symbol"]+".traj")
+    shear_modulus(traj_read)
+    
 
 
 def main(options):
