@@ -12,6 +12,7 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
+from equilibriumCondition import equilibiriumCheck
 
 from ase.calculators.kim.kim import KIM
 
@@ -60,17 +61,6 @@ def MD(options):
     dyn = dynamics_from_ensemble[options.get("ensemble", "NVE")] # default to NVE
 
     print(f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
-    
-    # Setup writing of simulation data to trajectory file
-    main_trajectory_file_name = options["symbol"]+".traj"
-    traj = Trajectory(
-                main_trajectory_file_name, 
-                "w", 
-                atoms, 
-                properties="energy, forces"
-            )
-    
-    dyn.attach(traj.write, interval=interval)
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -82,7 +72,60 @@ def MD(options):
     dyn.attach(printenergy, interval=interval)
     printenergy()
 
-    # Now run the dynamics
+    # This process makes the simulation wait for equilibrium before it starts
+    # writing data to the outpul .traj-file.
+    if options.get("checkForEquilibrium", None):
+        # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
+        rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+        dyn.attach(rawTraj.write, interval=interval)
+
+        # Condtions for equilibrium.
+        eqCheckInterval = 10
+        initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000 
+        iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
+        eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 30) else 30
+        ensamble = options.get("ensemble", "NVE") # default to NVE
+
+        # Variables that are updated in the process
+        eqReached = False
+        numberOfChecks = 0
+
+        # Runs for first couple of itterations
+        dyn.run(initIterations)
+
+        while ((not eqReached) and (not (numberOfChecks > eqLimit))):
+            eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
+                            atoms_number_of_atoms,
+                            ensamble,
+                            eqCheckInterval)
+        
+            numberOfChecks = numberOfChecks + 1
+
+            dyn.run(iterationsBetweenChecks)
+        
+        # When equilibrium is or isn't reached the elapsed time is calculated
+        # and a statement is written in the terminal on wheter the system reached
+        # equilibrium and how long it took or how long the simulation waited.
+        # TODO: Store this information together with the calculate quantities.
+        timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+        if eqReached:
+            print("System reached equilibirium after",timeToEquilibrium,"fs")
+        else:
+            print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
+            print("Continues")
+
+    # Setup writing of simulation data to trajectory file
+    main_trajectory_file_name = options["symbol"]+".traj"
+    traj = Trajectory(
+                main_trajectory_file_name, 
+                "w", 
+                atoms, 
+                properties="energy, forces"
+            )
+    
+    dyn.attach(traj.write, interval=interval)
+    
     dyn.run(iterations)
     
     traj.close()
