@@ -1,45 +1,27 @@
 ---
-#-----------Simulation------------#
-run_MD: True
-make_traj: True
-atomic_number: 18
-epsilon: 0.010323 # eV
-sigma: 3.40 # Å
-cutoff: 6.625 # Å
-a : 5.256E-10 # Lattice constant
-# Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [3.6147,None,None,None,None,None] #[a, b, c, alpha, beta, gamma]
-#bravaislattice currently only supports "SC", "FCC", "BCC" 
-bravaislattice : "FCC" #(conventional unit cell)
-directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
-#Customizable primitive unit cell, leave bravaislattice empty if cell is used.
+#-----------Atoms Setup------------#
+latticeconstant : 3.6147 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0]] #Set position of each atom in the molecule
-symbol : "Ar" 
+positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Ar"
 pbc : True #periodic boundary conditions
-size : [15,15,15]
-# Select between NVE (Velocity Verlet) for constant energy ensemble
-# and NVT for constant temperature (Langevin) ensemble.
-ensemble: "NVT"
+size : 15 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+
+#-----------Simulation Setup------------#
+make_traj: True
+run_MD: True
+ensemble: "NVT" #Choose NVT or NVE
 NVT_friction: 0.02
 temperature_K : 300
-# Leave potential empty if running ASE, will resort to using EMT as potential.
-potential: "openKIM"
-# simulation time step [fs]
-dt: 5
+openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
 # Equilibrium checks only supports about 700+ atoms systems reliably. For more info
 # consult the documentation
 checkForEquilibrium : True
+dt: 5 # simulation time step [fs]
 # Number of iterations after equilibrium has been reached or timeout in the equilibrium
-# check
-iterations: 5000 
-output:
-  - temperature
-  - volume
-# Number of timesteps between each save to the .traj file
+# check  
+iterations: 5000
 interval: 100
-openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
-
 
 #-----------Analyse------------#
 run_density: True
@@ -53,6 +35,9 @@ self_diffusion_coefficient_time: #If wanted to specify what timestep the self di
 
 run_pressure: True
 
+output: #What material parameters to calculate and output from the traj-file?
+  - temperature
+  - volume
 
 #-----------Visualize------------#
 visualize:
