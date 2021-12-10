@@ -72,6 +72,10 @@ def MD(options):
     dyn.attach(printenergy, interval=interval)
     printenergy()
 
+    atoms_positions = atoms.get_positions()
+    atoms_number_of_atoms = len(atoms_positions)
+    print("Number of atoms: " + str(atoms_number_of_atoms))
+
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
