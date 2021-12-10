@@ -116,7 +116,7 @@ def MD(options):
 
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
-    if options["checkForEquilibrium"]:
+    if options.get("checkForEquilibrium", None):
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
         rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
         dyn.attach(rawTraj.write, interval=interval)
