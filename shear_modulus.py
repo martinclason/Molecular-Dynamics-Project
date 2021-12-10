@@ -14,7 +14,7 @@ def shear_modulus(atom_list) :
     F_vec = atom_list[10].get_forces()[last_atom]
     F_len = (F_vec[0]**2 + F_vec[1]**2 + F_vec[2]**2)**(1/2)
     
-    l = atom_list[0].get_cell_lengths_and_angles()[0] * 1E-10 #cubic unit cell length (m)
+    l = atom_list[0].cell.cellpar()[0] * 1E-10 #cubic unit cell length (m)
 
     # print("Force on last atom:", F_len)
     # print("Force_vector on last atom:", F_vec)

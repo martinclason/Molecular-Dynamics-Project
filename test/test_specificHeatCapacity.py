@@ -13,7 +13,7 @@ C_v_Ar = specificHeatCapacity("NVE",arTraj)
 def test_specificHeatCapacity_Ar():
     assert (C_v_Ar >= 0.2) and (C_v_Ar <= 0.5) 
 
-C_v_Cu = specificHeatCapacity("NVE",cuTraj)
+C_v_Cu = specificHeatCapacity("NVT",cuTraj)
 
 def test_specificHeatCapacity_Cu():
     assert (C_v_Cu >= 0.1) and (C_v_Cu <= 0.6)

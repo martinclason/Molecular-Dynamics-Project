@@ -17,17 +17,26 @@ cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vector
 positions : [[0,0,0]] #Set position of each atom in the molecule
 symbol : "Ar" 
 pbc : True #periodic boundary conditions
-size : [13,13,13]
-ensemble : "NVE"
-temperature_K : 70
+size : [15,15,15]
+# Select between NVE (Velocity Verlet) for constant energy ensemble
+# and NVT for constant temperature (Langevin) ensemble.
+ensemble: "NVE"
+NVT_friction: 0.02
+temperature_K : 80
 # Leave potential empty if running ASE, will resort to using EMT as potential.
 potential: "openKIM"
 # simulation time step [fs]
 dt: 5
-iterations: 7000
+# Equilibrium checks only supports about 700+ atoms systems reliably. For more info
+# consult the documentation
+checkForEquilibrium : True
+# Number of iterations after equilibrium has been reached or timeout in the equilibrium
+# check
+iterations: 4500 
 output:
   - temperature
   - volume
+# Number of timesteps between each save to the .traj file
 interval: 100
 openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
 
