@@ -19,6 +19,14 @@ test:
 	@echo "Running pytest on code..."
 	pytest
 
+unit-test:
+	@echo "Running pytest with unit tests..."
+	pytest -k "not integration"
+
+integration-test:
+	@echo "Running pytest with integration tests..."
+	pytest -k "integration"
+
 html-doc:
 	@echo "Running sphinx html doc generation..."
 	make --directory docs html
