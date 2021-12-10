@@ -25,57 +25,19 @@ def MD(options):
 
     # Use Asap for a huge performance increase if it is installed
     use_asap = options["use_asap"]
-
-    # TODO: Make some of these optional by creating factory function for
-    # LennardJones
-    atomic_number = options["atomic_number"]
-    epsilon = options["epsilon"] * units.eV
-    sigma = options["sigma"] * units.Ang
-    cutoff = options["cutoff"] * units.Ang
     iterations = options["iterations"] if options["iterations"] else 200
     interval = options["interval"] if options["interval"] else 10
 
     if use_asap:
         print("Running with asap")
-        from asap3 import EMT
         from asap3.md.verlet import VelocityVerlet
-        from asap3 import LennardJones
     else:
         print("Running with ase")
-        from ase.calculators.emt import EMT
-        from ase.calculators.lj import LennardJones
         from ase.md.verlet import VelocityVerlet
-
-    def LJ(use_asap=use_asap):
-        if use_asap:
-            return LennardJones(
-                [atomic_number],
-                [epsilon],
-                [sigma],
-                rCut=cutoff,
-                modified=True)
-        else:
-            return LennardJones(
-                epsilon=epsilon,
-                sigma=sigma)
 
     # Set up a crystal
     atoms = createAtoms(options)
-
-    def OpenKIMPotential():
-        try:
-            return KIM(options["openKIMid"])
-        except:
-            return None
-
-    known_potentials = {
-        'EMT' : EMT(),
-        'LJ' : LJ(use_asap),
-        'openKIM' : OpenKIMPotential(),
-    }
-
-    potential = options.get("potential", "EMT") # Default to using EMT
-    atoms.calc = known_potentials[potential]
+    atoms.calc = KIM(options["openKIMid"]) # Attach the openKIM calculator
     
     time_step = options["dt"] * units.fs
     temperature = options["temperature_K"]
@@ -117,10 +79,6 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-    atoms_positions = atoms.get_positions()
-    atoms_number_of_atoms = len(atoms_positions)
-    print("Number of atoms: " + str(atoms_number_of_atoms))
-
     dyn.attach(printenergy, interval=interval)
     printenergy()
 
@@ -128,13 +86,6 @@ def MD(options):
     dyn.run(iterations)
     
     traj.close()
-    
-    # TODO: Remove unused code
-    #print(len(traj_read[0].get_positions()))
-    #   print(MSD(0,traj_read))
-    #print("The self diffusion coefficient is:", self_diffusion_coefficient(10,traj_read)) # TODO: Determine how long we should wait, t should approach infinity
-    #print("Lindemann:", Lindemann_criterion(10, traj_read))
-    #MSD_plot(len(traj_read),traj_read)
 
 
 def main(options):

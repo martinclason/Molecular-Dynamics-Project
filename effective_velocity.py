@@ -8,7 +8,7 @@ def longtitudinalSoundWaveVelocity(atom_list) :
     bulkModulus(atom_list) and density()"""
     #K = bulk_modulus(atom_list)
     K = 123 * 1E9 #bulk modulus for copper 
-    G = shear_modulus(atom_list)
+    #G = shear_modulus(atom_list)
     G = 44.7 * 1E9 #shear modulus for copper
     rho = density(atom_list, 0) #g/cm3
     rho = rho * 1E3 #kg/m3
@@ -20,7 +20,7 @@ def transversalSoundWaveVelocity(atom_list) :
     a list of atoms objects. It calculates and returns the transversal
     velocity of a sound wave by calling shearModulus(atom_list) and
     density()"""
-    G = shear_modulus(atom_list)
+    #G = shear_modulus(atom_list)
     G = 44.7 * 1E9 #shear modulus for copper
     rho = density(atom_list, 0) #g/cm3
     rho = rho * 1E3 #kg/m3
