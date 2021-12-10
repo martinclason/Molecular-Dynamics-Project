@@ -10,7 +10,7 @@ import numpy as np
 
 from pressure import pressure, printpressure
 from createAtoms import createAtoms
-from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
+from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from density import density
 
 from ase.calculators.kim.kim import KIM

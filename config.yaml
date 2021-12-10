@@ -26,6 +26,8 @@ iterations: 2000
 output:
   - temperature
   - volume
+  - MSD
+  - Self Diffusion Coefficient
 interval: 20
 openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 
@@ -33,9 +35,6 @@ openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 #-----------Analyse------------#
 run_density: True
 density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
-
-run_MSD: True
-MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
 
 run_self_diffusion_coefficient: True
 self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
@@ -46,5 +45,5 @@ run_pressure: True
 #-----------Visualize------------#
 visualize:
   - temperature
-run_density_plot: False
-run_MSD_plot: False
+  - MSD
+run_density_plot: True

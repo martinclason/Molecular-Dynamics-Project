@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import math
+from simulationDataIO import inputSimulationData
+import numpy as np
 
 def MSD(t,atom_list):
     """The MSD(t,atom:list) function calculates and returns the mean square displacement for one time t.
@@ -12,19 +14,25 @@ def MSD(t,atom_list):
     squareddiff = diff**2
     summ = sum(sum(squareddiff))
     normsum = (1/N) * summ
-    return normsum
+    return normsum #Å^2
 #Calculates MSD for all the time steps and plots them
-def MSD_plot(time,atom_list):
-    """The MSD_plot(time,atom_list) function calculates the MSD for every timestep in the simulation 
-    from .traj file. It returns a plot of the MSD over time."""
-    MSD_data = []
-    for t in range(time):
-        MSD_data.append(MSD(t,atom_list))
-    plt.plot(range(time),MSD_data)
-    plt.ylabel("MSD-[Å]")
-    plt.xlabel("Measured time step")
-    plt.title("Mean Square Displacement")
-    plt.show()
+def make_MSD_plotter(data):
+    """The make_MSD_plotter function takes in data dictionary from .json file, takes 
+    the MSD data out from it and returns a plotter that can plot MSD over time"""
+    def plotter():
+        MSD_data = data["MSD"]
+        dt = 2
+        t = np.arange(0, len(MSD_data)*dt, dt)
+
+        fig = plt.figure()
+        ax = plt.axes()
+        
+        plt.ylabel("MSD-[Å]")
+        plt.xlabel("Measured time step")
+        plt.title("Mean Square Displacement") 
+
+        ax.plot(t,MSD_data)
+    return plotter  
 
 def self_diffusion_coefficient(t, atom_list) :
     """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
@@ -33,7 +41,7 @@ def self_diffusion_coefficient(t, atom_list) :
     The Lindemann_critertion() first checks if the element is a solid or liquid. For
     solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
-    if Lindemann_criterion(t, atom_list) :
+    if Lindemann_criterion(t, atom_list) or t==0 :
         return 0
     else :
         return 1/(6*t) * MSD(t, atom_list)

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from simulationDataIO import inputSimulationData
+from MSD import make_MSD_plotter
 
 def s_to_fs(t):
   return t*10e-15
@@ -21,6 +22,7 @@ def visualize(options, data_file_name="out.json"):
 
   known_visualizers = {
     'temperature' : make_temperature_plotter(data, dt),
+    'MSD' : make_MSD_plotter(data)
   }
 
   for visualizer_name, visualizer in known_visualizers.items():

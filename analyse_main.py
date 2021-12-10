@@ -1,8 +1,9 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
-from simulationDataIO import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj,outputarraytofile
 from debye_temperature import debye_temperature
+import numpy as np
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -12,8 +13,8 @@ def analyse_main(options,traj_read):
 
     run_density = options["run_density"]
     density_time = options["density_time"] if options["density_time"] else 0
-    run_MSD = options["run_MSD"]
-    MSD_time = options["MSD_time"] if options["MSD_time"] else 0
+    #run_MSD = options["run_MSD"]
+    #MSD_time = options["MSD_time"] if options["MSD_time"] else 0
     run_pressure = options["run_pressure"]
     run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
     self_diffusion_coefficient_time = options["self_diffusion_coefficient_time"] if options["self_diffusion_coefficient_time"] else 1
@@ -22,8 +23,8 @@ def analyse_main(options,traj_read):
     if run_density:
         density(traj_read,density_time)
 
-    if run_MSD:
-        MSD(MSD_time, traj_read)
+    #if run_MSD:
+        #outputarraytofile("MSD",MSD_data_calc(traj_read))
     
 
     atoms_volume = traj_read[1].get_volume()
@@ -70,11 +71,28 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     'volume',
                     lambda atoms: atoms.get_volume(),
                 ),
+            'MSD' :
+                outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Self Diffusion Coefficient' :
+                outputarraytofile("Self Diffusion Coefficient",self_diffusion_coefficient_calc(traj),f),
         }
 
         for prop in properties:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
+
+def MSD_data_calc(traj_read):
+    """Calculates all MSD for all timesteps registered in the .traj file"""
+    MSD_data = np.array([])
+    for t in range(len(traj_read)):
+        MSD_data = np.append(MSD_data,MSD(t,traj_read))
+    return MSD_data
+
+def self_diffusion_coefficient_calc(traj_read):
+    sfc = np.array([])
+    for t in range(len(traj_read)):
+        sfc = np.append(sfc,self_diffusion_coefficient(t,traj_read))
+    return sfc
 
 if __name__=="__main__":
     from command_line_arg_parser import parser
