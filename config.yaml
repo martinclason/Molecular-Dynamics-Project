@@ -13,7 +13,9 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
-openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 50

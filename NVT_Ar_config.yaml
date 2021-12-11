@@ -11,7 +11,9 @@ size : 10 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as la
 ensemble: "NVT" #Choose NVT or NVE
 NVT_friction: 0.02
 temperature_K : 200
-openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
 dt: 5 # simulation time step [fs]
 iterations: 2000
 interval: 20
