@@ -12,6 +12,7 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
+
 from equilibriumCondition import equilibiriumCheck
 
 from ase.calculators.kim.kim import KIM
@@ -132,9 +133,6 @@ def MD(options):
     
     dyn.run(iterations)
     
-    traj.close()
-
-
 def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.
     'main()' also prints out the density or other properties of the material at

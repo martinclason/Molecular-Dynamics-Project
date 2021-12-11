@@ -9,12 +9,11 @@ def createAtoms(options):
     symbol = options["symbol"]
     size = options["size"]
     latticeconstant = options["latticeconstant"]    
-    positions = options["positions"]
+    scaled_positions = options["scaled_positions"]
     cell = options["cell"]
     cell = [[x*latticeconstant for x in y] for y in cell] #Add lattice constant to basis matrix
-
     atoms = Atoms(symbol, 
-        positions = positions,
+        scaled_positions = scaled_positions,
         cell=cell,
         pbc=pbc)
     atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size

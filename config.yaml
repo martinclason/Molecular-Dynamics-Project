@@ -1,11 +1,11 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 3.614 #Only supporting cubic lattices with one parameter
+latticeconstant : 5.64 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "Cu" 
+scaled_positions : [[0,0,0],[0.5,0.5,0.5]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "NaCl" 
 pbc : True #periodic boundary conditions
-size : 2 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+size : 5 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -13,10 +13,10 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
-openKIMid: "EAM_NN_Johnson_1988_Cu__MO_887933271505_002"
+openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
 dt: 5 # simulation time step [fs]
-iterations: 2000
-interval: 20
+iterations: 1000
+interval: 50
 
 #-----------Analyse------------#
 run_density: True

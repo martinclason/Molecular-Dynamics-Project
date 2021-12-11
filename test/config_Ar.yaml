@@ -3,7 +3,7 @@
 #-----------Atoms Setup------------#
 latticeconstant : 5.260 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors) #fcc currently
-positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
 symbol : "Ar" 
 pbc : True #periodic boundary conditions
 size : 13 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)

@@ -1,24 +1,51 @@
+from ase import Atoms
+from ase.calculators.emt import EMT
+from ase.calculators.kim.kim import KIM
+import math
+
+import yaml
+from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
+from asap3 import Trajectory
+from ase import units
+import numpy as np
+from asap3.md.verlet import VelocityVerlet
+from ase.lattice.cubic import FaceCenteredCubic
+#https://docs.materialsproject.org/methodology/elasticity/
+#https://www.nature.com/articles/sdata20159.pdf
+
 def shear_modulus(atom_list) :
-    """Calculates shearModulus from a simulation by taking
-    the force on an atom and dividing by the unit cell length
-    times the displacement of the atom. shearModulus(atom_list)
-    takes one argument, a list of atoms objects. It return
-    the shear modulus as a number."""
-    last_atom = len(atom_list[0]) - 1 #Find the index of the last atom
-    r0 = atom_list[10].get_positions()[last_atom]
-    r1 = atom_list[11].get_positions()[last_atom]
+    all_symbols = atom_list[0].get_chemical_symbols()
+    size = atom_list[0].get_tags()[0]
+    size_cube = size**3
+    number_of_atoms = int(len(all_symbols) / size_cube) # Number of atoms per molecule
+    molecule_symbols = all_symbols[0:number_of_atoms] #Retrieve masses from one molecule
+    symbols = ''.join(molecule_symbols)
+    interatomic_positions = atom_list[0].get_positions()[0:number_of_atoms]
+ 
+    old_cell = atom_list[0].get_cell() / size
+    displacement_angle = math.radians(5)
+    new_cell = old_cell
+    for i in range(2):
+        old_x = old_cell[i][0]
+        old_z = old_cell[i][2]
+        
+        new_x = old_x + old_z * math.sin(displacement_angle)
+        new_cell[i][0] = new_x
+        
+        new_z = old_z * math.cos(displacement_angle)
+        new_cell[i][2] = new_z
+ 
+    atoms = Atoms(symbols, positions = interatomic_positions, cell = new_cell, pbc = True)
+    atoms = atoms.repeat([size,size,size]) 
 
-    r_vec = r1 - r0
-    r_len = (r_vec[0]**2 + r_vec[1]**2 + r_vec[2]**2)**(1/2) * 1E-10 #distance between last atoms (m)
-    
-    F_vec = atom_list[10].get_forces()[last_atom]
-    F_len = (F_vec[0]**2 + F_vec[1]**2 + F_vec[2]**2)**(1/2)
-    
-    l = atom_list[0].cell.cellpar()[0] * 1E-10 #cubic unit cell length (m)
+    atoms.calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
 
-    # print("Force on last atom:", F_len)
-    # print("Force_vector on last atom:", F_vec)
-    # print("Displacement of last atom:", r_len)
-    # print("Length of cell:", l)
+    stress_z = (atoms.get_stress()[3]**2 + atoms.get_stress()[4]**2)**(1/2)
+    unit_conversion = 160.21766208 * 10**9 # ev/Anstrom^3 to GPa to Pascal
     
-    return F_len / (l * r_len)
+    # shear stress z-component divided by tan of displacement angle
+    # ASE provides stress-component in ev/A^3 which is converted to
+    # pascal by unit_conversion. The factor 0.5 comes from the
+    # definition of engineering shear strain
+    G = stress_z/(math.tan(displacement_angle)) * unit_conversion * 0.5 
+    return G

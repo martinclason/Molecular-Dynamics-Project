@@ -1,12 +1,11 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 10 #Only supporting cubic lattices with one parameter
+latticeconstant : 3.61 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
 symbol : "Cu" 
 pbc : True #periodic boundary conditions
 size : 2 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
-
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -34,7 +33,6 @@ run_pressure: True
 output: #What material parameters to calculate and output from the traj-file?
   - temperature
   - volume
-
 
 #-----------Visualize------------#
 visualize:
