@@ -22,8 +22,6 @@ def MSD_plot(time,atom_list):
     MSD_data = []
     for t in range(time):
         MSD_data.append(MSD(t,atom_list))
-    write_to_csv("results","MSD",MSD_data,1)
-    print(read_from_csv("results1.csv"))
     plt.plot(range(time),MSD_data)
     plt.ylabel("MSD-[Å]")
     plt.xlabel("Measured time step")
