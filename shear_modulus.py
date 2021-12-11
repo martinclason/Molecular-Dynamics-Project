@@ -1,19 +1,16 @@
 from ase import Atoms
-from ase.calculators.emt import EMT
-from ase.calculators.kim.kim import KIM
 import math
-
-import yaml
-from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
-from asap3 import Trajectory
-from ase import units
-import numpy as np
-from asap3.md.verlet import VelocityVerlet
-from ase.lattice.cubic import FaceCenteredCubic
+from ase.calculators.kim.kim import KIM
 #https://docs.materialsproject.org/methodology/elasticity/
 #https://www.nature.com/articles/sdata20159.pdf
 
 def shear_modulus(atom_list) :
+    """Takes a list of atoms objects and returns the shear modulus
+    for the molecule/element with the structure specified by the
+    atoms objects. Currently uses the universal LJ potential
+    since there seems to be no way of retrieving the calculator
+    attached to the atoms objects (after being written and read
+    to and from a traj-file)"""
     all_symbols = atom_list[0].get_chemical_symbols()
     size = atom_list[0].get_tags()[0]
     size_cube = size**3
@@ -21,7 +18,7 @@ def shear_modulus(atom_list) :
     molecule_symbols = all_symbols[0:number_of_atoms] #Retrieve masses from one molecule
     symbols = ''.join(molecule_symbols)
     interatomic_positions = atom_list[0].get_positions()[0:number_of_atoms]
- 
+
     old_cell = atom_list[0].get_cell() / size
     displacement_angle = math.radians(5)
     new_cell = old_cell
@@ -35,7 +32,7 @@ def shear_modulus(atom_list) :
         new_z = old_z * math.cos(displacement_angle)
         new_cell[i][2] = new_z
  
-    atoms = Atoms(symbols, positions = interatomic_positions, cell = new_cell, pbc = True)
+    atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
     atoms = atoms.repeat([size,size,size]) 
 
     atoms.calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
