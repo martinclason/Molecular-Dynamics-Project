@@ -4,7 +4,7 @@ import sys
 import os
 import yaml 
 
-config_file = open("config.yaml")
+config_file = open("test/config.yaml")
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 out_file_list = find_json_files(parsed_config_file)
