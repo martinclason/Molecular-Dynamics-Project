@@ -35,7 +35,7 @@ def shear_modulus(atom_list) :
     atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
     atoms = atoms.repeat([size,size,size]) 
 
-    atoms.calc = KIM("Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000")
+    atoms.calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
 
     stress_z = (atoms.get_stress()[3]**2 + atoms.get_stress()[4]**2)**(1/2)
     unit_conversion = 160.21766208 * 10**9 # ev/Anstrom^3 to GPa to Pascal
