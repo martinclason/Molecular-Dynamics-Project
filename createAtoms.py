@@ -24,5 +24,4 @@ def createAtoms(options):
         pbc=pbc)
     atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
     atoms.set_tags(size) #Save the size of supercell for later use
-    #print("Initial lattice constants [Å]:", atoms.cell.cellpar()[0:3] / size)
     return atoms

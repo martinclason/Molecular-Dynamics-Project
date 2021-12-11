@@ -1,9 +1,9 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 5.64 #Only supporting cubic lattices with one parameter
-cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-scaled_positions : [[0,0,0],[0.5,0.5,0.5]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "NaCl" 
+latticeconstant : 4.09 #Only supporting cubic lattices with one parameter
+cell: "fcc" #[[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Ag" 
 pbc : True #periodic boundary conditions
 size : 5 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
@@ -15,7 +15,7 @@ NVT_friction: 0.2
 temperature_K : 300
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 50
