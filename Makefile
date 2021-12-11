@@ -3,8 +3,15 @@
 
 ci:
 	@echo "Running CI tests locally..."
+	@make ci-lint
+	@make ci-test
+
+ci-lint:
 	make lint
-	make test
+
+ci-test:
+	make unit-test-no-openkim
+	make integration-test-no-openkim
 
 # Run linting on all code and report error count
 lint:
@@ -19,9 +26,21 @@ test:
 	@echo "Running pytest on code..."
 	pytest
 
+test-no-openkim:
+	@echo "Running pytest excluding openkim..."
+	pytest -k "not openkim"
+
+unit-test-no-openkim:
+	@echo "Running pytest with unit tests..."
+	pytest -k "not (integration or openkim)"
+
 unit-test:
 	@echo "Running pytest with unit tests..."
 	pytest -k "not integration"
+
+integration-test-no-openkim:
+	@echo "Running pytest with unit tests..."
+	pytest -k "integration and not openkim"
 
 integration-test:
 	@echo "Running pytest with integration tests..."
