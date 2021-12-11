@@ -21,7 +21,7 @@ size : [2,2,2]
 ensemble : "NVE"
 temperature_K : 0
 # Leave potential empty if running ASE, will resort to using EMT as potential.
-potential: "EMT"
+potential: "openKIM"
 # simulation time step [fs]
 dt: 5
 iterations: 20
@@ -29,7 +29,7 @@ output:
   - temperature
   - volume
 interval: 1
-openKIMid: "LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
+openKIMid: "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
 
 
 #-----------Analyse------------#
