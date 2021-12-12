@@ -1,4 +1,4 @@
-from MSD import MSD, MSD_plot, self_diffusion_coefficient
+from MSD import MSD, make_MSD_plotter, self_diffusion_coefficient
 
 def test_MSD():
     pass
