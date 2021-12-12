@@ -27,6 +27,8 @@ density_time: 1 #If wanted to specify what timestep the density is to be calcula
 run_MSD: False
 MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
 
+run_debye: False
+
 run_self_diffusion_coefficient: True
 self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
 
