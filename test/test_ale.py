@@ -1,12 +1,16 @@
 import subprocess
 import os
+from os.path import join as joinPath
+from os.path import isfile
 import signal
 import pytest
 # from time import sleep
+from md_config_reader import config_parser as config_file_parser
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
 small_test_config_universal = "test/small_test_config_universal.yaml"
+short_test_config = "test/config_extra_short.yaml"
 
 @pytest.mark.integration
 def test_ale_help():
@@ -47,14 +51,28 @@ def test_ale_small_simulation_builtin_LJ():
 
 @pytest.mark.integration
 @pytest.mark.openkim
-def test_ale_small_multi():
+def test_ale_short_multi():
+    """Tests that multi runs and creates traj files in specified output directory"""
+
+    output_dir = 'out'
+    multi_config_file = 'test/multi_config_Cu_Ar.yaml'
+
+    with open(multi_config_file, 'r') as f:
+        multi_config = config_file_parser(f)
+    print(multi_config['elements'])
+    elements = multi_config['elements'][0]
+
     try:
         process = subprocess.run(
-                        f"./ale multi m_config.yaml out -c {small_test_config_universal}",
+                        f"./ale multi {multi_config_file} {output_dir} -c {short_test_config}",
                         shell=True,
                         check=True)
+
+        for element in elements:
+            assert isfile(joinPath(output_dir, f'{element}.traj')), \
+                   f"Out file wasn't created by multi simulation run for {element}"
     except:
-        assert False, "ale couldn't run"
+        assert False, "ale multi couldn't run"
 
 
 @pytest.mark.integration
