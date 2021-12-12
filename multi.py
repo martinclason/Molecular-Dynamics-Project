@@ -47,10 +47,10 @@ def multi(multi_config, options, simulate, analyze):
 
         simulate(options)
 
-        # # Setup out file
-        # options['out_file_name'] = os.path.join(output_dir, f"{element}_out.json")
+        # Setup out file
+        options['out_file_name'] = f"{element}_out.json"
 
-        # analyze(options)
+        analyze(options)
 
 def get_spec_potential_for_element(potentials_spec, element):
     if element in potentials_spec:

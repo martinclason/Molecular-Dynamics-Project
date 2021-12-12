@@ -3,6 +3,7 @@ from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj
 from debye_temperature import debye_temperature
+import os
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -48,14 +49,20 @@ def analyse_main(options,traj_read):
         print("Debye Temperature:", debye_temperature(traj_read))
 
     # Output specified data to outfile
-    if options['output']:
-        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
+    output_dir = options['out_dir']
+    out_file_path = os.path.join(output_dir, options['out_file_name'])
 
-def output_properties_to_file(properties, traj, out_file_name='out.json'):
+    if options['output']:
+        output_properties_to_file(
+            properties=options['output'], 
+            traj=traj_read, 
+            out_file_path=out_file_path)
+
+def output_properties_to_file(properties, traj, out_file_path='out.json'):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
-    with open(out_file_name, 'w+') as f:
+    with open(out_file_path, 'w+') as f:
         known_property_outputters = {
             'temperature' : 
                 outputGenericFromTraj(
