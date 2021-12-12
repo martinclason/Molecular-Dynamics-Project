@@ -17,13 +17,13 @@ def MSD(t,atom_list):
     return normsum
 #Calculates MSD for all the time steps and plots them
 def MSD_plot(time,atom_list):
-    """The MSD_plot(time,atom_list) function calculates the MSD for every timestep in the simulation 
+    """The MSD_plot(time,atom_list) function calculates the MSD for every timestep in the simulation
     from .traj file. It returns a plot of the MSD over time."""
     MSD_data = []
     for t in range(time):
         MSD_data.append(MSD(t,atom_list))
-    write_to_csv("results","MSD",MSD_data,1)
-    print(read_from_csv("results1.csv"))
+    # TODO: Output MSD data to file, not in this function though, needs some
+    # refactoring.
     plt.plot(range(time),MSD_data)
     plt.ylabel("MSD-[Å]")
     plt.xlabel("Measured time step")
@@ -32,10 +32,10 @@ def MSD_plot(time,atom_list):
 
 def self_diffusion_coefficient(t, atom_list) :
     """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
-    self diffusion coefficient. The function takes two arguments, the time t and an 
-    atom_list which it sends to the MSD(t,atom_list) function to retrieve the MSD. 
+    self diffusion coefficient. The function takes two arguments, the time t and an
+    atom_list which it sends to the MSD(t,atom_list) function to retrieve the MSD.
     The Lindemann_critertion() first checks if the element is a solid or liquid. For
-    solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
+    solids we approximate the self_diffusion_coefficient as 0 and for liquids the self
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
     if Lindemann_criterion(t, atom_list) :
         return 0
