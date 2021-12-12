@@ -30,8 +30,15 @@ def multi(multi_config, options, simulate, analyze):
         # Prepare options
         options['symbol'] = element
 
-        # Hard code potential to default LJ for now
-        options['openKIMid'] = "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+        # Set potential if specified for this element combination
+        if potentials_spec := multi_config.get('potentials'):
+            if specified_pot := get_spec_potential_for_element(potentials_spec, element):
+                print(f"Using specified potential {specified_pot} for: {element}")
+                options['potential'] = specified_pot
+            elif default_pot := potentials_spec.get('default'):
+                print(f"Using default potential {default_pot} for: {element}")
+            else:
+                print(f"No specific potential for: {element} was specified. Will try to use potential specified in config file instead.")
 
         # Setup traj file
         traj_file_name = f"{element}.traj"
@@ -44,3 +51,8 @@ def multi(multi_config, options, simulate, analyze):
         # options['out_file_name'] = os.path.join(output_dir, f"{element}_out.json")
 
         # analyze(options)
+
+def get_spec_potential_for_element(potentials_spec, element):
+    if element in potentials_spec:
+        return potentials_spec[element]
+    return None

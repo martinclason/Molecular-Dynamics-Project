@@ -2,3 +2,8 @@ elements:
   - ["Cu", "Ar"]
   #- ["Na", "Ca"]
   #- ["Cl"]
+
+potentials:
+  Cu: "openKIM:EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
+  Ar: "LJ"
+  default: "LJ"
