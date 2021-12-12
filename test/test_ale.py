@@ -14,7 +14,7 @@ def test_ale_small_simulation_ase():
     try:
         process = subprocess.run(
                         f"./ale --no-asap -c {small_test_config}",
-                        shell=True, 
+                        shell=True,
                         check=True)
     except:
         assert False, "ale couldn't run with ase"
@@ -77,3 +77,4 @@ def test_ale_visualize():
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except:
         assert False, "ale visualize couldn't run"
+
