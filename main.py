@@ -19,6 +19,7 @@ from ase.calculators.kim.kim import KIM
 
 from simulationDataIO import outputGenericFromTraj
 from aleErrors import ConfigError
+import os
 
 def built_in_LennardJones(options, use_asap):
     # Fallback/default values if not present in config
@@ -146,14 +147,16 @@ def MD(options):
     printenergy()
 
     # Setup writing of simulation data to trajectory file
+    output_dir = options['out_dir']
     main_trajectory_file_name = options['traj_file_name']
 
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
-        raw_trajectory_file_name = f"raw{options['traj_file_name']}"
+
+        raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_name, "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -192,8 +195,9 @@ def MD(options):
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
 
+    main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
     traj = Trajectory(
-                main_trajectory_file_name, 
+                main_trajectory_file_path,
                 "w", 
                 atoms, 
                 properties="energy, forces"

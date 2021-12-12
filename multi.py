@@ -13,6 +13,7 @@ def get_combinations_of_elements(elements):
 def multi(multi_config, options, simulate, analyze):
     elements = multi_config['elements']
     output_dir = options['out_dir']
+    assert os.path.isdir(output_dir), f"There seems to be no output directory: {output_dir}"
 
     element_combinations = product(*elements)
 
@@ -33,12 +34,13 @@ def multi(multi_config, options, simulate, analyze):
         options['openKIMid'] = "LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
 
         # Setup traj file
-        traj_file_name = os.path.join(output_dir, f"{element}.traj")
+        traj_file_name = f"{element}.traj"
         options['traj_file_name'] = traj_file_name
+        options['out_dir'] = output_dir
 
         simulate(options)
 
-        # Setup out file
-        options['out_file_name'] = os.path.join(output_dir, f"{element}_out.json")
+        # # Setup out file
+        # options['out_file_name'] = os.path.join(output_dir, f"{element}_out.json")
 
-        analyze(options)
+        # analyze(options)
