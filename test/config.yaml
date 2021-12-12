@@ -1,12 +1,11 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 10 #Only supporting cubic lattices with one parameter
+latticeconstant : 3.61 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
 symbol : "Cu" 
 pbc : True #periodic boundary conditions
 size : 2 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
-
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -14,7 +13,9 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
-openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
 iterations: 2000
 interval: 20
@@ -34,7 +35,6 @@ run_pressure: True
 output: #What material parameters to calculate and output from the traj-file?
   - temperature
   - volume
-
 
 #-----------Visualize------------#
 visualize:
