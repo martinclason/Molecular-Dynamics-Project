@@ -174,7 +174,7 @@ def MD(options):
         dyn.run(initIterations)
 
         while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-            eqReached = equilibiriumCheck(raw_trajectory_file_name,
+            eqReached = equilibiriumCheck(raw_trajectory_file_path,
                             atoms_number_of_atoms,
                             ensamble,
                             eqCheckInterval)

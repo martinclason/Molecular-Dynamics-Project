@@ -6,6 +6,7 @@ import pytest
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
+small_test_config_universal = "test/small_test_config_universal.yaml"
 
 @pytest.mark.integration
 def test_ale_help():
@@ -42,6 +43,18 @@ def test_ale_small_simulation_builtin_LJ():
                         check=True)
     except:
         assert False, "ale couldn't run with built in LJ potential"
+
+
+@pytest.mark.integration
+@pytest.mark.openkim
+def test_ale_small_multi():
+    try:
+        process = subprocess.run(
+                        f"./ale multi m_config.yaml out -c {small_test_config_universal}",
+                        shell=True,
+                        check=True)
+    except:
+        assert False, "ale couldn't run"
 
 
 @pytest.mark.integration
