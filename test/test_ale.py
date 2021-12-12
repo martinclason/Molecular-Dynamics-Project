@@ -7,17 +7,31 @@ import pytest
 small_test_config = "test/config_small_test.yaml"
 
 @pytest.mark.integration
+def test_ale_help():
+    try:
+        process = subprocess.run(
+                        f"./ale -h",
+                        shell=True,
+                        check=True)
+    except:
+        assert False, "ale couldn't display help message"
+
+
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation_ase():
+
     try:
         process = subprocess.run(
                         f"./ale --no-asap -c {small_test_config}",
-                        shell=True, 
+                        shell=True,
                         check=True)
     except:
         assert False, "ale couldn't run with ase"
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation():
     try:
         process = subprocess.run(
@@ -29,6 +43,7 @@ def test_ale_small_simulation():
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_simulate():
     try:
         process = subprocess.run(
@@ -40,6 +55,7 @@ def test_ale_simulate():
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_analyze():
     out_test_file = './out_test.json'
     if os.path.isfile(out_test_file):
@@ -60,6 +76,7 @@ def test_ale_analyze():
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_visualize():
     try:
         process = subprocess.Popen(
@@ -70,3 +87,4 @@ def test_ale_visualize():
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except:
         assert False, "ale visualize couldn't run"
+

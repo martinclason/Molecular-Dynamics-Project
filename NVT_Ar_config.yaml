@@ -1,36 +1,22 @@
 ---
-#-----------Simulation------------#
-atomic_number: 18
-epsilon: 0.010323 # eV
-sigma: 3.40 # Å
-cutoff: 6.625 # Å
-# Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [] #[a, b, c, alpha, beta, gamma], leave empty to use ase default
-#bravaislattice currently only supports "SC", "FCC", "BCC" 
-bravaislattice : "FCC" #(conventional unit cell)
-directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
-#Customizable primitive unit cell, leave bravaislattice empty if cell is used.
+#-----------Atoms Setup------------#
+latticeconstant : 3.614 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0]] #Set position of each atom in the molecule
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
 symbol : "Ar"
 pbc : True #periodic boundary conditions
-size : [10,10,10]
-# Select between NVE (Velocity Verlet) for constant energy ensemble
-# and NVT for constant temperature (Langevin) ensemble.
-ensemble: "NVT"
+size : 10 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+
+#-----------Simulation Setup------------#
+ensemble: "NVT" #Choose NVT or NVE
 NVT_friction: 0.02
 temperature_K : 200
-# Leave potential empty if running ASE, will resort to using EMT as potential.
-potential: "LJ"
-# simulation time step [fs]
-dt: 5
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
+dt: 5 # simulation time step [fs]
 iterations: 2000
-output:
-  - temperature
-  - volume
 interval: 20
-openKIMid: "Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
-
 
 #-----------Analyse------------#
 run_density: True
@@ -44,6 +30,9 @@ self_diffusion_coefficient_time: #If wanted to specify what timestep the self di
 
 run_pressure: True
 
+output: #What material parameters to calculate and output from the traj-file?
+  - temperature
+  - volume
 
 #-----------Visualize------------#
 visualize:
