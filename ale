@@ -79,6 +79,9 @@ def run(arguments=None):
   # print(options)
   options['out_file_name'] = args.out_file_name
 
+  # Default to current directory as dir to output files to
+  options['out_dir'] = "."
+
   args.sub_command(options, args)
 
 if __name__=="__main__":
