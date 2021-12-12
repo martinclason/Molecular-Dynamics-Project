@@ -1,5 +1,4 @@
 ---
----
 #-----------Atoms Setup------------#
 latticeconstant : 5.260 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors) #fcc currently
