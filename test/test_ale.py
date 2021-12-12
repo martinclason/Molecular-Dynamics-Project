@@ -6,6 +6,16 @@ import pytest
 
 small_test_config = "test/config_small_test.yaml"
 
+@pytest.mark.integration
+def test_ale_help():
+    try:
+        process = subprocess.run(
+                        f"./ale -h",
+                        shell=True,
+                        check=True)
+    except:
+        assert False, "ale couldn't display help message"
+
 
 @pytest.mark.integration
 @pytest.mark.openkim
