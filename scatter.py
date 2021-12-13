@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from aleErrors import ConfigError
 
-from pudb import set_trace
 
 import glob, os, sys
 
