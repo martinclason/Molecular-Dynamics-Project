@@ -207,6 +207,8 @@ def MD(options):
     dyn.attach(traj.write, interval=interval)
     
     dyn.run(iterations)
+
+    traj.close()
     print(f"Traj {main_trajectory_file_path} should be written")
 
     
