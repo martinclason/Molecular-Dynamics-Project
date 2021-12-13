@@ -26,22 +26,28 @@ def MSD_plot(time,atom_list):
     plt.title("Mean Square Displacement")
     plt.show()
 
-def self_diffusion_coefficient(t, atom_list) :
+def self_diffusion_coefficient(atom_list) :
     """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
-    self diffusion coefficient. The function takes two arguments, the time t and an 
-    atom_list which it sends to the MSD(t,atom_list) function to retrieve the MSD. 
-    The Lindemann_critertion() first checks if the element is a solid or liquid. For
+    self diffusion coefficient. The function takes an atom_list at different time steps
+    which it sends to the MSD(t,atom_list) function to retrieve the MSD. 
+    The lindemann_critertion() first checks if the element is a solid or liquid. For
     solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
-    if lindemann_criterion(t, atom_list) :
+    t = len(atom_list) - 1 #Take the system at the last accessible time
+    if lindemann_criterion(atom_list) :
         return 0
     else :
         return 1/(6*t) * MSD(t, atom_list)
 
-def lindemann_criterion(t, atom_list) :
-    """Checks if melting has occured. The functions takes the time t and a list of atoms as arguments.
+def lindemann_criterion(atom_list) :
+    """Checks if melting has occured. The functions takes a list of atoms at different time steps.
     The lindemann criterion states that melting happens when the the root mean vibration exceeds 10%
     of the nearest neighbor (NN) distance. The function checks this condition by calling MSD() and
     returns True if the condition is met"""
-    NN = atom_list[0].get_distance(0,1)
+    size = atom_list[0].get_tags()[0]
+    super_cell_x = atom_list[0].cell[0]
+    unit_cell_x = super_cell_x / size
+    #Nearest Neighbour distance from basis matrix
+    NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2) 
+    t = len(atom_list) - 1 #Take the system at the last accessible time
     return MSD(t,atom_list) > 0.1 * NN

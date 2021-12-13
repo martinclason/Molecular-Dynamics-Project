@@ -17,7 +17,7 @@ def shear_modulus(atom_list) :
     number_of_atoms = int(len(all_symbols) / size_cube) # Number of atoms per molecule
     molecule_symbols = all_symbols[0:number_of_atoms] #Retrieve masses from one molecule
     symbols = ''.join(molecule_symbols)
-    interatomic_positions = atom_list[0].get_positions()[0:number_of_atoms]
+    interatomic_positions = atom_list[0].get_scaled_positions()[0:number_of_atoms]
 
     old_cell = atom_list[0].get_cell() / size
     displacement_angle = math.radians(5)
@@ -31,7 +31,7 @@ def shear_modulus(atom_list) :
         
         new_z = old_z * math.cos(displacement_angle)
         new_cell[i][2] = new_z
- 
+    
     atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
     atoms = atoms.repeat([size,size,size]) 
 
