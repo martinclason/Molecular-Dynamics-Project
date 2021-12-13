@@ -38,6 +38,7 @@ def multi(options, args):
 
   # Run simulate and analyze distributed
   multi_main(multi_config, options, simulate=simulate, analyze=analyze)
+  print("exiting multi run")
 
 def simulate(options, args=None):
   print(f'Use asap: {options["use_asap"]}')

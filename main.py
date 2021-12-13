@@ -196,6 +196,7 @@ def MD(options):
             print("Continues")
 
     main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
+    print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
                 main_trajectory_file_path,
                 "w", 
@@ -206,6 +207,8 @@ def MD(options):
     dyn.attach(traj.write, interval=interval)
     
     dyn.run(iterations)
+    print(f"Traj {main_trajectory_file_path} should be written")
+
     
 def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.
