@@ -42,7 +42,8 @@ def analyse_main(options,traj_read):
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(traj_read)
 
-    print("Debye Temperature:", debye_temperature(traj_read))
+    if options.get('run_debye', True):
+        print("Debye Temperature:", debye_temperature(traj_read))
 
     # Output specified data to outfile
     if options['output']:

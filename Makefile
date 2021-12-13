@@ -1,6 +1,10 @@
 # Phony targets to enable running e.g. test target while also having a folder named test
 .PHONY: test
 
+# Default target
+all:
+	make test
+
 ci:
 	@echo "Running CI tests locally..."
 	@make ci-lint
@@ -23,8 +27,9 @@ lint-warn:
 
 # Run pytest for project
 test:
-	@echo "Running pytest on code..."
-	pytest
+	@echo "Running unit tests followed by intergration tests..."
+	make unit-test
+	make integration-test
 
 test-no-openkim:
 	@echo "Running pytest excluding openkim..."
