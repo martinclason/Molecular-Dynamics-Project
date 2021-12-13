@@ -93,5 +93,5 @@ else:
     print(f"\n\n\nprocess {rank} did no work\n\n\n")
 
 # print(f"process {rank} before barrier")
-# comm.Barrier()
+comm.Barrier()
 print(f"process {rank} after barrier")

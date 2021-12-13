@@ -4,7 +4,8 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 #from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 
-from asap3 import Trajectory
+# Use ase.io to make traj-writing from different processes work
+from ase.io import Trajectory
 from ase import units
 import numpy as np
 
@@ -201,7 +202,9 @@ def MD(options):
                 main_trajectory_file_path,
                 "w", 
                 atoms, 
-                properties="energy, forces"
+                properties="energy, forces",
+                # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
+                master=True, # Let processes write to their own respective traj-files
             )
     
     dyn.attach(traj.write, interval=interval)
