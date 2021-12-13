@@ -1,5 +1,5 @@
 from scatter import make_scatter_plotter, find_json_files
-from ase.io.trajectory import Trajectory
+from asap3 import Trajectory
 import sys
 import os 
 
