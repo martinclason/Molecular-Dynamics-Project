@@ -29,11 +29,11 @@ def subcommands_parser():
 
     args_parser = CreateParser(
                     default=lambda: 'default',
-                    subcommands={
-                        'simulate' : lambda: 'simulate',
-                        'analyze' : lambda: 'analyze',
-                        'visualize' : lambda: 'visualize',
-                    })
+                    multi=lambda: 'multi',
+                    simulate=lambda: 'simulate',
+                    analyze=lambda: 'analyze',
+                    visualize=lambda: 'visualize',
+                    )
     yield args_parser
     print("Tear down parser")
 
@@ -41,6 +41,11 @@ class TestParserSubcommands():
     def test_default_option(self, subcommands_parser):
         args = subcommands_parser.parse_args([])
         assert args.sub_command() == 'default'
+
+    def test_multi_option(self, subcommands_parser):
+        """Makes shure multi subcommand crashes if no multi config file is passed"""
+        with pytest.raises(SystemExit):
+            args = subcommands_parser.parse_args(['multi'])
 
     def test_simulate_option(self, subcommands_parser):
         args = subcommands_parser.parse_args(['simulate'])
