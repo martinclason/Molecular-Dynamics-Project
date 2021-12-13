@@ -8,15 +8,9 @@ from asap3 import Trajectory
 from ase import units
 import numpy as np
 
-from pressure import pressure, printpressure
 from createAtoms import createAtoms
-from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
-from density import density
-
 from equilibriumCondition import equilibiriumCheck
-
 from ase.calculators.kim.kim import KIM
-
 from simulationDataIO import outputGenericFromTraj
 from aleErrors import ConfigError
 
