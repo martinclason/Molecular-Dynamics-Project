@@ -1,20 +1,51 @@
 import subprocess
 import os
 import signal
+import pytest
 # from time import sleep
 
 small_test_config = "test/config_small_test.yaml"
+small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
 
+@pytest.mark.integration
+def test_ale_help():
+    try:
+        process = subprocess.run(
+                        f"./ale -h",
+                        shell=True,
+                        check=True)
+    except:
+        assert False, "ale couldn't display help message"
+
+
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation_ase():
+
     try:
         process = subprocess.run(
                         f"./ale --no-asap -c {small_test_config}",
-                        shell=True, 
+                        shell=True,
                         check=True)
     except:
         assert False, "ale couldn't run with ase"
 
 
+@pytest.mark.integration
+def test_ale_small_simulation_builtin_LJ():
+    """Test built in LJ potential that doesn't depend on openKIM"""
+
+    try:
+        process = subprocess.run(
+                        f"./ale -c {small_test_config_builtin_lj}",
+                        shell=True,
+                        check=True)
+    except:
+        assert False, "ale couldn't run with built in LJ potential"
+
+
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation():
     try:
         process = subprocess.run(
@@ -25,6 +56,8 @@ def test_ale_small_simulation():
         assert False, "ale couldn't run"
 
 
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_simulate():
     try:
         process = subprocess.run(
@@ -35,6 +68,8 @@ def test_ale_simulate():
         assert False, "ale simulate couldn't run"
 
 
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_analyze():
     out_test_file = './out_test.json'
     if os.path.isfile(out_test_file):
@@ -53,6 +88,9 @@ def test_ale_analyze():
     assert os.path.isfile(out_test_file), "Out file wasn't created by analyze"
     os.remove(out_test_file)
 
+
+@pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_visualize():
     try:
         process = subprocess.Popen(
@@ -63,4 +101,4 @@ def test_ale_visualize():
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
     except:
         assert False, "ale visualize couldn't run"
-    
+
