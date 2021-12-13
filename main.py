@@ -12,6 +12,7 @@ from pressure import pressure, printpressure
 from createAtoms import createAtoms
 from MSD import MSD, MSD_plot, self_diffusion_coefficient, Lindemann_criterion
 from density import density
+from cohesive_energy import cohesive_energy
 
 from equilibriumCondition import equilibiriumCheck
 
@@ -186,6 +187,11 @@ def MD(options):
         else:
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
+
+    if options.get("calculateCohesiveEnergy") and eqReached:
+        cohesive_energy(atoms,initIterations + numberOfChecks*iterationsBetweenChecks)
+    elif options.get("calculateCohesiveEnergy") and not eqReached:
+        cohesive_energy(atoms,options.get("max_iterations_coh_E"))
 
     # Setup writing of simulation data to trajectory file
     main_trajectory_file_name = options["symbol"]+".traj"

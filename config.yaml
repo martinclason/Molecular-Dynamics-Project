@@ -19,6 +19,9 @@ potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 50
+checkForEquilibrium: True
+calculateCohesiveEnergy: True
+max_iterations_coh_E: 200
 
 #-----------Analyse------------#
 run_density: True
