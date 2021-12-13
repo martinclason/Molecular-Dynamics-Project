@@ -35,9 +35,9 @@ def self_diffusion_coefficient(atom_list) :
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
     t = len(atom_list) - 1 #Take the system at the last accessible time
     if lindemann_criterion(atom_list) :
-        return 0
-    else :
         return 1/(6*t) * MSD(t, atom_list)
+    else :
+        return 0
 
 def lindemann_criterion(atom_list) :
     """Checks if melting has occured. The functions takes a list of atoms at different time steps.
@@ -50,4 +50,4 @@ def lindemann_criterion(atom_list) :
     #Nearest Neighbour distance from basis matrix
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2) 
     t = len(atom_list) - 1 #Take the system at the last accessible time
-    return MSD(t,atom_list) > 0.1 * NN
+    return (MSD(t,atom_list) > 0.1 * NN)

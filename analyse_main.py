@@ -16,8 +16,6 @@ def analyse_main(options,traj_read):
     MSD_time = options["MSD_time"] if options["MSD_time"] else 0
     run_pressure = options["run_pressure"]
     run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
-    self_diffusion_coefficient_time = options["self_diffusion_coefficient_time"] if options["self_diffusion_coefficient_time"] else 1
-
 
     if run_density:
         density(traj_read,density_time)
