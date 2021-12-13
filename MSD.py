@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import math
+import os
 
 def MSD(t,atom_list):
     """The MSD(t,atom:list) function calculates and returns the mean square displacement for one time t.
