@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import math
-import csv
 import os
 
 def MSD(t,atom_list):

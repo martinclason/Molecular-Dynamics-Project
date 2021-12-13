@@ -49,7 +49,7 @@ visualize:
   - scatter
 scatter_type_d1: "temperature"
 scatter_type_d2: "volume"
-scatter_dir: #Leave empty and it will search for .json files in the main dir.
-scatter_files: ["out1.json"] 
+scatter_dir: dir #Leave empty and it will search for .json files in the main dir.
+scatter_files: [] 
 run_density_plot: False
 run_MSD_plot: False
