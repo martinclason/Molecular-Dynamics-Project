@@ -1,7 +1,7 @@
-# from specificHeatCapacity import specificHeatCapacity
-# from ase.io.trajectory import Trajectory
-# import sys
-# import os
+from specificHeatCapacity import specificHeatCapacity
+from ase.io.trajectory import Trajectory
+import sys
+import os
 
 arTraj = Trajectory('test/Ar.traj')
 cuTraj = Trajectory('test/Cu.traj')
