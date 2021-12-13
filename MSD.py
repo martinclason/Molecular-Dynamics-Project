@@ -33,12 +33,12 @@ def self_diffusion_coefficient(t, atom_list) :
     The Lindemann_critertion() first checks if the element is a solid or liquid. For
     solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
-    if Lindemann_criterion(t, atom_list) :
+    if lindemann_criterion(t, atom_list) :
         return 0
     else :
         return 1/(6*t) * MSD(t, atom_list)
 
-def Lindemann_criterion(t, atom_list) :
+def lindemann_criterion(t, atom_list) :
     """Checks if melting has occured. The functions takes the time t and a list of atoms as arguments.
     The lindemann criterion states that melting happens when the the root mean vibration exceeds 10%
     of the nearest neighbor (NN) distance. The function checks this condition by calling MSD() and
