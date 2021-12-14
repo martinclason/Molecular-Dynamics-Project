@@ -10,6 +10,7 @@ def analyse_main(options,traj_read):
     options for analysing the simulated material. It is specified in config file exactly what 
     the user wants to calculate"""
 
+
     # Output specified data to outfile
     if options['output']:
         output_properties_to_file(options['output'], traj_read, options['out_file_name'])

@@ -19,6 +19,7 @@ def shear_modulus(atoms_object) :
     symbols = ''.join(molecule_symbols)
     interatomic_positions = atoms_object.get_scaled_positions()[0:number_of_atoms]
 
+
     old_cell = atoms_object.get_cell() / size
     displacement_angle = math.radians(5)
     new_cell = old_cell
