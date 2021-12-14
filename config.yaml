@@ -13,11 +13,12 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
+checkForEquilibrium : True
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
 potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
-iterations: 500
+iterations: 1000
 interval: 20
 
 #-----------Analyse------------#
@@ -30,6 +31,7 @@ output:
   - Pressure
   - MSD
   - Self Diffusion Coefficient Array
+  - Specific Heat Capacity
 
 #-----------Visualize------------#
 visualize:
