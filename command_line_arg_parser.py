@@ -53,7 +53,7 @@ data about the atoms for time steps in the simulation.
                           nargs='?',
                           type=str,
                           dest='out_file_name',
-                          default='out.json',
+                          default=None,
                           help='where to output the analysis data (default: out.json)',
                           metavar='output_file')
 

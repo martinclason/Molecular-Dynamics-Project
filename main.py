@@ -11,7 +11,7 @@ import numpy as np
 from createAtoms import createAtoms
 from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from simulationDataIO import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty
 from aleErrors import ConfigError
 
 def built_in_LennardJones(options, use_asap):
@@ -172,8 +172,29 @@ def MD(options):
         # When equilibrium is or isn't reached the elapsed time is calculated
         # and a statement is written in the terminal on wheter the system reached
         # equilibrium and how long it took or how long the simulation waited.
-        # TODO: Store this information together with the calculate quantities.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+        # Writes meta data about the equilibrium to the output .json-file
+        f = open(options['out_file_name'], 'a')
+        equilibiriumProp = {
+            'Equilibrium reached':
+                outputSingleProperty(
+                    f,
+                    'Equilibrium reached',
+                    eqReached
+                ),
+            'Time before equilibrium':
+                outputSingleProperty(
+                    f,
+                    'Time before equilibrium',
+                    timeToEquilibrium
+                )
+        }
+
+        for prop in list(equilibiriumProp):
+            equilibiriumProp[prop]()
+
+        f.close()
 
         if eqReached:
             print("System reached equilibirium after",timeToEquilibrium,"fs")

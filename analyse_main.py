@@ -14,13 +14,15 @@ def analyse_main(options,traj_read):
 
     # Output specified data to outfile
     if options['output']:
-        output_properties_to_file(options, traj_read, options['out_file_name'])
+        output_properties_to_file(options, traj_read)
 
-def output_properties_to_file(options, traj, out_file_name='out.json'):
+def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
-    with open(out_file_name, 'w+') as f:
+    out_file_name = options["out_file_name"] 
+
+    with open(out_file_name, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
             'Temperature' : 
@@ -46,21 +48,18 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
             #     ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Self Diffusion Coefficient',
                     self_diffusion_coefficient(traj)
                 ),
             'Density' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Density',
                     density(last_atoms_object)
                 ),
             'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
                 outputSingleProperty(
-                    traj,
                     f,
                     'Instant Pressure',
                     pressure(last_atoms_object)
@@ -71,7 +70,6 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
             'Specific Heat Capacity' :
                 outputSingleProperty(
-                    traj,
                     f,
                     'Specific Heat Capacity',
                     specificHeatCapacity(options['ensemble'],traj)

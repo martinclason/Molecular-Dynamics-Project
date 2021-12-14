@@ -82,7 +82,17 @@ def run(arguments=None):
     # default to <symbol>.traj
     options['traj_file_name'] = f"{options['symbol']}.traj"
   print(options)
-  options['out_file_name'] = args.out_file_name
+
+  if args.out_file_name:
+    options['out_file_name'] = args.out_file_name
+  else:
+    # Defaults to <symbol>.json if not provided in the command line.
+    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}.json")
+
+  if len(options['output']) > 0:
+    f = open(options['out_file_name'], 'r+')
+    f.truncate(0) # need '0' when using r+
+    f.close()
 
   args.sub_command(options, args)
 
