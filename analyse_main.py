@@ -68,6 +68,12 @@ def output_properties_to_file(options, traj):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Lindemann criterion' :
+                outputSingleProperty(
+                    f,
+                    'Lindemann criterion',
+                    lindemann_criterion(traj)
+                ),
             'Specific Heat Capacity' :
                 outputSingleProperty(
                     f,
