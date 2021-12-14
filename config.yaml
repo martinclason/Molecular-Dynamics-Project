@@ -24,7 +24,7 @@ interval: 20
 output:
   - Temperature
   - Volume
-  - Debye Temperature
+  #- Debye Temperature
   - Self Diffusion Coefficient
   - Density
   - Pressure
