@@ -31,3 +31,28 @@ def inputSimulationData(out_file_name="out.json"):
             read_data.update(json.loads(line))
 
     return read_data
+
+def outputarraytofile(name,array,out_file):
+    """Creates and returns outputter function that dumps some data from
+    array into json file. Can be used if calculations are needed before 
+    dumping data in .json file"""
+    def output():
+        data = {
+            name : list(array)
+        }
+        json.dump(data, fp=out_file)
+        
+        out_file.write('\n')
+    return output
+
+def outputSingleProperty(traj, out_file, name, value) :
+    """Writes single value to json file"""
+    def output():
+        data = {
+            name : value
+        }
+        json.dump(data, fp=out_file)
+        # Newline to generate JSON Lines data, one doc per line
+        out_file.write('\n')
+
+    return output
