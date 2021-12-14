@@ -3,12 +3,8 @@ from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
-<<<<<<< HEAD
-import os
-=======
 from specificHeatCapacity import specificHeatCapacity
 import numpy as np
->>>>>>> develop
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
