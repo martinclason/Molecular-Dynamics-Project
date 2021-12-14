@@ -92,6 +92,4 @@ if rank < len(options_list):
 else:
     print(f"\n\n\nprocess {rank} did no work\n\n\n")
 
-# print(f"process {rank} before barrier")
-comm.Barrier()
-print(f"process {rank} after barrier")
+print(f"process {rank} all done")
