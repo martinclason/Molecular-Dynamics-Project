@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import math
+from simulationDataIO import inputSimulationData
+import numpy as np
 import os
+
 
 def MSD(t,atom_list):
     """The MSD(t,atom:list) function calculates and returns the mean square displacement for one time t.
@@ -13,19 +16,26 @@ def MSD(t,atom_list):
     squareddiff = diff**2
     summ = sum(sum(squareddiff))
     normsum = (1/N) * summ
-    return normsum
+    return normsum #Å^2
 #Calculates MSD for all the time steps and plots them
-def MSD_plot(time,atom_list):
-    """The MSD_plot(time,atom_list) function calculates the MSD for every timestep in the simulation 
-    from .traj file. It returns a plot of the MSD over time."""
-    MSD_data = []
-    for t in range(time):
-        MSD_data.append(MSD(t,atom_list))
-    plt.plot(range(time),MSD_data)
-    plt.ylabel("MSD-[Å]")
-    plt.xlabel("Measured time step")
-    plt.title("Mean Square Displacement")
-    plt.show()
+def make_MSD_plotter(data):
+    """The make_MSD_plotter function takes in data dictionary from .json file, takes 
+    the MSD data out from it and returns a plotter that can plot MSD over time"""
+    def plotter():
+        MSD_data = data["MSD"]
+        dt = 2
+        t = np.arange(0, len(MSD_data)*dt, dt)
+
+        fig = plt.figure()
+        ax = plt.axes()
+        
+        plt.ylabel("MSD-[Å]")
+        plt.xlabel("Measured time step")
+        plt.title("Mean Square Displacement") 
+
+
+        ax.plot(t,MSD_data)
+    return plotter  
 
 def self_diffusion_coefficient(atom_list) :
     """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
@@ -45,7 +55,9 @@ def lindemann_criterion(atom_list) :
     The lindemann criterion states that melting happens when the the root mean vibration exceeds 10%
     of the nearest neighbor (NN) distance. The function checks this condition by calling MSD() and
     returns True if the condition is met"""
+
     # TODO: Maybe dangerous to use tags like this if the order/index changes...
+
     size = atom_list[0].get_tags()[0]
     super_cell_x = atom_list[0].cell[0]
     unit_cell_x = super_cell_x / size
@@ -53,3 +65,4 @@ def lindemann_criterion(atom_list) :
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2) 
     t = len(atom_list) - 1 #Take the system at the last accessible time
     return (MSD(t,atom_list) > 0.1 * NN)
+

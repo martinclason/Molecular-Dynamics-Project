@@ -32,6 +32,7 @@ def test_ale_small_simulation_ase():
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation_builtin_LJ():
     """Test built in LJ potential that doesn't depend on openKIM"""
 

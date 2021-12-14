@@ -21,27 +21,16 @@ iterations: 2000
 interval: 20
 
 #-----------Analyse------------#
-run_density: True
-density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
-
-run_MSD: True
-MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
-
-run_self_diffusion_coefficient: True
-self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
-
-run_pressure: True
-
 output: #What material parameters to calculate and output from the traj-file?
-  - temperature
-  - volume
+  - Temperature
+  - Volume
 
 #-----------Visualize------------#
 visualize:
-  - temperature
-  - scatter
-scatter_type_d1: "temperature"
-scatter_type_d2: "volume"
+  - Temperature
+  - Scatter
+scatter_type_d1: "Temperature"
+scatter_type_d2: "Volume"
 scatter_dir:  #Leave empty and it will search for .json files in the main dir.
 scatter_files: []
 run_density_plot: False
