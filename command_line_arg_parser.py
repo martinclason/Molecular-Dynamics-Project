@@ -64,7 +64,7 @@ data about the atoms for time steps in the simulation.
             cmd.set_defaults(sub_command=subcommands[command])
 
     def parse_args(self, args=None):
-        if args:
+        if args is not None:
             # Handle if caller passes explicit args list
             parsed_args = self.parser.parse_known_args(args)
             parsed_args = self.parser.parse_args(parsed_args[1], parsed_args[0])

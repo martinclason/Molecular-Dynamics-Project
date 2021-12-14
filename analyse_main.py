@@ -1,5 +1,5 @@
 from density import density
-from MSD import MSD, self_diffusion_coefficient, Lindemann_criterion
+from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile
 from debye_temperature import debye_temperature
@@ -17,8 +17,6 @@ def analyse_main(options,traj_read):
     #MSD_time = options["MSD_time"] if options["MSD_time"] else 0
     run_pressure = options["run_pressure"]
     run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
-    self_diffusion_coefficient_time = options["self_diffusion_coefficient_time"] if options["self_diffusion_coefficient_time"] else 1
-
 
     if run_density:
         density(traj_read,density_time)
@@ -43,9 +41,10 @@ def analyse_main(options,traj_read):
             atoms_kinetic_energy)
 
     if run_self_diffusion_coefficient:
-        self_diffusion_coefficient(self_diffusion_coefficient_time, traj_read)
+        self_diffusion_coefficient(traj_read)
 
-    print("Debye Temperature:", debye_temperature(traj_read))
+    if options.get('run_debye', True):
+        print("Debye Temperature:", debye_temperature(traj_read))
 
     # Output specified data to outfile
     if options['output']:
