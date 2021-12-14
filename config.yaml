@@ -19,6 +19,7 @@ output:
   - Debye Temperature
   - Self Diffusion Coefficient
   - Density
+  - Pressure
   - MSD
   - Self Diffusion Coefficient Array
 # set potential to 'LJ' to use built in LennardJones

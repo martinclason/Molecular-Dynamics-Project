@@ -10,7 +10,6 @@ def analyse_main(options,traj_read):
     options for analysing the simulated material. It is specified in config file exactly what 
     the user wants to calculate"""
 
-
     run_density = options["run_density"]
     density_time = options["density_time"] if options["density_time"] else 0
     #run_MSD = options["run_MSD"]
@@ -18,27 +17,8 @@ def analyse_main(options,traj_read):
     run_pressure = options["run_pressure"]
     run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
 
-    # if run_density:
-    #     density(traj_read,density_time)
-
-    #if run_MSD:
-        #outputarraytofile("MSD",MSD_data_calc(traj_read))
-    
-
-    atoms_volume = traj_read[1].get_volume()
-    atoms_positions = traj_read[1].get_positions()
-    atoms_kinetic_energy = traj_read[1].get_kinetic_energy()
-    atoms_forces = traj_read[1].get_forces()
-    atoms_temperature = traj_read[1].get_temperature()
-    atoms_number_of_atoms = len(atoms_positions)
-
     if run_pressure:
-        pressure(atoms_forces,
-            atoms_volume,
-            atoms_positions,
-            atoms_temperature,
-            atoms_number_of_atoms,
-            atoms_kinetic_energy)
+        pressure(traj_read[-1])
 
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(traj_read)
@@ -89,6 +69,13 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     f,
                     'Density',
                     density(last_atoms_object)
+                ),
+            'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Instant Pressure',
+                    pressure(last_atoms_object)
                 ),
             'Self Diffusion Coefficient Array' :
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
