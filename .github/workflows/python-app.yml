@@ -22,10 +22,11 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
+        sudo apt-get -y install libkim-api-dev openkim-models
         python -m pip install --upgrade pip
-        pip install flake8 pytest wheel numpy scipy ase pyyaml
+        pip install flake8 pytest wheel numpy scipy ase pyyaml kimpy
         pip install asap3
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        #if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -34,4 +35,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python3 -m pytest
+        make ci-test
+        # python3 -m pytest

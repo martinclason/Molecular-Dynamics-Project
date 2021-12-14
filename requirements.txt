@@ -1,3 +1,13 @@
-ase ~= 3.22
-asap3 ~= 3.12
+ase
+asap3
 pyyaml
+sphinx
+kimpy
+kim-api
+openkim-models
+Cython
+numpy
+scipy
+matplotlib
+mpi4py
+pytest

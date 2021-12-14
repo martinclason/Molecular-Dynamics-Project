@@ -1,30 +1,48 @@
 ---
-Element: 'argon'
-Z: 4 # Number of atoms
-M: 1 # Molar mass
-atomic_number: 18
-epsilon: 0.010323 # eV
-sigma: 3.40 # Å
-cutoff: 6.625 # Å
-Na: 6.023E+23 # avogadros constant
-a : 5.256E-10 # Lattice constant
-# Insert None for the unused lattice constants (e.g. [3.569,None,None,None,None,None] for SC/FCC/BCC lattice) 
-latticeconstants : [3.569,None,None,None,None,None] #[a, b, c, alpha, beta, gamma]
-#bravaislattice currently only supports "SC", "FCC", "BCC" 
-bravaislattice : #(conventional unit cell)
-directions : [[1,0,0], [0,1,0], [0,0,1]] #(use Miller-Bravais for hex-structure), hex currently not supported
-#Customizable primitive unit cell, leave bravaislattice empty if cell is used.
-cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
-positions : [[0,0,0],[0,0,1]] #Set position of each atom in the molecule
-symbol : "CuAl"
-make_traj: True
+#-----------Atoms Setup------------#
+latticeconstant : 4.09 #Only supporting cubic lattices with one parameter
+cell: "fcc" #[[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Ag" 
 pbc : True #periodic boundary conditions
-size : [2,2,2]
-temperature_K : 300
-# Leave potential empty if running ASE, will resort to using EMT as potential.
-potential:
-run_density: False
+size : 5 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+
+#-----------Simulation Setup------------#
+make_traj: True
 run_MD: True
+ensemble: "NVE" #Choose NVT or NVE
+NVT_friction: 0.2
+temperature_K : 300
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+dt: 5 # simulation time step [fs]
+iterations: 1000
+interval: 50
+
+#-----------Analyse------------#
+run_density: True
+density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
+
+run_MSD: True
+MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
+
+run_self_diffusion_coefficient: True
+self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
+
 run_pressure: True
-iterations: 2000
-interval: 100
+
+output: #What material parameters to calculate and output from the traj-file?
+  - temperature
+  - volume
+
+#-----------Visualize------------#
+visualize:
+  - temperature
+  - scatter
+scatter_type_d1: "temperature" #chooses which type of data to write to x-axis.
+scatter_type_d2:  #chooses which type of data to write to y-axis.
+scatter_dir:  #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
+scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
+run_density_plot: False
+run_MSD_plot: False

@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 
-from command_line_arg_parser import parser
+from command_line_arg_parser import CreateParser
 from md_config_reader import config_parser as config_file_parser
 from main import main
+from analyse_main import analyse_main
+from visualize_main import visualize as visualize_simulation
+import os
+
+from asap3 import Trajectory
+
+import pprint
 """There is a parser for passing flags from the command line to the MD which enables
 or disables the use of asap on the current run with the flags '--asap' for enable-
 ing it and '--no-asap' to disable it.
@@ -11,14 +18,75 @@ Passing this flag is to avoid getting the error 'illegal instruction (core dumpe
 in the terminal since some machines cannot run the current version of ASAP which
 is used in this project. """
 
-args = parser.parse_args()
-parsed_config_file = config_file_parser(args.config_file)
+pp = pprint.PrettyPrinter(indent=4)
 
-options = parsed_config_file
-options['use_asap'] = args.use_asap
+def default(options, args=None):
+  print("Running default")
+  simulate(options)
+  analyze(options)
 
-print(f'Use asap: {options["use_asap"]}')
-print(options["Element"])
-print(options["Z"])
+def multi(options, args):
+  print("Should run multiple simulations and analyzations parallelized on multiple cores")
+  multi_config_file = args.multi_config_file
+  print(f"multi_config_file: {multi_config_file}")
+  # TODO: Parse multi config file
+  output_dir = args.out_dir
 
-main(options)
+  # Setup correct traj file
+  # default to <symbol>.traj
+  traj_file_name = options['traj_file_name']
+  options['traj_file_name'] = os.path.join(output_dir, traj_file_name)
+
+  # Setup correct out data file (JSON)
+  out_file_name = options['out_file_name']
+  options['out_file_name'] = os.path.join(output_dir, out_file_name)
+
+  simulate(options)
+  analyze(options)
+
+def simulate(options, args=None):
+  print(f'Use asap: {options["use_asap"]}')
+  print("Using traj:", options['traj_file_name'])
+  main(options)
+
+def analyze(options, args=None):
+  traj_read = Trajectory(options['traj_file_name'])
+  analyse_main(options,traj_read)
+
+def visualize(options, args=None):
+  # pp.pprint(options)
+  visualize_simulation(options, options['out_file_name'])
+
+def run(arguments=None):
+  parser = CreateParser(
+                default=default,
+                multi=multi,
+                simulate=simulate,
+                analyze=analyze,
+                visualize=visualize,
+           )
+
+  if arguments:
+    args = parser.parse_args(arguments.split(" "))
+  else:
+    args = parser.parse_args()
+
+  parsed_config_file = config_file_parser(args.config_file)
+
+  options = parsed_config_file
+  options['use_asap'] = args.use_asap
+  if args.traj_file_name:
+    print("Using supplied traj_file")
+    options['traj_file_name'] = args.traj_file_name
+  else:
+    # default to <symbol>.traj
+    options['traj_file_name'] = f"{options['symbol']}.traj"
+  print(options)
+  options['out_file_name'] = args.out_file_name
+
+  args.sub_command(options, args)
+
+if __name__=="__main__":
+  run()
+  # Use this to run some specific command with args when debugging
+  #run("multi m_config.yaml out")
