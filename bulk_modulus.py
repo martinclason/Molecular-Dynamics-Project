@@ -8,6 +8,11 @@ import numpy as np
 from asap3 import Atoms
 from asap3 import EMT
 
+from ase.calculators.kim.kim import KIM
+#import kimpy
+
+
+
 """
 This function creates atoms objects with varying lattice constants from a guessed
 value, a, of the chosen element. Using the linspace function to choose a range
@@ -22,7 +27,7 @@ def create_lattice_traj(symbol):
     ag = Atoms(symbol,
            cell=[(0, b, b), (b, 0, b), (b, b, 0)],
            pbc=1,
-           calculator=EMT())  # use EMT potential
+           calculator=EMT())#KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"))
     cell = ag.get_cell()
     traj = Trajectory(symbol + ".traj", 'w')
 
