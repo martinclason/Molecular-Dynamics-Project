@@ -3,6 +3,7 @@ from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
+from specificHeatCapacity import specificHeatCapacity
 import numpy as np
 
 def analyse_main(options,traj_read):
@@ -13,9 +14,9 @@ def analyse_main(options,traj_read):
 
     # Output specified data to outfile
     if options['output']:
-        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
+        output_properties_to_file(options, traj_read, options['out_file_name'])
 
-def output_properties_to_file(properties, traj, out_file_name='out.json'):
+def output_properties_to_file(options, traj, out_file_name='out.json'):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
@@ -36,13 +37,13 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-            'Debye Temperature' : 
-                outputSingleProperty(
-                    traj,
-                    f,
-                    'Debye Temperature',
-                    debye_temperature(last_atoms_object)
-                ),
+            # 'Debye Temperature' : 
+            #     outputSingleProperty(
+            #         traj,
+            #         f,
+            #         'Debye Temperature',
+            #         debye_temperature(last_atoms_object)
+            #     ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
                     traj,
@@ -68,9 +69,16 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Specific Heat Capacity' :
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Specific Heat Capacity',
+                    specificHeatCapacity(options['ensemble'],traj)
+                ),
         }
 
-        for prop in properties:
+        for prop in options['output']:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
 
