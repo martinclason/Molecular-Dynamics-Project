@@ -2,16 +2,17 @@ import matplotlib.pyplot as plt
 import math
 
 
-def density(atom_list,t):
+def density(atoms_object):
     """The function 'density()' takes a time t, a list of atoms from .traj file 
     and config options as argument and calculates the density of the chosen 
     time step t. Prints and returns density in g/cm^3"""
-    m = sum(atom_list[t].get_masses()) * (1.6605387E-24)
-    V = atom_list[t].cell.volume*10**(-24)
+    m = sum(atoms_object.get_masses()) * (1.6605387E-24)
+    V = atoms_object.cell.volume*10**(-24)
     density = m/V
 
     return density
 
+# TODO: Should we keep density plot? Might need some restructuring since density() now takes atoms_object instead of atom_list
 def density_plot(time,atom_list,options):
     """The function 'density_plot()' takes a amount of timesteps, a list of atoms
     from a .traj file amd options from config file and plots the density over time.

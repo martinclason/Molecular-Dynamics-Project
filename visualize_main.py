@@ -4,6 +4,7 @@ import numpy as np
 from scatter import make_scatter_plotter
 
 from simulationDataIO import inputSimulationData
+from MSD import make_MSD_plotter
 
 def s_to_fs(t):
   return t*10e-15
@@ -23,6 +24,7 @@ def visualize(options, data_file_name="out.json"):
 
   known_visualizers = {
     'temperature' : make_temperature_plotter(data, dt),
+    'MSD' : make_MSD_plotter(data),
     'scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }
 

@@ -4,22 +4,22 @@ from ase.calculators.kim.kim import KIM
 #https://docs.materialsproject.org/methodology/elasticity/
 #https://www.nature.com/articles/sdata20159.pdf
 
-def shear_modulus(atom_list) :
+def shear_modulus(atoms_object) :
     """Takes a list of atoms objects and returns the shear modulus
     for the molecule/element with the structure specified by the
     atoms objects. Currently uses the universal LJ potential
     since there seems to be no way of retrieving the calculator
     attached to the atoms objects (after being written and read
     to and from a traj-file)"""
-    all_symbols = atom_list[0].get_chemical_symbols()
-    size = atom_list[0].get_tags()[0]
+    all_symbols = atoms_object.get_chemical_symbols()
+    size = atoms_object.get_tags()[0]
     size_cube = size**3
     number_of_atoms = int(len(all_symbols) / size_cube) # Number of atoms per molecule
     molecule_symbols = all_symbols[0:number_of_atoms] #Retrieve masses from one molecule
     symbols = ''.join(molecule_symbols)
-    interatomic_positions = atom_list[0].get_positions()[0:number_of_atoms]
+    interatomic_positions = atoms_object.get_scaled_positions()[0:number_of_atoms]
 
-    old_cell = atom_list[0].get_cell() / size
+    old_cell = atoms_object.get_cell() / size
     displacement_angle = math.radians(5)
     new_cell = old_cell
     for i in range(2):
@@ -31,7 +31,7 @@ def shear_modulus(atom_list) :
         
         new_z = old_z * math.cos(displacement_angle)
         new_cell[i][2] = new_z
- 
+    
     atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
     atoms = atoms.repeat([size,size,size]) 
 
