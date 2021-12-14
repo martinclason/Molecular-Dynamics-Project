@@ -18,7 +18,7 @@ def analyse_main(options,traj_read):
     out_file_path = os.path.join(output_dir, options['out_file_name'])
 
     if options['output']:
-        output_properties_to_file(options, traj_read, options['out_file_name'])
+        output_properties_to_file(options, traj_read, out_file_path)
 
 def output_properties_to_file(options, traj, out_file_name='out.json'):
     """ Outputs the chosen properties from a traj file to

@@ -26,6 +26,7 @@ def simulate(options):
     simulate_main(options)
 
 def analyze(options):
+    print(f"process {rank} writes output to: {options['out_dir']}/{options['out_file_name']}")
     traj_read_path = os.path.join(options['out_dir'], options['traj_file_name'])
     traj_read = Trajectory(traj_read_path)
     analyze_main(options, traj_read)
