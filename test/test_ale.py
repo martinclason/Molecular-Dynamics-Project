@@ -7,7 +7,8 @@ import pytest
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
 
-@pytest.mark.integration
+@pytest.mark.integrationcode
+@pytest.mark.openkim    
 def test_ale_help():
     try:
         process = subprocess.run(
