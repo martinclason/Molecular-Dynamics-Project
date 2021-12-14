@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from scatter import make_scatter_plotter
+
 from simulationDataIO import inputSimulationData
 from MSD import make_MSD_plotter
 
@@ -22,7 +24,8 @@ def visualize(options, data_file_name="out.json"):
 
   known_visualizers = {
     'temperature' : make_temperature_plotter(data, dt),
-    'MSD' : make_MSD_plotter(data)
+    'MSD' : make_MSD_plotter(data),
+    'scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }
 
   for visualizer_name, visualizer in known_visualizers.items():

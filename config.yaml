@@ -40,5 +40,10 @@ run_pressure: True
 #-----------Visualize------------#
 visualize:
   - temperature
-  - MSD
-run_density_plot: True
+  - scatter
+scatter_type_d1: "temperature" #chooses which type of data to write to x-axis.
+scatter_type_d2:  #chooses which type of data to write to y-axis.
+scatter_dir:  #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
+scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
+run_density_plot: False
+run_MSD_plot: False
