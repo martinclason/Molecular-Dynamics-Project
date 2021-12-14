@@ -1,26 +1,29 @@
 import numpy as np
-from ase import Atoms
+from ase import atoms
 
 
-def pressure(forces, volume, positions, temperature, number_of_atoms, kinetic_energy):
+def pressure(atoms_object):
+    forces = atoms_object.get_forces()
+    volume = atoms_object.get_volume()
+    kinetic_energy = atoms_object.get_kinetic_energy()
+    positions = atoms_object.get_positions()
+    number_of_atoms_object = len(positions) #TODO: Is this indexed correctly?
+    temperature = atoms_object.get_temperature()
 
     forces_times_positions = sum(np.dot(x,y) for x, y in zip(positions, forces))
 
-    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms * kinetic_energy)
+    instant_pressure = (1/3 * volume) * ((2 * number_of_atoms_object * kinetic_energy)
                             + forces_times_positions)
-
-    print("The instant pressure is: " + str(instant_pressure))
-
     return instant_pressure
 
 
 
-def printpressure(atoms):
+def printpressure(atoms_object):
      """Function to calculate and print the instant pressure in XXX for every timestep """
      forces_times_positions = sum(np.dot(x,y) for x, y in
-                            zip(atoms.get_positions(), atoms.get_forces()))
+                            zip(atoms_object.get_positions(), atoms_object.get_forces()))
 
-     instant_pressure = ((1/(3 * atoms.get_volume())) * ((2 * len(atoms) *
-     atoms.get_kinetic_energy()) + forces_times_positions))
+     instant_pressure = ((1/(3 * atoms_object.get_volume())) * ((2 * len(atoms_object) *
+     atoms_object.get_kinetic_energy()) + forces_times_positions))
 
      print("The instant pressure is: " + str(instant_pressure))

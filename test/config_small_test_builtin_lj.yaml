@@ -21,25 +21,12 @@ iterations: 7000
 interval: 100
 
 #-----------Analyse------------#
-run_density: True
-density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
-
-run_MSD: False
-MSD_time: #If wanted to specify what timestep the mean square displacement is to be calculated. Empty = first timestep
-
-run_debye: False
-
-run_self_diffusion_coefficient: True
-self_diffusion_coefficient_time: #If wanted to specify what timestep the self diffusion coefficient is to be calculated. Empty = first timestep
-
-run_pressure: True
-
 output: #What material parameters to calculate and output from the traj-file?
-  - temperature
-  - volume
+  - Temperature
+  - Volume
 
 #-----------Visualize------------#
 visualize:
-  - temperature
+  - Temperature
 run_density_plot: False
 run_MSD_plot: False
