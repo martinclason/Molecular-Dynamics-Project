@@ -1,9 +1,12 @@
 from pickle_options import pickle_options
 from subprocess import Popen, PIPE
 import os
+import pytest
 
 
+# TODO: Add tests
 
+@pytest.mark.skip
 def test_parallel_proof_of_concept():
     pickle_options()
 
