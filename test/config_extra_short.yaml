@@ -1,6 +1,6 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 3.615 #Only supporting cubic lattices with one parameter
+latticeconstant : 10.615 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
 symbol : "Cu" 

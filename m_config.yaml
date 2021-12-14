@@ -1,9 +1,5 @@
 elements:
-  #- ["Ar"]
-  #- ["Cu"]
-
-  - ["Ar", "Cu"]
-  #- ["Cu", "Ar"]
+  - ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
   #- ["Na", "Ca"]
   #- ["Cl"]
 
