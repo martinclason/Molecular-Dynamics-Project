@@ -13,6 +13,14 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+dt: 5 # simulation time step [fs]
+iterations: 500
+interval: 20
+
+#-----------Analyse------------#
 output:
   - Temperature
   - Volume
@@ -22,26 +30,12 @@ output:
   - Pressure
   - MSD
   - Self Diffusion Coefficient Array
-# set potential to 'LJ' to use built in LennardJones
-# prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
-dt: 5 # simulation time step [fs]
-iterations: 500
-interval: 20
-
-#-----------Analyse------------#
-run_density: True
-density_time: 1 #If wanted to specify what timestep the density is to be calculated. Empty = first timestep
-
-run_self_diffusion_coefficient: True
-
-run_pressure: True
 
 #-----------Visualize------------#
 visualize:
-  - temperature
-  - scatter
-scatter_type_d1: "temperature" #chooses which type of data to write to x-axis.
+  - Temperature
+  - Scatter
+scatter_type_d1: "Temperature" #chooses which type of data to write to x-axis.
 scatter_type_d2:  #chooses which type of data to write to y-axis.
 scatter_dir:  #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
 scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.

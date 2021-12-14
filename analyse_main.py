@@ -10,20 +10,6 @@ def analyse_main(options,traj_read):
     options for analysing the simulated material. It is specified in config file exactly what 
     the user wants to calculate"""
 
-    run_density = options["run_density"]
-    density_time = options["density_time"] if options["density_time"] else 0
-    #run_MSD = options["run_MSD"]
-    #MSD_time = options["MSD_time"] if options["MSD_time"] else 0
-    run_pressure = options["run_pressure"]
-    run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
-
-    if run_pressure:
-        pressure(traj_read[-1])
-
-    if run_self_diffusion_coefficient:
-        self_diffusion_coefficient(traj_read)
-
-
     # Output specified data to outfile
     if options['output']:
         output_properties_to_file(options['output'], traj_read, options['out_file_name'])
