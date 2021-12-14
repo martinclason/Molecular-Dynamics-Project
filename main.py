@@ -110,7 +110,10 @@ def MD(options):
     print(f"nvt_friction {nvt_friction}")
 
     # Set the momenta corresponding to the temperature
-    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature)
+    # The communicator is set to 'serial' to inhibit this function trying 
+    # to communicate between processes. This would send a broadcast which seems to deadlock
+    # the program if processes calls this function a different number of times.
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
     # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
