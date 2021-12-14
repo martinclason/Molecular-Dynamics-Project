@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import math
 from simulationDataIO import inputSimulationData
 import numpy as np
+import os
+
 
 def MSD(t,atom_list):
     """The MSD(t,atom:list) function calculates and returns the mean square displacement for one time t.
@@ -59,3 +61,4 @@ def lindemann_criterion(atom_list) :
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2) 
     t = len(atom_list) - 1 #Take the system at the last accessible time
     return (MSD(t,atom_list) > 0.1 * NN)
+
