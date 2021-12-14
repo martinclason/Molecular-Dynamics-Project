@@ -1,7 +1,6 @@
 from ase.io.trajectory import Trajectory
 import numpy as np
 from ase import atoms, units
-import sys
 
 def specificHeatCapacity(ensemble, traj):
   """This function calculates the specific heat capacity from the trajectory output
@@ -9,7 +8,7 @@ def specificHeatCapacity(ensemble, traj):
 
   # Calculates the number of atoms and the temperature of the simulated system.
   N = len(traj[1].get_positions()) # Number of atoms is the same as number of positions
-  T = np.sum([atoms.get_temperature() for atoms in traj[-20:]])/20 # Average of last 10 itterations
+  T = np.mean([atoms.get_temperature() for atoms in traj]) # Average of last 20 itterations
 
   if ensemble == "NVE":
     # Calculates the kinetic energy per atom and then proceeds to calculate the 
