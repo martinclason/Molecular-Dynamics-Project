@@ -41,7 +41,7 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     traj,
                     f,
                     'Debye Temperature',
-                    debye_temperature(last_atoms_object)
+                    debye_temperature(last_atoms_object, options["potential"])
                 ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(

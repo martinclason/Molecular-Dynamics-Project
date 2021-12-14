@@ -4,7 +4,7 @@ from ase.calculators.kim.kim import KIM
 #https://docs.materialsproject.org/methodology/elasticity/
 #https://www.nature.com/articles/sdata20159.pdf
 
-def shear_modulus(atoms_object) :
+def shear_modulus(atoms_object, calc) :
     """Takes a list of atoms objects and returns the shear modulus
     for the molecule/element with the structure specified by the
     atoms objects. Currently uses the universal LJ potential
@@ -36,8 +36,8 @@ def shear_modulus(atoms_object) :
     atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
     atoms = atoms.repeat([size,size,size]) 
 
-    atoms.calc = KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003")
-
+    atoms.calc = calc
+    
     stress_z = (atoms.get_stress()[3]**2 + atoms.get_stress()[4]**2)**(1/2)
     unit_conversion = 160.21766208 * 10**9 # ev/Anstrom^3 to GPa to Pascal
     
