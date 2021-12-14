@@ -13,6 +13,11 @@ small_test_config_universal = "test/small_test_config_universal.yaml"
 short_test_config = "test/config_extra_short.yaml"
 
 @pytest.mark.integration
+def test_test() :
+    pass
+
+@pytest.mark.integration
+@pytest.mark.openkim    
 def test_ale_help():
     try:
         process = subprocess.run(
@@ -37,6 +42,7 @@ def test_ale_small_simulation_ase():
 
 
 @pytest.mark.integration
+@pytest.mark.openkim
 def test_ale_small_simulation_builtin_LJ():
     """Test built in LJ potential that doesn't depend on openKIM"""
 
