@@ -44,6 +44,7 @@ def options_from_element_combination(element_combination, multi_config, template
             options['potential'] = specified_pot
         elif default_pot := potentials_spec.get('default'):
             print(f"Using default potential {default_pot} for: {element}")
+            options['potential'] = default_pot
         else:
             print(f"No specific potential for: {element} was specified. Will try to use potential specified in config file instead.")
 
@@ -73,7 +74,8 @@ def run_in_parallell(options_list):
     print("Calling mpirun...")
     parallel_mpi_script = 'parallel_mpi_script.py'
     n_options = len(options_list)
-    arguments = ['mpirun', '-n', f'{n_options}', 'python3', parallel_mpi_script]
+    # arguments = ['mpirun', '-n', f'{n_options}', 'python3', parallel_mpi_script]
+    arguments = ['mpirun', 'python3', parallel_mpi_script]
     print(f"Will call mpirun with arguments: {arguments}")
     process = Popen(arguments)#, pickle_file_path])
     print(f"Waiting for process to finish...")
