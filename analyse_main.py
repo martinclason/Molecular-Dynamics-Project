@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
-from simulationDataIO import outputGenericFromTraj,outputarraytofile
+from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
 import numpy as np
 
@@ -18,8 +18,8 @@ def analyse_main(options,traj_read):
     run_pressure = options["run_pressure"]
     run_self_diffusion_coefficient = options["run_self_diffusion_coefficient"]
 
-    if run_density:
-        density(traj_read,density_time)
+    # if run_density:
+    #     density(traj_read,density_time)
 
     #if run_MSD:
         #outputarraytofile("MSD",MSD_data_calc(traj_read))
@@ -43,8 +43,6 @@ def analyse_main(options,traj_read):
     if run_self_diffusion_coefficient:
         self_diffusion_coefficient(traj_read)
 
-    if options.get('run_debye', True):
-        print("Debye Temperature:", debye_temperature(traj_read))
 
     # Output specified data to outfile
     if options['output']:
@@ -55,25 +53,47 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
         json-file.
     """
     with open(out_file_name, 'w+') as f:
+        last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
-            'temperature' : 
+            'Temperature' : 
                 outputGenericFromTraj(
                     traj,
                     f,
-                    'temperature',
+                    'Temperature',
                     lambda atoms: atoms.get_temperature(),
                 ),
-            'volume' : 
+            'Volume' : 
                 outputGenericFromTraj(
                     traj,
                     f,
-                    'volume',
+                    'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
+            'Debye Temperature' : 
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Debye Temperature',
+                    debye_temperature(last_atoms_object)
+                ),
+            'Self Diffusion Coefficient' : 
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Self Diffusion Coefficient',
+                    self_diffusion_coefficient(traj)
+                ),
+            'Density' : 
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Density',
+                    density(last_atoms_object)
+                ),
+            'Self Diffusion Coefficient Array' :
+                outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
-            'Self Diffusion Coefficient' :
-                outputarraytofile("Self Diffusion Coefficient",self_diffusion_coefficient_calc(traj),f),
         }
 
         for prop in properties:
@@ -88,10 +108,10 @@ def MSD_data_calc(traj_read):
     return MSD_data
 
 def self_diffusion_coefficient_calc(traj_read):
-    sfc = np.array([])
+    sdc = np.array([])
     for t in range(len(traj_read)):
-        sfc = np.append(sfc,self_diffusion_coefficient(t,traj_read))
-    return sfc
+        sdc = np.append(sdc,self_diffusion_coefficient(traj_read))
+    return sdc
 
 if __name__=="__main__":
     from command_line_arg_parser import parser
