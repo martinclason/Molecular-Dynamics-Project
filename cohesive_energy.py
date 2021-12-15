@@ -27,7 +27,10 @@ def cohesive_energy(options,atoms,iterations,file_output_path):
     print("Calculating Cohesive Energy")
     coh_dyn.run(iterations)
     print("Cohesive Energy calculated and stored in " + os.path.join(os.getcwd(),file_output_path))
+    coh_traj.close()
 
 def retrieve_cohesive_energy(traj_file):
+    if not os.path.isfile(traj_file):
+        return None
     traj_read_cohE = Trajectory(traj_file)
     return -traj_read_cohE[-1].get_potential_energy()/len(traj_read_cohE[0].get_positions())
