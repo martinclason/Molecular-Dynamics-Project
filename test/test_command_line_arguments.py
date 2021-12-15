@@ -87,13 +87,20 @@ def test_traj_file_argument():
 
 def test_out_file_argument():
     args = parser.parse_args([])
-    assert args.out_file_name == 'out.json'
+    assert args.out_file_name == None
 
     args = parser.parse_args(['-o', 'my_out.json'])
     assert args.out_file_name == 'my_out.json'
     
     args = parser.parse_args(['--out', 'my_out.json'])
     assert args.out_file_name == 'my_out.json'
+
+    args = parser.parse_args(['-d', 'my_dir'])
+    assert args.out_dir == 'my_dir'
+
+    args = parser.parse_args(['--dir', 'my_dir'])
+    assert args.out_dir == 'my_dir'
+
 
 
 # TODO: Add test for custom config files

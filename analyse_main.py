@@ -13,18 +13,21 @@ def analyse_main(options,traj_read):
     the user wants to calculate"""
 
 
-    # Output specified data to outfile
-    output_dir = options['out_dir']
-    out_file_path = os.path.join(output_dir, options['out_file_name'])
+    # # Output specified data to outfile
+    # output_dir = options['out_dir']
+    # out_file_path = os.path.join(output_dir, options['out_file_name'])
 
     if options['output']:
-        output_properties_to_file(options, traj_read, out_file_path)
+        output_properties_to_file(options, traj_read)
 
-def output_properties_to_file(options, traj, out_file_name='out.json'):
+def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
-    with open(out_file_name, 'w+') as f:
+
+    out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+    with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
             'Temperature' : 
@@ -50,21 +53,18 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
             #     ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Self Diffusion Coefficient',
                     self_diffusion_coefficient(traj)
                 ),
             'Density' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Density',
                     density(last_atoms_object)
                 ),
             'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
                 outputSingleProperty(
-                    traj,
                     f,
                     'Instant Pressure',
                     pressure(last_atoms_object)
@@ -73,9 +73,14 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Lindemann criterion' :
+                outputSingleProperty(
+                    f,
+                    'Lindemann criterion',
+                    lindemann_criterion(traj)
+                ),
             'Specific Heat Capacity' :
                 outputSingleProperty(
-                    traj,
                     f,
                     'Specific Heat Capacity',
                     specificHeatCapacity(options['ensemble'],traj)

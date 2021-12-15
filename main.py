@@ -1,4 +1,3 @@
-"""Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 
 #from ase.md.verlet import VelocityVerlet
@@ -12,7 +11,7 @@ import numpy as np
 from createAtoms import createAtoms
 from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from simulationDataIO import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty
 from aleErrors import ConfigError
 import os
 
@@ -154,7 +153,7 @@ def MD(options):
 
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -184,8 +183,31 @@ def MD(options):
         # When equilibrium is or isn't reached the elapsed time is calculated
         # and a statement is written in the terminal on wheter the system reached
         # equilibrium and how long it took or how long the simulation waited.
-        # TODO: Store this information together with the calculate quantities.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+        # Writes meta data about the equilibrium to the output .json-file
+        f = open(out_file_path, 'a')
+        equilibiriumProp = {
+            'Equilibrium reached':
+                outputSingleProperty(
+                    f,
+                    'Equilibrium reached',
+                    eqReached
+                ),
+            'Time before equilibrium':
+                outputSingleProperty(
+                    f,
+                    'Time before equilibrium',
+                    timeToEquilibrium
+                )
+        }
+
+        for prop in list(equilibiriumProp):
+            equilibiriumProp[prop]()
+
+        f.close()
 
         if eqReached:
             print("System reached equilibirium after",timeToEquilibrium,"fs")
