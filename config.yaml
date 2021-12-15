@@ -1,11 +1,12 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : 2.87 #Only supporting cubic lattices with one parameter
-cell: "bcc" #(primitive unit cell vectors)
-scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "Fe"
+latticeconstant : #Only supporting cubic lattices with one parameter
+guess_latticeconstant: 5
+cell: "fcc" #(primitive unit cell vectors)
+scaled_positions : [[0,0,0], [0.5,0.5,0.5]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "NiMo"
 pbc : True #periodic boundary conditions
-size : 5   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+size : 2   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -13,12 +14,12 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
-checkForEquilibrium : True
+checkForEquilibrium : False
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:EAM_Dynamo_AcklandBaconCalder_1997_Fe__MO_142799717516_005"
+potential: "openKIM:SNAP_LiHuChen_2018_NiMo__MO_468686727341_000"
 dt: 5 # simulation time step [fs]
-iterations: 500
+iterations: 1000
 interval: 20
 
 #-----------Analyse------------#
@@ -34,6 +35,7 @@ output:
   - Specific Heat Capacity
   - Lindemann criterion
   - Optimal Lattice Constant
+  - Optimal Lattice Volume
   - Bulk Modulus
 
 #-----------Visualize------------#

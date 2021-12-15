@@ -48,7 +48,6 @@ def output_properties_to_file(options, traj):
                 ),
             'Debye Temperature' :
                 outputSingleProperty(
-                    traj,
                     f,
                     'Debye Temperature',
                     debye_temperature(first_atoms_object, options)
@@ -91,13 +90,19 @@ def output_properties_to_file(options, traj):
                     outputSingleProperty(
                         f,
                         'Optimal Lattice Constant',
-                        calc_lattice_constant(options['symbol'])[0]
+                        calc_lattice_constant(options)[0]
+                    ),
+            'Optimal Lattice Volume' :
+                    outputSingleProperty(
+                        f,
+                        'Optimal Lattice Volume',
+                        calc_lattice_constant(options)[2]
                     ),
             'Bulk Modulus' :
                     outputSingleProperty(
                         f,
                         'Bulk Modulus',
-                        calc_lattice_constant(options['symbol'])[1]
+                        calc_lattice_constant(options)[1]
                     ),
         }
 
