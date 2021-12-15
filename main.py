@@ -5,8 +5,9 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 from ase.md.langevin import Langevin
 
 from asap3 import Trajectory
-from ase import units
 import numpy as np
+from ase import units
+
 
 from createAtoms import createAtoms
 from equilibriumCondition import equilibiriumCheck

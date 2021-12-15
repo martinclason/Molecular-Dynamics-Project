@@ -1,4 +1,5 @@
 from ase.calculators.kim.kim import KIM
+from ase import units
 
 def built_in_LennardJones(options) :
     use_asap = options["use_asap"]
@@ -49,7 +50,7 @@ def create_potential(options) :
     potential_str = options["potential"]
     if potential_str.lower() in ("lj", "LennardJones".lower()):
         # return built in LennardJones
-        return built_in_LennardJones(options, use_asap)
+        return built_in_LennardJones(options)
     if "openkim:" in potential_str.lower():
         # extract openKIM id from string prefixed with 'openkim:'
         openKIMpotential_str = potential_str.split(":")[1]

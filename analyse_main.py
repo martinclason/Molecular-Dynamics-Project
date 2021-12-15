@@ -22,6 +22,7 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
     """
     with open(out_file_name, 'w+') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
+        first_atoms_object = traj[0] #Take the first atoms object
         known_property_outputters = {
             'Temperature' : 
                 outputGenericFromTraj(
@@ -37,23 +38,13 @@ def output_properties_to_file(options, traj, out_file_name='out.json'):
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-<<<<<<< HEAD
             'Debye Temperature' : 
                 outputSingleProperty(
                     traj,
                     f,
                     'Debye Temperature',
-                    debye_temperature(last_atoms_object, options["potential"])
+                    debye_temperature(first_atoms_object, options)
                 ),
-=======
-            # 'Debye Temperature' : 
-            #     outputSingleProperty(
-            #         traj,
-            #         f,
-            #         'Debye Temperature',
-            #         debye_temperature(last_atoms_object)
-            #     ),
->>>>>>> develop
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
                     traj,
