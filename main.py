@@ -153,7 +153,7 @@ def MD(options):
 
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -185,8 +185,10 @@ def MD(options):
         # equilibrium and how long it took or how long the simulation waited.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
 
+        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
         # Writes meta data about the equilibrium to the output .json-file
-        f = open(options['out_file_path'], 'a')
+        f = open(out_file_path, 'a')
         equilibiriumProp = {
             'Equilibrium reached':
                 outputSingleProperty(
