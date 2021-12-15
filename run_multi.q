@@ -17,7 +17,7 @@ module load Anaconda/2020.07-nsc1
 #conda activate /proj/tfya99/software/condaenv
 conda activate /home/x_marcl/.conda/envs/tfya99
 #conda list
-#time ./ale multi m_config.yaml out -c test/config_extra_short.yaml
-time mpirun python3 parallel_mpi_script.py
+time ./ale multi m_config.yaml out -c test/config_extra_short.yaml
+#time mpirun python3 parallel_mpi_script.py
 
 echo "job completed"
