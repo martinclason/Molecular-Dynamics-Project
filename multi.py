@@ -30,86 +30,66 @@ def generate_options_list(multi_config, options):
 
     return options_list
 
+
 def multi(multi_config, options, simulate, analyze):
     options_list = generate_options_list(multi_config, options)
 
     run_in_parallell(options_list)
 
+
+def serialize_element_combination(element_combination):
+    # TODO: Fix for multiple elements aswell
+    return element_combination[0]
+
+
 def options_from_element_combination(element_combination, multi_config, template_options, output_dir):
     options = deepcopy(template_options)
 
-    # TODO: Fix for multiple elements aswell
-    element = element_combination[0]
-    element_combination_serialized = element_combination[0]
+    element_combination_serialized = serialize_element_combination(element_combination)
 
     # Prepare options
-    options['symbol'] = element
+    options['symbol'] = element_combination_serialized
 
-    # Set potential if specified for this element combination
-    if potentials_spec := multi_config.get('potentials'):
-        if specified_pot := get_spec_potential_for_element(potentials_spec, element):
-            print(f"Using specified potential {specified_pot} for: {element}")
-            options['potential'] = specified_pot
-        elif default_pot := potentials_spec.get('default'):
-            print(f"Using default potential {default_pot} for: {element}")
-            options['potential'] = default_pot
-        else:
-            print(f"No specific potential for: {element} was specified. Will try to use potential specified in config file instead.")
+    print(f"\nSetting up properties for {element_combination_serialized}:")
 
-    print(f"\n\nSetting up properties for {element_combination_serialized}:\n\n")
-
-    # maps into options object
+    # maps into options object if present in multi_config
     map_to_each_element_combination = {
+        'potentials': 'potential',
         'cells': 'cell',
         'scaled_positions': 'scaled_positions'
     }
 
     for (known_key, target_prop) in map_to_each_element_combination.items():
         if known_key in multi_config:
-            # dict comprehension only keeping entries matching this element combination
+            # dict comprehension to flatten lists of dicts to one dict
             element_combination_maps_for_prop = {
                     k:v for d in multi_config[known_key]
                     for k,v in d.items()
             }
-            print("element_combination_maps_for_prop")
-            print(element_combination_maps_for_prop)
-
+            # Only keeping entries matching this element combination
             prop_map_for_this_element_combination = {
                 k:v for k,v in element_combination_maps_for_prop.items() 
                     if k == element_combination_serialized
             }
-            print("prop_map_for_this_element_combination")
-            print(prop_map_for_this_element_combination)
-
             for specified_element, new_value in prop_map_for_this_element_combination.items():
-                print(f"Should configure {target_prop} for {element_combination_serialized} with {new_value}")
+                print(f"{element_combination_serialized} using specified {target_prop}: {new_value}")
                 options[target_prop] = new_value
             if len(prop_map_for_this_element_combination.items()) == 0:
-            #else:
-                print(f"no map for {target_prop} for {element_combination_serialized}")
-                print(len(prop_map_for_this_element_combination.items()))
-                print("was:")
-                print(prop_map_for_this_element_combination.items())
                 if 'default' in element_combination_maps_for_prop:
                     default_value = element_combination_maps_for_prop['default']
-                    print(f"Setting default for {target_prop} for {element_combination_serialized} with default value {default_value}\n\n")
+                    print(f"{element_combination_serialized} using default {target_prop}: {default_value}")
                     options[target_prop] = default_value
+                else:
+                    print(f"No specific {target_prop} for {element_combination_serialized} was specified. Will try to use {target_prop}: {options.get(target_prop)} specified in config file instead.")
                 
 
     # Setup traj file
-    traj_file_name = f"{element}.traj"
+    traj_file_name = f"{element_combination_serialized}.traj"
     options['traj_file_name'] = traj_file_name
-    options['out_dir'] = output_dir
 
     # Setup out file for analysis
-    options['out_file_name'] = f"{element}_out.json"
+    options['out_file_name'] = f"{element_combination_serialized}_out.json"
     return options
-
-
-def get_spec_potential_for_element(potentials_spec, element):
-    if element in potentials_spec:
-        return potentials_spec[element]
-    return None
 
 
 def run_in_parallell(options_list):
@@ -122,13 +102,13 @@ def run_in_parallell(options_list):
     print("Calling mpirun...")
     parallel_mpi_script = 'parallel_mpi_script.py'
     n_options = len(options_list)
-    # arguments = ['mpirun', '-n', f'{n_options}', 'python3', parallel_mpi_script]
     arguments = ['mpirun', 'python3', parallel_mpi_script]
     print(f"Will call mpirun with arguments: {arguments}")
     process = Popen(arguments)#, pickle_file_path])
     print(f"Waiting for process to finish...")
     process.wait()
     print(f"Process finished!")
+
 
 if __name__=="__main__":
     print("testing options list generation from multi config file")
