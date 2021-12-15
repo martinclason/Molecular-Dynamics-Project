@@ -3,17 +3,16 @@ from effective_velocity import longtitudinalSoundWaveVelocity, transversalSoundW
 from density import density
 from atomic_masses import atomic_masses
 
-def debye_temperature(atoms_object) :
-    """debyeTemperature(atoms_object) takes one argument, a list of atoms objects.
-    It calculates and returns the debyeTemperature by calling effectiveVelocity()
-    atomic_masses() and density()"""
-  
-    c_eff = effectiveVelocity(atoms_object) #Find the sonic velocity (debye_temp. constant)
+def debye_temperature(atoms_object, options) :
+    """debyeTemperature(atoms_object) takes two argument, an atoms objects and
+    options (a config-file). It calculates and returns the Debye temperature by 
+    calling effectiveVelocity atomic_masses and density"""
     
+    c_eff = effectiveVelocity(atoms_object, options) #Find the sonic velocity (debye_temp. constant)
     #defining Planck-, Boltzmann- and Avogadro's constants
     h = 6.62607015E-34
     k = 1.38064852E-23
-    pi = math.pi    
+    pi = math.pi        
     N_a = 6.02214086E23
     
     #Retrieve material parameters
