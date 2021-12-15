@@ -36,7 +36,7 @@ output:
   - Self Diffusion Coefficient Array
   - Specific Heat Capacity
   - Lindemann criterion
-
+out_dir: 
 #-----------Visualize------------#
 visualize:
   - Temperature
