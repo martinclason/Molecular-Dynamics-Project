@@ -13,7 +13,7 @@ def test_cohesive_energy():
     calc = create_potential(parsed_config_file)
     atoms.calc = calc
     iterations = 2000
-    cohesive_energy(atoms,iterations)
+    cohesive_energy(parsed_config_file,atoms,iterations,"test/coh_E.traj")
     coh_E = retrieve_cohesive_energy("test/coh_E.traj")
     coh_E_Cu = 3.6
     assert coh_E < coh_E_Cu

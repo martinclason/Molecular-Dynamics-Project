@@ -32,8 +32,8 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
     :param filelist: list of .json files, if specification of which files to do plotter of is needed, default=[]."""
     filelist = options.get("scatter_files") if options.get("scatter_files") != [] else find_json_files(options) 
     if options.get("scatter_dir"):
-        for file in range(len(filelist)):
-            filelist[file] = os.path.join(options.get("scatter_dir"),filelist[file])
+        for file in filelist:
+            file = os.path.join(options.get("scatter_dir"),file)
     def scatter_plotter():
         if filelist is None:
             raise ConfigError(

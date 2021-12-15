@@ -154,11 +154,12 @@ def MD(options):
         else:
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
-
+    coh_E_trajectory_file_name = "_coh_E.traj"
+    cohesive_energy_file_path = os.path.join(output_dir, coh_E_trajectory_file_name)
     if options.get("calculateCohesiveEnergy") and eqReached:
-        cohesive_energy(atoms,initIterations + numberOfChecks*iterationsBetweenChecks)
+        cohesive_energy(options,atoms,initIterations + numberOfChecks*iterationsBetweenChecks,cohesive_energy_file_path)
     elif options.get("calculateCohesiveEnergy") and not eqReached:
-        cohesive_energy(atoms,options.get("max_iterations_coh_E"))
+        cohesive_energy(options,atoms,options.get("max_iterations_coh_E"),cohesive_energy_file_path)
 
     # Setup writing of simulation data to trajectory file
     main_trajectory_file_name = options["symbol"]+".traj"
