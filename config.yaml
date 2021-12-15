@@ -3,7 +3,7 @@
 latticeconstant : 3.61 #Only supporting cubic lattices with one parameter
 cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors)
 scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "Cu" 
+symbol : "Au"
 pbc : True #periodic boundary conditions
 size : 10 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
@@ -16,7 +16,7 @@ temperature_K : 300
 checkForEquilibrium : True
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+potential: "LJ" #"openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 20
@@ -33,6 +33,8 @@ output:
   - Self Diffusion Coefficient Array
   - Specific Heat Capacity
   - Lindemann criterion
+  - Optimal Lattice Constant
+  - Bulk Modulus
 
 #-----------Visualize------------#
 visualize:

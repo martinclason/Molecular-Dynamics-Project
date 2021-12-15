@@ -4,12 +4,13 @@ from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
 from specificHeatCapacity import specificHeatCapacity
+from bulk_modulus import calc_lattice_constant
 import numpy as np
 import os
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
-    options for analysing the simulated material. It is specified in config file exactly what 
+    options for analysing the simulated material. It is specified in config file exactly what
     the user wants to calculate"""
 
 
@@ -30,34 +31,34 @@ def output_properties_to_file(options, traj):
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
-            'Temperature' : 
+            'Temperature' :
                 outputGenericFromTraj(
                     traj,
                     f,
                     'Temperature',
                     lambda atoms: atoms.get_temperature(),
                 ),
-            'Volume' : 
+            'Volume' :
                 outputGenericFromTraj(
                     traj,
                     f,
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-            # 'Debye Temperature' : 
+            # 'Debye Temperature' :
             #     outputSingleProperty(
             #         traj,
             #         f,
             #         'Debye Temperature',
             #         debye_temperature(last_atoms_object)
             #     ),
-            'Self Diffusion Coefficient' : 
+            'Self Diffusion Coefficient' :
                 outputSingleProperty(
                     f,
                     'Self Diffusion Coefficient',
                     self_diffusion_coefficient(traj)
                 ),
-            'Density' : 
+            'Density' :
                 outputSingleProperty(
                     f,
                     'Density',
@@ -85,6 +86,18 @@ def output_properties_to_file(options, traj):
                     'Specific Heat Capacity',
                     specificHeatCapacity(options['ensemble'],traj)
                 ),
+            'Optimal Lattice Constant' :
+                    outputSingleProperty(
+                        f,
+                        'Optimal Lattice Constant',
+                        calc_lattice_constant(options['symbol'])[0]
+                    ),
+            'Bulk Modulus' :
+                    outputSingleProperty(
+                        f,
+                        'Bulk Modulus',
+                        calc_lattice_constant(options['symbol'])[1]
+                    ),
         }
 
         for prop in options['output']:

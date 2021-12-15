@@ -26,10 +26,11 @@ def create_lattice_traj(symbol):
     b = a / 2
     ag = Atoms(symbol,
            cell=[(0, b, b), (b, 0, b), (b, b, 0)],
+           #cell=[(-b, b, b), (b, -b, b), (b, b, -b)],
            pbc=1,
            calculator=EMT())#KIM("LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"))
     cell = ag.get_cell()
-    traj = Trajectory(symbol + ".traj", 'w')
+    traj = Trajectory(symbol + "_X.traj", 'w')
 
     for x in np.linspace(0.85, 1.15, 1000):
         ag.set_cell(cell * x, scale_atoms=True)
@@ -55,7 +56,7 @@ def calc_lattice_constant(element):
 
     create_lattice_traj(str(element))
 
-    configs = Trajectory(element + ".traj")
+    configs = Trajectory(element + "_X.traj")
     volumes = [element.get_volume() for element in configs]
     energies = [element.get_potential_energy() for element in configs]
 
@@ -68,8 +69,8 @@ def calc_lattice_constant(element):
     return [a0, B0]
 
 
-print("Optimal lattice constant (calculated) is: " + str(calc_lattice_constant("Al")[0]) + " Å")
-print("The bulk modulus is :" + str(calc_lattice_constant("Al")[1]) +" GPa" )
+#print("Optimal lattice constant (calculated) is: " + str(calc_lattice_constant("Au")[0]) + " Å")
+#print("The bulk modulus is :" + str(calc_lattice_constant("Al")[1]) +" GPa" )
 #print("Optimal lattice constant (table) is: " + "BLABLA " + " Å")
 
 
