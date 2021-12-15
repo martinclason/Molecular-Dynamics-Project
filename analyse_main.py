@@ -3,6 +3,7 @@ from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
+from cohesive_energy import retrieve_cohesive_energy
 import numpy as np
 
 def analyse_main(options,traj_read):
@@ -68,6 +69,13 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Cohesive Energy' :
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Cohesive Energy',
+                    retrieve_cohesive_energy("coh_E.traj")
+                )
         }
 
         for prop in properties:

@@ -13,6 +13,7 @@ from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
 from simulationDataIO import outputGenericFromTraj
 from aleErrors import ConfigError
+from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
 
 def built_in_LennardJones(options, use_asap):
     # Fallback/default values if not present in config

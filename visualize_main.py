@@ -23,7 +23,7 @@ def visualize(options, data_file_name="out.json"):
   dt = dt * interval
 
   known_visualizers = {
-    'temperature' : make_temperature_plotter(data, dt),
+    'Temperature' : make_temperature_plotter(data, dt),
     'MSD' : make_MSD_plotter(data),
     'scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }

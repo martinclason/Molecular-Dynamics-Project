@@ -82,7 +82,11 @@ def run(arguments=None):
     # default to <symbol>.traj
     options['traj_file_name'] = f"{options['symbol']}.traj"
   print(options)
-  options['out_file_name'] = args.out_file_name
+  if args.out_file_name:
+    options['out_file_name'] = args.out_file_name
+  else:
+    # default to out.json if not set in config
+    options['out_file_name'] = options.get('out_file_name', 'out.json')
 
   args.sub_command(options, args)
 
