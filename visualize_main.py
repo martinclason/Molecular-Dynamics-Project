@@ -25,7 +25,7 @@ def visualize(options, data_file_name="out.json"):
   known_visualizers = {
     'Temperature' : make_temperature_plotter(data, dt),
     'MSD' : make_MSD_plotter(data),
-    'scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
+    'Scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }
 
   for visualizer_name, visualizer in known_visualizers.items():
@@ -41,7 +41,7 @@ def visualize(options, data_file_name="out.json"):
 
 def make_temperature_plotter(data, dt):
   def plotter():
-    temperatures = data['temperature']
+    temperatures = data['Temperature']
     dt = 2
     t = np.arange(0, len(temperatures)*dt, dt)
 

@@ -46,6 +46,20 @@ def simulate(options, args=None):
   main(options)
 
 def analyze(options, args=None):
+  output_dir = options['out_dir']
+
+  # Stores the formated output path in the options dictionary
+  out_file_path = os.path.join(output_dir,options['out_file_name'])
+ 
+  # Creates or wipes the properties file if the user asks for output.
+  if len(out_file_path) > 0:
+    if os.path.exists(out_file_path):
+      f = open(out_file_path, 'r+')
+      f.truncate(0) # need '0' when using r+
+      f.close()
+    else:
+      f = open(out_file_path, 'x')
+      f.close()
   traj_read = Trajectory(options['traj_file_name'])
   analyse_main(options,traj_read)
 
@@ -78,15 +92,22 @@ def run(arguments=None):
     # default to <symbol>.traj
     options['traj_file_name'] = f"{options['symbol']}.traj"
   print(options)
+
+  # Sets the file name of the properties file.
   if args.out_file_name:
     options['out_file_name'] = args.out_file_name
   else:
-    # default to out.json if not set in config
-    options['out_file_name'] = options.get('out_file_name', 'out.json')
+    # Defaults to <symbol>.json if not provided in the command line.
+    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}_out.json")
 
-  # Default to current directory as dir to output files to
-  options['out_dir'] = "."
-
+  # Sets the output directory of the properties file.
+  if args.out_dir:
+    output_dir = args.out_dir
+    options['out_dir'] = output_dir
+  else:
+    # Defaults to current working directory
+    options['out_dir'] = os.getcwd()
+  
   args.sub_command(options, args)
 
 if __name__=="__main__":

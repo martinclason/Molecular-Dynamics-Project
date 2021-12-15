@@ -1,4 +1,3 @@
-"""Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 
 #from ase.md.verlet import VelocityVerlet
@@ -6,79 +5,18 @@ from ase.md.langevin import Langevin
 
 # Use ase.io to make traj-writing from different processes work
 from ase.io import Trajectory
-from ase import units
 import numpy as np
+from ase import units
+
 
 from createAtoms import createAtoms
 from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from simulationDataIO import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty
 from aleErrors import ConfigError
 from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
+from create_potential import create_potential, built_in_LennardJones
 import os
-
-def built_in_LennardJones(options, use_asap):
-    # Fallback/default values if not present in config
-    fallback_atomic_number = 1
-    fallback_epsilon = 0.010323 # eV
-    fallback_sigma = 3.40 # Å
-    fallback_cutoff = 6.625 # Å
-
-    if use_asap:
-        print("Running LJ potential with asap")
-        from asap3 import LennardJones
-
-        atomic_number = options.get("atomic_number", fallback_atomic_number)
-        epsilon = options.get("epsilon", fallback_epsilon) * units.eV
-        sigma = options.get("sigma", fallback_sigma) * units.Ang
-        cutoff = options.get("cutoff", fallback_cutoff) * units.Ang
-        
-        keys = ("atomic_number", "epsilon", "sigma", "cutoff")
-        if not all (key in options for key in keys):
-            print(f"Warning, using fallback values for some values in: {keys}")
-
-        return LennardJones(
-                [atomic_number],
-                [epsilon],
-                [sigma],
-                rCut=cutoff,
-                modified=True,
-            )
-    else:
-        print("Running LJ potential with ase")
-        from ase.calculators.lj import LennardJones
-
-        epsilon = options.get("epsilon", fallback_epsilon) * units.eV
-        sigma = options.get("sigma", fallback_sigma) * units.Ang
-        
-        keys = ("epsilon", "sigma")
-        if not all (key in options for key in keys):
-            print(f"Warning, using fallback values for some values in: {keys}")
-
-        return LennardJones(
-                epsilon=epsilon,
-                sigma=sigma,
-            )
-
-def create_potential(options, use_asap):
-    potential_str = options["potential"]
-    if potential_str.lower() in ("lj", "LennardJones".lower()):
-        # return built in LennardJones
-        return built_in_LennardJones(options, use_asap)
-    if "openkim:" in potential_str.lower():
-        # extract openKIM id from string prefixed with 'openkim:'
-        openKIMpotential_str = potential_str.split(":")[1]
-        try:
-            return KIM(openKIMpotential_str)
-        except:
-            raise ConfigError(
-                    message=f"A openKIM potential couldn't be created from given config: {openKIMpotential_str}",
-                    config_properties=["potential"],
-                  )
-    raise ConfigError(
-                message=f"No potential could be created from given config: {potential_str}",
-                config_properties=["potential"],
-          )
 
 
 def MD(options):
@@ -101,7 +39,7 @@ def MD(options):
 
     # Set up a crystal
     atoms = createAtoms(options)
-    calc = create_potential(options, use_asap)
+    calc = create_potential(options)
     print(f"Using potential: {calc}")
     atoms.calc = calc
     
@@ -155,7 +93,7 @@ def MD(options):
 
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -185,8 +123,31 @@ def MD(options):
         # When equilibrium is or isn't reached the elapsed time is calculated
         # and a statement is written in the terminal on wheter the system reached
         # equilibrium and how long it took or how long the simulation waited.
-        # TODO: Store this information together with the calculate quantities.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+        # Writes meta data about the equilibrium to the output .json-file
+        f = open(out_file_path, 'a')
+        equilibiriumProp = {
+            'Equilibrium reached':
+                outputSingleProperty(
+                    f,
+                    'Equilibrium reached',
+                    eqReached
+                ),
+            'Time before equilibrium':
+                outputSingleProperty(
+                    f,
+                    'Time before equilibrium',
+                    timeToEquilibrium
+                )
+        }
+
+        for prop in list(equilibiriumProp):
+            equilibiriumProp[prop]()
+
+        f.close()
 
         if eqReached:
             print("System reached equilibirium after",timeToEquilibrium,"fs")
