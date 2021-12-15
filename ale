@@ -106,8 +106,13 @@ def run(arguments=None):
     options['out_dir'] = output_dir
   else:
     # Defaults to current working directory
-    options['out_dir'] = os.getcwd()
-  
+    options['out_dir'] = options.get('out_dir', os.getcwd())
+
+  output_dir = options['out_dir']
+
+  # Stores the formated output path in the options dictionary
+  out_file_path = os.path.join(output_dir,options['out_file_name'])
+ 
   args.sub_command(options, args)
 
 if __name__=="__main__":
