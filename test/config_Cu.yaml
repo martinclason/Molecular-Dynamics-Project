@@ -25,6 +25,7 @@ checkForEquilibrium : True
 iterations: 4500 
 # Number of timesteps between each save to the .traj file
 interval: 100
+use_asap: True
 
 #-----------Analyse------------#
 output: #What material parameters to calculate and output from the traj-file?
