@@ -52,7 +52,6 @@ def MD(options):
     # to communicate between processes. This would send a broadcast which seems to deadlock
     # the program if processes calls this function a different number of times.
     MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
-    # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
 

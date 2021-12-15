@@ -1,9 +1,9 @@
 ---
 #-----------Atoms Setup------------#
 latticeconstant : 5 #Only supporting cubic lattices with one parameter
-cell: #(primitive unit cell vectors)
+cell: # Given by m_config (primitive unit cell vectors)
 scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "Fe" 
+symbol : # Given by m_config
 pbc : True #periodic boundary conditions
 size : 5   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
@@ -13,10 +13,10 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 600
-checkForEquilibrium : True
+checkForEquilibrium : False
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:EAM_Dynamo_AcklandBaconCalder_1997_Fe__MO_142799717516_005"
+potential: # Given by m_config
 dt: 5 # simulation time step [fs]
 iterations: 500
 interval: 20
@@ -38,9 +38,9 @@ output:
 visualize:
   - Temperature
   - Scatter
-scatter_type_d1: "Temperature" #chooses which type of data to write to x-axis.
-scatter_type_d2:  #chooses which type of data to write to y-axis.
-scatter_dir:  #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
+scatter_type_d1: "Density" #chooses which type of data to write to x-axis.
+scatter_type_d2: "Specific Heat Capacity" #chooses which type of data to write to y-axis.
+scatter_dir: "test_dir" #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
 scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
 run_density_plot: False
 run_MSD_plot: False

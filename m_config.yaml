@@ -1,7 +1,5 @@
 elements:
   - ["Cu", "Au", "Ag", "Mg", "Al", "Na", "Ca", "Fe", "Co", "W", "Cr"]
-  # - ["O"]
-  #- ["Cl"]
 
 potentials:
   Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
@@ -20,5 +18,7 @@ potentials:
 cells:
   Na: "BCC" 
   Fe: "BCC"
-  Default: "FCC"
+  W: "BCC"
+  Cr: "BCC"
+  default: "FCC"
 
