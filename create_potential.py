@@ -1,5 +1,6 @@
 from ase.calculators.kim.kim import KIM
 from ase import units
+from aleErrors import ConfigError
 
 def built_in_LennardJones(options) :
     use_asap = options["use_asap"]

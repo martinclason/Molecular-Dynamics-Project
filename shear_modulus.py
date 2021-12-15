@@ -4,9 +4,6 @@ from ase.calculators.kim.kim import KIM
 from create_potential import create_potential
 from createAtoms import read_cell
 
-#https://docs.materialsproject.org/methodology/elasticity/
-#https://www.nature.com/articles/sdata20159.pdf
-
 def shear_modulus(options) :
     """Shear_modulus takes one argument, options (a config-file), 
     and returns the shear modulus for the element/molecule defined
@@ -31,14 +28,11 @@ def shear_modulus(options) :
     atoms = atoms.repeat([size,size,size]) 
 
     atoms.calc = create_potential(options)
-    print(atoms.calc)
     stress_z = (atoms.get_stress()[3]**2 + atoms.get_stress()[4]**2)**(1/2)
     unit_conversion = 160.21766208 * 10**9 # ev/Angstrom^3 to GPa to Pascal
-    print(atoms.get_stress())
     # shear stress z-component divided by tan of displacement angle
     # ASE provides stress-component in ev/A^3 which is converted to
     # pascal by unit_conversion. The factor 0.5 comes from the
     # definition of engineering shear strain
     G = stress_z/(math.tan(displacement_angle)) * unit_conversion * 0.5 
-    print("G", G)
     return G
