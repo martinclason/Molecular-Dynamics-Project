@@ -1,4 +1,4 @@
-from ase import Atoms
+from asap3 import Atoms
 
 def createAtoms(options):
     """createAtoms(options) takes the argument options which is the key to read from the 

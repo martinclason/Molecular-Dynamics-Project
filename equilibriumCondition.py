@@ -1,12 +1,11 @@
-from ase.io.trajectory import Trajectory
+# Needs the Trajectory from ase.io in order to run get_temperature() on 
+# the partial traj-file.
+from ase.io import Trajectory
 import numpy as np
 from ase import atoms, units
 import sys
 
 def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval):
-
-    traj = Trajectory(atomsTraj)
-
     """This function determines if the system has reached an equilibrium which
     then determines if the simulation has reached equilibrium. This checks the 
     temperature if the NVE ensamble is used and the energy if the NVT ensamble
@@ -14,6 +13,8 @@ def equilibiriumCheck(atomsTraj, numberOfAtoms, ensamble,checkInterval):
     
     The condition is to have a low variance in the temperature/energy in the last 
     batch of itterations which will depend on the size of the system."""    
+
+    traj = Trajectory(atomsTraj)
 
     if ensamble == "NVE":
 

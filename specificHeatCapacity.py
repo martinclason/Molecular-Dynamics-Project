@@ -1,4 +1,4 @@
-from ase.io.trajectory import Trajectory
+from asap3 import Trajectory
 import numpy as np
 from ase import atoms, units
 
