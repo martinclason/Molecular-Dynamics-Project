@@ -10,6 +10,7 @@ import pytest
 # then checks with the real value for cohesive energy for copper.
 @pytest.mark.openkim 
 def test_cohesive_energy():
+    from ase.calculators.kim.kim import KIM
     parsed_config_file = config_parser(open("test/config_Cu.yaml"))
     atoms = createAtoms(parsed_config_file)
     calc = create_potential(parsed_config_file)
