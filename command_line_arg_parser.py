@@ -53,9 +53,19 @@ data about the atoms for time steps in the simulation.
                           nargs='?',
                           type=str,
                           dest='out_file_name',
-                          default='out.json',
-                          help='where to output the analysis data (default: out.json)',
+                          default=None,
+                          help='where to output the analysis data (default: <symbol>.json)',
                           metavar='output_file')
+
+        self.parser.add_argument(
+                          '-d',
+                          '--dir',
+                          nargs='?',
+                          type=str,
+                          dest='out_dir',
+                          default=None,
+                          help='relative path to where simulation output files should be written.',
+                          metavar='out_dir')
 
         self.parser.set_defaults(sub_command=default)
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 from ase import Atoms
-from ase.io.trajectory import Trajectory
+from asap3 import Trajectory
 from ase.calculators.emt import EMT
 
 a = 4.0  # approximate lattice constant

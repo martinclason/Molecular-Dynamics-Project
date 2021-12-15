@@ -1,0 +1,9 @@
+elements:
+  - ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
+  #- ["Na", "Ca"]
+  #- ["Cl"]
+
+potentials:
+  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Ar: "LJ"
+  default: "LJ"

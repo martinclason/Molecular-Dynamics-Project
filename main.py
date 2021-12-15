@@ -1,10 +1,10 @@
-"""Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 
 #from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 
-from asap3 import Trajectory
+# Use ase.io to make traj-writing from different processes work
+from ase.io import Trajectory
 import numpy as np
 from ase import units
 
@@ -12,9 +12,11 @@ from ase import units
 from createAtoms import createAtoms
 from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from simulationDataIO import outputGenericFromTraj
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty
 from aleErrors import ConfigError
 from create_potential import create_potential, built_in_LennardJones
+import os
+
 
 def MD(options):
     """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
@@ -46,7 +48,10 @@ def MD(options):
     print(f"nvt_friction {nvt_friction}")
 
     # Set the momenta corresponding to the temperature
-    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature)
+    # The communicator is set to 'serial' to inhibit this function trying 
+    # to communicate between processes. This would send a broadcast which seems to deadlock
+    # the program if processes calls this function a different number of times.
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
     # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
@@ -69,18 +74,25 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-    dyn.attach(printenergy, interval=interval)
-    printenergy()
 
     atoms_positions = atoms.get_positions()
     atoms_number_of_atoms = len(atoms_positions)
     print("Number of atoms: " + str(atoms_number_of_atoms))
 
+    dyn.attach(printenergy, interval=interval)
+    printenergy()
+
+    # Setup writing of simulation data to trajectory file
+    output_dir = options['out_dir']
+    main_trajectory_file_name = options['traj_file_name']
+
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
+
+        raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -98,7 +110,7 @@ def MD(options):
         dyn.run(initIterations)
 
         while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-            eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
+            eqReached = equilibiriumCheck(raw_trajectory_file_path,
                             atoms_number_of_atoms,
                             ensamble,
                             eqCheckInterval)
@@ -110,8 +122,31 @@ def MD(options):
         # When equilibrium is or isn't reached the elapsed time is calculated
         # and a statement is written in the terminal on wheter the system reached
         # equilibrium and how long it took or how long the simulation waited.
-        # TODO: Store this information together with the calculate quantities.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+        # Writes meta data about the equilibrium to the output .json-file
+        f = open(out_file_path, 'a')
+        equilibiriumProp = {
+            'Equilibrium reached':
+                outputSingleProperty(
+                    f,
+                    'Equilibrium reached',
+                    eqReached
+                ),
+            'Time before equilibrium':
+                outputSingleProperty(
+                    f,
+                    'Time before equilibrium',
+                    timeToEquilibrium
+                )
+        }
+
+        for prop in list(equilibiriumProp):
+            equilibiriumProp[prop]()
+
+        f.close()
 
         if eqReached:
             print("System reached equilibirium after",timeToEquilibrium,"fs")
@@ -119,18 +154,24 @@ def MD(options):
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
 
-    # Setup writing of simulation data to trajectory file
-    main_trajectory_file_name = options["symbol"]+".traj"
+    main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
+    print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
-                main_trajectory_file_name, 
+                main_trajectory_file_path,
                 "w", 
                 atoms, 
-                properties="energy, forces"
+                properties="energy, forces",
+                # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
+                master=True, # Let processes write to their own respective traj-files
             )
     
     dyn.attach(traj.write, interval=interval)
     
     dyn.run(iterations)
+
+    traj.close()
+    print(f"Traj {main_trajectory_file_path} should be written")
+
     
 def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.
