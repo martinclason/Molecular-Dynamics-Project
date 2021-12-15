@@ -47,7 +47,6 @@ def output_properties_to_file(options, traj):
                 ),
             'Debye Temperature' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Debye Temperature',
                     debye_temperature(first_atoms_object, options)
