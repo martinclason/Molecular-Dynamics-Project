@@ -2,11 +2,13 @@ from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
 from md_config_reader import config_parser
 from createAtoms import createAtoms
 from create_potential import create_potential
+import pytest
 
 
 
 #Creates an atom object and run cohesive energy simulation and 
 # then checks with the real value for cohesive energy for copper.
+@pytest.mark.openkim 
 def test_cohesive_energy():
     parsed_config_file = config_parser(open("test/config_Cu.yaml"))
     atoms = createAtoms(parsed_config_file)
