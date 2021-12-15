@@ -54,7 +54,7 @@ data about the atoms for time steps in the simulation.
                           type=str,
                           dest='out_file_name',
                           default=None,
-                          help='where to output the analysis data (default: out.json)',
+                          help='where to output the analysis data (default: <symbol>.json)',
                           metavar='output_file')
 
         self.parser.add_argument(
