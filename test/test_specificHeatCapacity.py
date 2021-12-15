@@ -1,5 +1,5 @@
 from specificHeatCapacity import specificHeatCapacity
-from ase.io.trajectory import Trajectory
+from asap3 import Trajectory
 import sys
 import os
 

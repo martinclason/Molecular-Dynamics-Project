@@ -33,6 +33,7 @@ def make_MSD_plotter(data):
         plt.xlabel("Measured time step")
         plt.title("Mean Square Displacement") 
 
+
         ax.plot(t,MSD_data)
     return plotter  
 
@@ -54,11 +55,14 @@ def lindemann_criterion(atom_list) :
     The lindemann criterion states that melting happens when the the root mean vibration exceeds 10%
     of the nearest neighbor (NN) distance. The function checks this condition by calling MSD() and
     returns True if the condition is met"""
+
+    # TODO: Maybe dangerous to use tags like this if the order/index changes...
+
     size = atom_list[0].get_tags()[0]
     super_cell_x = atom_list[0].cell[0]
     unit_cell_x = super_cell_x / size
     #Nearest Neighbour distance from basis matrix
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2) 
     t = len(atom_list) - 1 #Take the system at the last accessible time
-    return (MSD(t,atom_list) > 0.1 * NN)
+    return bool(MSD(t,atom_list) > 0.1 * NN)
 

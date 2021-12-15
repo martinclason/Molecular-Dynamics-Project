@@ -1,8 +1,14 @@
 import numpy as np
 
+<<<<<<< HEAD
 from asap3 import Atoms
 from asap3 import Trajectory
 from asap3 import EMT
+=======
+from ase import Atoms
+from asap3 import Trajectory
+from ase.calculators.emt import EMT
+>>>>>>> ale_analyse
 
 """
 This function creates atoms objects with varying lattice constants from a guessed

@@ -3,6 +3,7 @@
 
 # Default target
 all:
+	make lint
 	make test
 
 ci:

@@ -45,7 +45,7 @@ def outputarraytofile(name,array,out_file):
         out_file.write('\n')
     return output
 
-def outputSingleProperty(traj, out_file, name, value) :
+def outputSingleProperty(out_file, name, value) :
     """Writes single value to json file"""
     def output():
         data = {

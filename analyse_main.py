@@ -3,22 +3,29 @@ from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
+from specificHeatCapacity import specificHeatCapacity
 import numpy as np
+import os
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
     options for analysing the simulated material. It is specified in config file exactly what 
     the user wants to calculate"""
 
-    # Output specified data to outfile
-    if options['output']:
-        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
 
-def output_properties_to_file(properties, traj, out_file_name='out.json'):
+    # # Output specified data to outfile
+    # output_dir = options['out_dir']
+    # out_file_path = os.path.join(output_dir, options['out_file_name'])
+
+    if options['output']:
+        output_properties_to_file(options, traj_read)
+
+def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
-    with open(out_file_name, 'w+') as f:
+
+    with open(options['out_file_path'], 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
             'Temperature' : 
@@ -35,30 +42,27 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-            'Debye Temperature' : 
-                outputSingleProperty(
-                    traj,
-                    f,
-                    'Debye Temperature',
-                    debye_temperature(last_atoms_object)
-                ),
+            # 'Debye Temperature' : 
+            #     outputSingleProperty(
+            #         traj,
+            #         f,
+            #         'Debye Temperature',
+            #         debye_temperature(last_atoms_object)
+            #     ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Self Diffusion Coefficient',
                     self_diffusion_coefficient(traj)
                 ),
             'Density' : 
                 outputSingleProperty(
-                    traj,
                     f,
                     'Density',
                     density(last_atoms_object)
                 ),
             'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
                 outputSingleProperty(
-                    traj,
                     f,
                     'Instant Pressure',
                     pressure(last_atoms_object)
@@ -67,9 +71,21 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Lindemann criterion' :
+                outputSingleProperty(
+                    f,
+                    'Lindemann criterion',
+                    lindemann_criterion(traj)
+                ),
+            'Specific Heat Capacity' :
+                outputSingleProperty(
+                    f,
+                    'Specific Heat Capacity',
+                    specificHeatCapacity(options['ensemble'],traj)
+                ),
         }
 
-        for prop in properties:
+        for prop in options['output']:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
 
