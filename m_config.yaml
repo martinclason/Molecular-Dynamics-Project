@@ -4,13 +4,13 @@ elements:
   #- ["Cl"]
 
 potentials:
-  - Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
-  - Ar: "LJ"
-  - default: "LJ"
+  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Ar: "LJ"
+  default: "LJ"
 
 cells:
-  - Na: FCC
-  - default: FCC
+  Na: FCC
+  default: FCC
 
 scaled_positions:
-  - Na: [[0,0,0]]
+  Na: [[0,0,0]]

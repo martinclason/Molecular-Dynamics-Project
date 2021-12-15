@@ -62,10 +62,7 @@ def options_from_element_combination(element_combination, multi_config, template
     for (known_key, target_prop) in map_to_each_element_combination.items():
         if known_key in multi_config:
             # dict comprehension to flatten lists of dicts to one dict
-            element_combination_maps_for_prop = {
-                    k:v for d in multi_config[known_key]
-                    for k,v in d.items()
-            }
+            element_combination_maps_for_prop = multi_config[known_key]
             # Only keeping entries matching this element combination
             prop_map_for_this_element_combination = {
                 k:v for k,v in element_combination_maps_for_prop.items() 
