@@ -8,7 +8,7 @@ import numpy as np
 from asap3 import Atoms
 from asap3 import EMT
 
-from ase.calculators.kim.kim import KIM
+#from ase.calculators.kim.kim import KIM
 #import kimpy
 
 
