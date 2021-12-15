@@ -57,6 +57,16 @@ data about the atoms for time steps in the simulation.
                           help='where to output the analysis data (default: out.json)',
                           metavar='output_file')
 
+        self.parser.add_argument(
+                          '-d',
+                          '--dir',
+                          nargs='?',
+                          type=str,
+                          dest='out_dir',
+                          default=None,
+                          help='relative path to where simulation output files should be written.',
+                          metavar='out_dir')
+
         self.parser.set_defaults(sub_command=default)
 
 

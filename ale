@@ -79,19 +79,34 @@ def run(arguments=None):
     options['traj_file_name'] = f"{options['symbol']}.traj"
   print(options)
 
+  # Sets the file name of the properties file.
   if args.out_file_name:
     options['out_file_name'] = args.out_file_name
   else:
     # Defaults to <symbol>.json if not provided in the command line.
     options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}.json")
 
-  if len(options['output']) > 0:
-    f = open(options['out_file_name'], 'r+')
-    f.truncate(0) # need '0' when using r+
-    f.close()
+  # Sets the output directory of the properties file.
+  if args.out_dir:
+    output_dir = args.out_dir
+    options['out_dir'] = output_dir
+  else:
+    # Defaults to current working directory
+    options['out_dir'] = os.getcwd()
+    output_dir = os.getcwd()
 
-  # Default to current directory as dir to output files to
-  options['out_dir'] = "."
+  # Stores the formated output path in the options dictionary
+  options['out_file_path'] = os.path.join(output_dir,options['out_file_name'])
+ 
+  # Creates or wipes the properties file if the user asks for output.
+  if len(options['output']) > 0:
+    if os.path.exists(options['out_file_path']):
+      f = open(options['out_file_path'], 'r+')
+      f.truncate(0) # need '0' when using r+
+      f.close()
+    else:
+      f = open(options['out_file_path'], 'x')
+      f.close()
 
   args.sub_command(options, args)
 

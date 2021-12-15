@@ -1,4 +1,3 @@
-"""Demonstrates molecular dynamics with constant energy."""
 from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
 
 #from ase.md.verlet import VelocityVerlet
@@ -187,7 +186,7 @@ def MD(options):
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
 
         # Writes meta data about the equilibrium to the output .json-file
-        f = open(options['out_file_name'], 'a')
+        f = open(options['out_file_path'], 'a')
         equilibiriumProp = {
             'Equilibrium reached':
                 outputSingleProperty(
