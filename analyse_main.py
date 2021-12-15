@@ -5,6 +5,7 @@ from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSing
 from debye_temperature import debye_temperature
 from specificHeatCapacity import specificHeatCapacity
 import numpy as np
+import os
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -13,6 +14,9 @@ def analyse_main(options,traj_read):
 
 
     # Output specified data to outfile
+    output_dir = options['out_dir']
+    out_file_path = os.path.join(output_dir, options['out_file_name'])
+
     if options['output']:
         output_properties_to_file(options, traj_read)
 
