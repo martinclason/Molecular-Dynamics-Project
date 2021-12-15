@@ -25,7 +25,9 @@ def output_properties_to_file(options, traj):
         json-file.
     """
 
-    with open(options['out_file_path'], 'a') as f:
+    out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+    with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         known_property_outputters = {
             'Temperature' : 

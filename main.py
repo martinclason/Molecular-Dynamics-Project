@@ -185,8 +185,10 @@ def MD(options):
         # equilibrium and how long it took or how long the simulation waited.
         timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
 
+        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
         # Writes meta data about the equilibrium to the output .json-file
-        f = open(options['out_file_path'], 'a')
+        f = open(out_file_path, 'a')
         equilibiriumProp = {
             'Equilibrium reached':
                 outputSingleProperty(

@@ -84,7 +84,7 @@ def run(arguments=None):
     options['out_file_name'] = args.out_file_name
   else:
     # Defaults to <symbol>.json if not provided in the command line.
-    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}.json")
+    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}_out.json")
 
   # Sets the output directory of the properties file.
   if args.out_dir:
@@ -96,16 +96,16 @@ def run(arguments=None):
     output_dir = os.getcwd()
 
   # Stores the formated output path in the options dictionary
-  options['out_file_path'] = os.path.join(output_dir,options['out_file_name'])
+  out_file_path = os.path.join(output_dir,options['out_file_name'])
  
   # Creates or wipes the properties file if the user asks for output.
-  if len(options['output']) > 0:
-    if os.path.exists(options['out_file_path']):
-      f = open(options['out_file_path'], 'r+')
+  if len(out_file_path) > 0:
+    if os.path.exists(out_file_path):
+      f = open(out_file_path, 'r+')
       f.truncate(0) # need '0' when using r+
       f.close()
     else:
-      f = open(options['out_file_path'], 'x')
+      f = open(out_file_path, 'x')
       f.close()
 
   args.sub_command(options, args)
