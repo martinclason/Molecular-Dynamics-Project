@@ -30,6 +30,7 @@ def output_properties_to_file(options, traj):
 
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
+        first_atoms_object = traj[0] #Take the first atoms object
         known_property_outputters = {
             'Temperature' :
                 outputGenericFromTraj(
@@ -45,13 +46,13 @@ def output_properties_to_file(options, traj):
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-            # 'Debye Temperature' :
-            #     outputSingleProperty(
-            #         traj,
-            #         f,
-            #         'Debye Temperature',
-            #         debye_temperature(last_atoms_object)
-            #     ),
+            'Debye Temperature' :
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Debye Temperature',
+                    debye_temperature(first_atoms_object, options)
+                ),
             'Self Diffusion Coefficient' :
                 outputSingleProperty(
                     f,
