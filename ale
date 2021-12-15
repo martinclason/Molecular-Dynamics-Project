@@ -6,6 +6,7 @@ from main import main
 from analyse_main import analyse_main
 from visualize_main import visualize as visualize_simulation
 import os
+from multi import multi as multi_main
 
 from asap3 import Trajectory
 
@@ -27,22 +28,17 @@ def default(options, args=None):
 
 def multi(options, args):
   print("Should run multiple simulations and analyzations parallelized on multiple cores")
+  
   multi_config_file = args.multi_config_file
   print(f"multi_config_file: {multi_config_file}")
-  # TODO: Parse multi config file
+  multi_config = config_file_parser(multi_config_file)
+
   output_dir = args.out_dir
+  options['out_dir'] = output_dir
 
-  # Setup correct traj file
-  # default to <symbol>.traj
-  traj_file_name = options['traj_file_name']
-  options['traj_file_name'] = os.path.join(output_dir, traj_file_name)
-
-  # Setup correct out data file (JSON)
-  out_file_name = options['out_file_name']
-  options['out_file_name'] = os.path.join(output_dir, out_file_name)
-
-  simulate(options)
-  analyze(options)
+  # Run simulate and analyze distributed
+  multi_main(multi_config, options, simulate=simulate, analyze=analyze)
+  print("exiting multi run")
 
 def simulate(options, args=None):
   print(f'Use asap: {options["use_asap"]}')
@@ -87,6 +83,9 @@ def run(arguments=None):
   else:
     # default to out.json if not set in config
     options['out_file_name'] = options.get('out_file_name', 'out.json')
+
+  # Default to current directory as dir to output files to
+  options['out_dir'] = "."
 
   args.sub_command(options, args)
 

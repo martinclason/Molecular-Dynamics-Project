@@ -4,7 +4,8 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 #from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 
-from asap3 import Trajectory
+# Use ase.io to make traj-writing from different processes work
+from ase.io import Trajectory
 from ase import units
 import numpy as np
 
@@ -14,6 +15,7 @@ from ase.calculators.kim.kim import KIM
 from simulationDataIO import outputGenericFromTraj
 from aleErrors import ConfigError
 from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
+import os
 
 def built_in_LennardJones(options, use_asap):
     # Fallback/default values if not present in config
@@ -109,7 +111,10 @@ def MD(options):
     print(f"nvt_friction {nvt_friction}")
 
     # Set the momenta corresponding to the temperature
-    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature)
+    # The communicator is set to 'serial' to inhibit this function trying 
+    # to communicate between processes. This would send a broadcast which seems to deadlock
+    # the program if processes calls this function a different number of times.
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
     # Is this where the temperature is halfed??
     Stationary(atoms)
     ZeroRotation(atoms)
@@ -132,18 +137,25 @@ def MD(options):
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
 
-    dyn.attach(printenergy, interval=interval)
-    printenergy()
 
     atoms_positions = atoms.get_positions()
     atoms_number_of_atoms = len(atoms_positions)
     print("Number of atoms: " + str(atoms_number_of_atoms))
 
+    dyn.attach(printenergy, interval=interval)
+    printenergy()
+
+    # Setup writing of simulation data to trajectory file
+    output_dir = options['out_dir']
+    main_trajectory_file_name = options['traj_file_name']
+
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
+
+        raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory("raw"+options["symbol"]+".traj", "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
@@ -161,7 +173,7 @@ def MD(options):
         dyn.run(initIterations)
 
         while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-            eqReached = equilibiriumCheck("raw"+options["symbol"]+".traj",
+            eqReached = equilibiriumCheck(raw_trajectory_file_path,
                             atoms_number_of_atoms,
                             ensamble,
                             eqCheckInterval)
@@ -189,16 +201,24 @@ def MD(options):
 
     # Setup writing of simulation data to trajectory file
     main_trajectory_file_name = options["symbol"]+".traj"
+    main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
+    print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
-                main_trajectory_file_name, 
+                main_trajectory_file_path,
                 "w", 
                 atoms, 
-                properties="energy, forces"
+                properties="energy, forces",
+                # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
+                master=True, # Let processes write to their own respective traj-files
             )
     
     dyn.attach(traj.write, interval=interval)
     
     dyn.run(iterations)
+
+    traj.close()
+    print(f"Traj {main_trajectory_file_path} should be written")
+
     
 def main(options):
     """The 'main()' function runs the 'MD()' function which runs the simulation.

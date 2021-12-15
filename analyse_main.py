@@ -4,7 +4,9 @@ from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
 from cohesive_energy import retrieve_cohesive_energy
+from specificHeatCapacity import specificHeatCapacity
 import numpy as np
+import os
 
 def analyse_main(options,traj_read):
     """The function analyse_main takes options and a traj_read as arguments where options are the
@@ -13,10 +15,13 @@ def analyse_main(options,traj_read):
 
 
     # Output specified data to outfile
-    if options['output']:
-        output_properties_to_file(options['output'], traj_read, options['out_file_name'])
+    output_dir = options['out_dir']
+    out_file_path = os.path.join(output_dir, options['out_file_name'])
 
-def output_properties_to_file(properties, traj, out_file_name='out.json'):
+    if options['output']:
+        output_properties_to_file(options, traj_read, out_file_path)
+
+def output_properties_to_file(options, traj, out_file_name='out.json'):
     """ Outputs the chosen properties from a traj file to
         json-file.
     """
@@ -37,13 +42,13 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
-            'Debye Temperature' : 
-                outputSingleProperty(
-                    traj,
-                    f,
-                    'Debye Temperature',
-                    debye_temperature(last_atoms_object)
-                ),
+            # 'Debye Temperature' : 
+            #     outputSingleProperty(
+            #         traj,
+            #         f,
+            #         'Debye Temperature',
+            #         debye_temperature(last_atoms_object)
+            #     ),
             'Self Diffusion Coefficient' : 
                 outputSingleProperty(
                     traj,
@@ -75,10 +80,17 @@ def output_properties_to_file(properties, traj, out_file_name='out.json'):
                     f,
                     'Cohesive Energy',
                     retrieve_cohesive_energy("coh_E.traj")
-                )
+                ),
+            'Specific Heat Capacity' :
+                outputSingleProperty(
+                    traj,
+                    f,
+                    'Specific Heat Capacity',
+                    specificHeatCapacity(options['ensemble'],traj)
+                ),
         }
 
-        for prop in properties:
+        for prop in options['output']:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
 
