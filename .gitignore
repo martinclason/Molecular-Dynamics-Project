@@ -11,3 +11,4 @@ docs/_build
 *.json
 config_Ar.yaml
 config_Cu.yaml
+options_pickle

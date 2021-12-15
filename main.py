@@ -153,7 +153,7 @@ def MD(options):
 
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces")
+        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
         dyn.attach(rawTraj.write, interval=interval)
 
         # Condtions for equilibrium.
