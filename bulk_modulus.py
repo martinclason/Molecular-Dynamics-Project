@@ -25,7 +25,10 @@ def create_lattice_traj(options):
            scaled_positions = interatomic_positions,
            calculator=calc)
     cell = atoms.get_cell()
-    traj = Trajectory(symbol + "_X.traj", 'w')
+    filepath = symbol + "_X.traj"
+    print(f"Creating trajectory for lattice constant calculations at {filepath}")
+
+    traj = Trajectory(filepath, 'w')
 
     for x in np.linspace(0.85, 1.15, 1000):
         atoms.set_cell(cell * x, scale_atoms=True)

@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
-from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
+from simulationDataIO import outputGenericFromTraj, outputarraytofile, outputSingleProperty, outputGenericResultLazily
 from debye_temperature import debye_temperature
 from shear_modulus import shear_modulus
 from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
@@ -22,8 +22,59 @@ def analyse_main(options,traj_read):
     # output_dir = options['out_dir']
     # out_file_path = os.path.join(output_dir, options['out_file_name'])
 
-    if options['output']:
-        output_properties_to_file(options, traj_read)
+    if not options.get('output'):
+        print("Nothing to analyze since output list in config is empty.")
+        return
+
+    output_dir = options['out_dir']
+    # Stores the formated output path in the options dictionary
+    out_file_path = os.path.join(output_dir, options['out_file_name'])
+
+    # Creates or wipes the properties file if the user asks for output.
+    if len(options['output']) > 0:
+        if os.path.exists(out_file_path):
+          f = open(out_file_path, 'r+')
+          f.truncate(0) # need '0' when using r+
+          f.close()
+        else:
+          f = open(out_file_path, 'x')
+          f.close()
+
+    output_properties_to_file(options, traj_read)
+
+class EoSResults:
+    """EoSResults stores results from EoS equations lazily. 
+    The class can be instantiated without running the costly computation but when
+    someone tries to access a value, the computation will be run if it hasn't
+    been run yet."""
+
+    def __init__(self, options):
+        self.options = options
+        self.__optimal_lattice_constant = None
+        self.__bulk_modulus = None
+        self.__optimal_lattice_volume = None
+
+    def _run_calculations(self):
+        a0, B0, v0 = calc_lattice_constant(self.options)
+        self.__optimal_lattice_constant = a0
+        self.__bulk_modulus = B0
+        self.__optimal_lattice_volume = v0
+
+    def get_optimal_lattice_constant(self):
+        if not self.__optimal_lattice_constant:
+            self._run_calculations()
+        return self.__optimal_lattice_constant
+
+    def get_bulk_modulus(self):
+        if not self.__bulk_modulus:
+            self._run_calculations()
+        return self.__bulk_modulus
+
+    def get_bulk_optimal_lattice_volume(self):
+        if not self.__optimal_lattice_volume:
+            self._run_calculations()
+        return self.__optimal_lattice_volume
+
 
 def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
@@ -36,7 +87,7 @@ def output_properties_to_file(options, traj):
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         first_atoms_object = traj[0] #Take the first atoms object
-        optimal_stuff = calc_lattice_constant(options)
+        eos_results = EoSResults(options)
         known_property_outputters = {
             'Temperature' :
                 outputGenericFromTraj(
@@ -53,16 +104,20 @@ def output_properties_to_file(options, traj):
                     lambda atoms: atoms.get_volume(),
                 ),
             'Debye Temperature' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Debye Temperature',
-                    debye_temperature(first_atoms_object, options, optimal_stuff[1])
+                    retrieve_result=lambda: debye_temperature(
+                                                first_atoms_object, 
+                                                options, 
+                                                eos_results.get_bulk_modulus()
+                                            )
                 ),
             'Self Diffusion Coefficient' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Self Diffusion Coefficient',
-                    self_diffusion_coefficient(traj)
+                    retrieve_result=lambda: self_diffusion_coefficient(traj)
                 ),
             'Density' :
                 outputSingleProperty(
@@ -99,40 +154,44 @@ def output_properties_to_file(options, traj):
                     specificHeatCapacity(options['ensemble'],traj)
                 ),
             'Optimal Lattice Constant' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Optimal Lattice Constant',
-                        optimal_stuff[0]
+                        retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
                     ),
             'Optimal Lattice Volume' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Optimal Lattice Volume',
-                        optimal_stuff[2]
+                        retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
                     ),
             'Bulk Modulus' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Bulk Modulus',
-                        optimal_stuff[1]
+                        retrieve_result=lambda: eos_results.get_bulk_modulus(),
                     ),
             'Transversal Sound Wave Velocity' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Transversal Sound Wave Velocity',
-                        transversal_sound_wave_velocity(last_atoms_object, options)
+                        retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
                     ),
             'Longitudinal Sound Wave Velocity' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Longitudinal Sound Wave Velocity',
-                        longitudinal_sound_wave_velocity(last_atoms_object, options, optimal_stuff[1])
+                        retrieve_result=lambda: longitudinal_sound_wave_velocity(
+                                            last_atoms_object, 
+                                            options, 
+                                            eos_results.get_bulk_modulus()
+                                        )
                     ),
             'Shear Modulus' :
-                    outputSingleProperty(
+                    outputGenericResultLazily(
                         f,
                         'Shear Modulus',
-                        shear_modulus(options)
+                        retrieve_result=lambda: shear_modulus(options)
                     ),
         }
 
