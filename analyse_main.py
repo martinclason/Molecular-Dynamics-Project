@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure, avg_pressure
-from simulationDataIO import outputGenericFromTraj, outputarraytofile, outputSingleProperty, outputGenericResultLazily
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
 from debye_temperature import debye_temperature
 from shear_modulus import shear_modulus
 from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
@@ -138,9 +138,17 @@ def output_properties_to_file(options, traj):
                     retrieve_result=lambda: avg_pressure(traj)
                     ),
             'Self Diffusion Coefficient Array' :
-                outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
+                outputGenericResultLazily(
+                    f,
+                    "Self Diffusion Coefficient Array",
+                    retrieve_result=lambda: list(self_diffusion_coefficient_calc(traj)),
+                ),
             'MSD' :
-                outputarraytofile("MSD",MSD_data_calc(traj),f),
+                outputGenericResultLazily(
+                    f,
+                    "MSD",
+                    retrieve_result=lambda: list(MSD_data_calc(traj)),
+                ),
             'Cohesive Energy' :
                 outputGenericResultLazily(
                     f,
