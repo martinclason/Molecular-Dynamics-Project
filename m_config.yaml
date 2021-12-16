@@ -5,6 +5,16 @@ elements:
   - ["Na", "Ca"]
   #- ["Cl"]
 
+# latticeconstant:
+#   Cu: 4
+#   Au: 3
+#   Ag: 5
+#   Al: 4
+#   Fe: 3
+#   Co: 5
+#   W: 3
+#   Mg: 5
+
 potentials:
   Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
   Ca: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Ca__MO_159753408472_004"
