@@ -1,7 +1,7 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
-from pressure import pressure
-from simulationDataIO import outputGenericFromTraj, outputarraytofile, outputSingleProperty, outputGenericResultLazily
+from pressure import pressure, avg_pressure
+from simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
 from debye_temperature import debye_temperature
 from shear_modulus import shear_modulus
 from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
@@ -120,79 +120,93 @@ def output_properties_to_file(options, traj):
                     retrieve_result=lambda: self_diffusion_coefficient(traj)
                 ),
             'Density' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Density',
-                    density(last_atoms_object)
+                    retrieve_result=lambda: density(last_atoms_object)
                 ),
-            'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
-                outputSingleProperty(
+            'Instant Pressure' :
+                outputGenericResultLazily(
                     f,
                     'Instant Pressure',
-                    pressure(last_atoms_object)
+                    retrieve_result=lambda: pressure(last_atoms_object)
                 ),
+            'Average Pressure' :
+                outputGenericResultLazily(
+                    f,
+                    'Average Pressure',
+                    retrieve_result=lambda: avg_pressure(traj)
+                    ),
             'Self Diffusion Coefficient Array' :
-                outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
+                outputGenericResultLazily(
+                    f,
+                    "Self Diffusion Coefficient Array",
+                    retrieve_result=lambda: list(self_diffusion_coefficient_calc(traj)),
+                ),
             'MSD' :
-                outputarraytofile("MSD",MSD_data_calc(traj),f),
+                outputGenericResultLazily(
+                    f,
+                    "MSD",
+                    retrieve_result=lambda: list(MSD_data_calc(traj)),
+                ),
             'Cohesive Energy' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Cohesive Energy',
-                    retrieve_cohesive_energy(coh_E_path)
+                    retrieve_result=lambda: retrieve_cohesive_energy(coh_E_path)
                 ),
             'Lindemann criterion' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Lindemann criterion',
-                    lindemann_criterion(traj)
+                    retrieve_result=lambda: lindemann_criterion(traj)
                 ),
             'Specific Heat Capacity' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Specific Heat Capacity',
-                    specificHeatCapacity(options['ensemble'],traj)
+                    retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
-                    outputGenericResultLazily(
-                        f,
-                        'Optimal Lattice Constant',
-                        retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Optimal Lattice Constant',
+                    retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
+                ),
             'Optimal Lattice Volume' :
-                    outputGenericResultLazily(
-                        f,
-                        'Optimal Lattice Volume',
-                        retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Optimal Lattice Volume',
+                    retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
+                ),
             'Bulk Modulus' :
-                    outputGenericResultLazily(
-                        f,
-                        'Bulk Modulus',
-                        retrieve_result=lambda: eos_results.get_bulk_modulus(),
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Bulk Modulus',
+                    retrieve_result=lambda: eos_results.get_bulk_modulus(),
+                ),
             'Transversal Sound Wave Velocity' :
-                    outputGenericResultLazily(
-                        f,
-                        'Transversal Sound Wave Velocity',
-                        retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Transversal Sound Wave Velocity',
+                    retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
+                ),
             'Longitudinal Sound Wave Velocity' :
-                    outputGenericResultLazily(
-                        f,
-                        'Longitudinal Sound Wave Velocity',
-                        retrieve_result=lambda: longitudinal_sound_wave_velocity(
-                                            last_atoms_object, 
-                                            options, 
-                                            eos_results.get_bulk_modulus()
-                                        )
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Longitudinal Sound Wave Velocity',
+                    retrieve_result=lambda: longitudinal_sound_wave_velocity(
+                                        last_atoms_object, 
+                                        options, 
+                                        eos_results.get_bulk_modulus()
+                                    )
+                ),
             'Shear Modulus' :
-                    outputGenericResultLazily(
-                        f,
-                        'Shear Modulus',
-                        retrieve_result=lambda: shear_modulus(options)
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Shear Modulus',
+                    retrieve_result=lambda: shear_modulus(options)
+                ),
         }
 
         for prop in options['output']:

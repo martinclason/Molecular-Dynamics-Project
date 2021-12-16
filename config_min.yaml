@@ -32,7 +32,8 @@ output:
   - Volume
   - Specific Heat Capacity
   - Density
-  - Pressure
+  - Instant Pressure
+  - Average Pressure
   - MSD
   - Self Diffusion Coefficient
   - Self Diffusion Coefficient Array
