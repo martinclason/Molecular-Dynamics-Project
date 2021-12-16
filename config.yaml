@@ -21,6 +21,9 @@ potential: "openKIM:SNAP_LiHuChen_2018_NiMo__MO_468686727341_000"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 20
+checkForEquilibrium: True
+calculateCohesiveEnergy: True
+max_iterations_coh_E: 200
 
 #-----------Analyse------------#
 output:
@@ -37,14 +40,15 @@ output:
   - Optimal Lattice Constant
   - Optimal Lattice Volume
   - Bulk Modulus
+  - Cohesive Energy
 
 #-----------Visualize------------#
 visualize:
   - Temperature
   - Scatter
-scatter_type_d1: "Temperature" #chooses which type of data to write to x-axis.
-scatter_type_d2:  #chooses which type of data to write to y-axis.
-scatter_dir:  #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
-scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
+scatter_type_d1: "Debye Temperature" #chooses which type of data to write to x-axis.
+scatter_type_d2: "Specific Heat Capacity" #chooses which type of data to write to y-axis.
+scatter_dir: out #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
+scatter_files: [Fe_out.json] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
 run_density_plot: False
 run_MSD_plot: False

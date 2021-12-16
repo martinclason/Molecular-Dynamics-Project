@@ -13,7 +13,7 @@ import signal
 def test_find_json_files():
     #config_file = open("config.yaml")
     #parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
-    parsed_config_file = config_parser(open("config.yaml"))
+    parsed_config_file = config_parser(open("test/config.yaml"))
 
 
     out_file_list = find_json_files(parsed_config_file)

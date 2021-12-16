@@ -15,7 +15,6 @@ def find_json_files(options):
     if os.path.isdir(os.path.join(os.getcwd(),outdir)):
         for file in glob.glob(os.path.join(os.getcwd(),outdir,"*.json")):
             file_list.append(file)
-            print(file_list)
         return file_list
     else:
         raise ConfigError(
@@ -32,6 +31,9 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
     :param data_type2: data type to write on the y-axis.
     :param filelist: list of .json files, if specification of which files to do plotter of is needed, default=[]."""
     filelist = options.get("scatter_files") if options.get("scatter_files") != [] else find_json_files(options) 
+    if options.get("scatter_dir"):
+        for file in filelist:
+            file = os.path.join(options.get("scatter_dir"),file)
     def scatter_plotter():
         if filelist is None:
             raise ConfigError(
@@ -68,8 +70,13 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
                             config_properties = ["data_type2"]
                 )
                 y = data[data_type2]
-                ax.scatter(x,y)
+                if options.get('scatter_dir') and options.get('scatter_files'):
+                    ax.scatter(x,y,label=(file.replace('.json','')).replace(options.get('scatter_dir')+'/',''))
+                else:
+                    leg_file=file.replace(os.getcwd(),'')
+                    ax.scatter(x,y,label=leg_file.replace('.json',''))
                 plt.xlabel(data_type1)
                 plt.ylabel(data_type2)
+                ax.legend()
 
     return scatter_plotter
