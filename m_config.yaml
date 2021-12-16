@@ -1,7 +1,7 @@
 elements:
   #- ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
-  - ["Cu", "Au", "Ag", "Al", "Fe", "Co", "W", "Mg"]
-  #- ["Na", "Ca"]
+  #- ["Cu", "Au", "Ag", "Al", "Fe", "Co", "W", "Mg"]
+  - ["Na", "Ca"]
   #- ["Cl"]
 
 potentials:
@@ -16,3 +16,11 @@ potentials:
   Co: "openKIM:EAM_Dynamo_PunMishin_2012_Co__MO_885079680379_005"
   W: "openKIM:EAM_Dynamo_Ackland_2003_W__MO_141627196590_005"
   default: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+  # default: "LJ"
+
+cells:
+  Na: FCC
+  default: FCC
+
+scaled_positions:
+  Na: [[0,0,0]]
