@@ -73,11 +73,9 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
                             config_properties = ["data_type2"]
                 )
                 y = data[data_type2]
-                if options.get('scatter_dir') and options.get('scatter_files'):
-                    ax.scatter(x,y,label=(file.replace('.json','')).replace(options.get('scatter_dir')+'/',''))
-                else:
-                    leg_file=file.replace(os.getcwd(),'')
-                    ax.scatter(x,y,label=leg_file.replace('.json',''))
+                
+                ax.scatter(x,y,label=os.path.basename(file).removesuffix('.json').removesuffix('_out'))
+
                 plt.xlabel(data_type1)
                 plt.ylabel(data_type2)
                 ax.legend()
