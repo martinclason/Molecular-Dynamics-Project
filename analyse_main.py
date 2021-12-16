@@ -53,8 +53,10 @@ class EoSResults:
         self.__optimal_lattice_constant = None
         self.__bulk_modulus = None
         self.__optimal_lattice_volume = None
+        self._counter = 0
 
     def _run_calculations(self):
+        self._counter = self._counter + 1
         a0, B0, v0 = calc_lattice_constant(self.options)
         self.__optimal_lattice_constant = a0
         self.__bulk_modulus = B0
@@ -63,16 +65,19 @@ class EoSResults:
     def get_optimal_lattice_constant(self):
         if not self.__optimal_lattice_constant:
             self._run_calculations()
+        assert self._counter <= 1
         return self.__optimal_lattice_constant
 
     def get_bulk_modulus(self):
         if not self.__bulk_modulus:
             self._run_calculations()
+        assert self._counter <= 1
         return self.__bulk_modulus
 
     def get_bulk_optimal_lattice_volume(self):
         if not self.__optimal_lattice_volume:
             self._run_calculations()
+        assert self._counter <= 1
         return self.__optimal_lattice_volume
 
 
