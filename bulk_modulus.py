@@ -2,11 +2,12 @@ from ase.io import read
 from ase.units import kJ
 from ase.eos import EquationOfState
 import math as m
-from asap3 import Trajectory
+from ase.io import Trajectory
 import numpy as np
 from asap3 import Atoms
 from create_potential import create_potential
 import functools
+import os
 
 def create_lattice_traj(options):
     """ This function creates atoms objects with varying lattice constants from a guessed
@@ -26,10 +27,11 @@ def create_lattice_traj(options):
            scaled_positions = interatomic_positions,
            calculator=calc)
     cell = atoms.get_cell()
-    filepath = symbol + "_X.traj"
+
+    filepath = os.path.join(options['out_dir'], f"{symbol}_X.traj")
     print(f"Creating trajectory for lattice constant calculations at {filepath}")
 
-    traj = Trajectory(filepath, 'w')
+    traj = Trajectory(filepath, 'w', master=True)
 
     for x in np.linspace(0.85, 1.15, 1000):
         atoms.set_cell(cell * x, scale_atoms=True)
@@ -63,8 +65,9 @@ def calc_lattice_constant(options):
     calc_lattice_constant_counter += 1
     assert calc_lattice_constant_counter <= 1
     create_lattice_traj(options)
-    element = options["symbol"]
-    configs = Trajectory(element + "_X.traj")
+    symbol = options["symbol"]
+    filepath = os.path.join(options['out_dir'], f"{symbol}_X.traj")
+    configs = Trajectory(filepath, master=True)
     volumes = [element.get_volume() for element in configs]
     energies = [element.get_potential_energy() for element in configs]
 
