@@ -1,4 +1,3 @@
-from createAtoms import createAtoms
 import pytest
 import yaml 
 
@@ -8,6 +7,7 @@ parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 #Make sure all data from config file gets stored in Atoms correctly
 @pytest.mark.openkim
 def test_createAtoms(): 
+    from createAtoms import createAtoms
     atoms = createAtoms(parsed_config_file)
     config_cell = parsed_config_file["cell"]
     config_scaled_positions = parsed_config_file["scaled_positions"]
