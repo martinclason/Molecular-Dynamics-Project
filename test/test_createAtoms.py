@@ -6,6 +6,7 @@ config_file = open("test/config.yaml")
 parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 #Make sure all data from config file gets stored in Atoms correctly
+@pytest.mark.openkim
 def test_createAtoms(): 
     atoms = createAtoms(parsed_config_file)
     config_cell = parsed_config_file["cell"]
