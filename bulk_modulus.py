@@ -12,7 +12,7 @@ def create_lattice_traj(options):
     value, a, of the chosen element. Using the linspace function to choose a range
     and number of variations created, and saves them all in a traj file."""
     a = 4 # approximate lattice constant, default value = 4
-    if options["guess_latticeconstant"] :
+    if options.get("guess_latticeconstant"):
         a = options["guess_latticeconstant"]
     symbol = options["symbol"]
     basis_matrix = read_cell(options)
@@ -25,7 +25,10 @@ def create_lattice_traj(options):
            scaled_positions = interatomic_positions,
            calculator=calc)
     cell = atoms.get_cell()
-    traj = Trajectory(symbol + "_X.traj", 'w')
+    filepath = symbol + "_X.traj"
+    print(f"Creating trajectory for lattice constant calculations at {filepath}")
+
+    traj = Trajectory(filepath, 'w')
 
     for x in np.linspace(0.85, 1.15, 1000):
         atoms.set_cell(cell * x, scale_atoms=True)

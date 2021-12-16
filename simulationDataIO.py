@@ -1,4 +1,5 @@
 import json
+import os
 
 def outputGenericFromTraj(traj, out_file, name, f):
     """Creates and returns outputter function that dumps some data
@@ -23,7 +24,25 @@ def outputGenericFromTraj(traj, out_file, name, f):
 
     return output
 
+def outputGenericResultLazily(out_file, name, retrieve_result):
+
+    def output():
+        result = retrieve_result()
+        data = {
+            name : result
+        }
+        json.dump(data, fp=out_file)
+        # Newline to generate JSON Lines data, one doc per line
+        out_file.write('\n')
+
+    return output
+
 def inputSimulationData(out_file_name="out.json"):
+    # TODO: Make this prettier...
+    if not os.path.isfile(out_file_name):
+        print(f"Couldn't find file {out_file_name} for visualization...")
+        return None
+
     read_data = {}
 
     with open(out_file_name, "r") as f:
