@@ -22,8 +22,25 @@ def analyse_main(options,traj_read):
     # output_dir = options['out_dir']
     # out_file_path = os.path.join(output_dir, options['out_file_name'])
 
-    if options['output']:
-        output_properties_to_file(options, traj_read)
+    if not options.get('output'):
+        print("Nothing to analyze since output list in config is empty.")
+        return
+
+    output_dir = options['out_dir']
+    # Stores the formated output path in the options dictionary
+    out_file_path = os.path.join(output_dir, options['out_file_name'])
+
+    # Creates or wipes the properties file if the user asks for output.
+    if len(options['output']) > 0:
+        if os.path.exists(out_file_path):
+          f = open(out_file_path, 'r+')
+          f.truncate(0) # need '0' when using r+
+          f.close()
+        else:
+          f = open(out_file_path, 'x')
+          f.close()
+
+    output_properties_to_file(options, traj_read)
 
 def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
