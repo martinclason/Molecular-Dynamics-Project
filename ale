@@ -46,12 +46,16 @@ def simulate(options, args=None):
   main(options)
 
 def analyze(options, args=None):
-  traj_read = Trajectory(options['traj_file_name'])
+  output_dir = options['out_dir']
+  traj_file_path = os.path.join(output_dir, options['traj_file_name'])
+  traj_read = Trajectory(traj_file_path)
   analyse_main(options,traj_read)
 
 def visualize(options, args=None):
   # pp.pprint(options)
-  visualize_simulation(options, options['out_file_name'])
+  output_dir = options['out_dir']
+  out_file_path = os.path.join(output_dir, options['out_file_name'])
+  visualize_simulation(options, out_file_path)
 
 def run(arguments=None):
   parser = CreateParser(
@@ -93,11 +97,6 @@ def run(arguments=None):
   else:
     # Defaults to current working directory
     options['out_dir'] = options.get('out_dir', os.getcwd())
-
-  output_dir = options['out_dir']
-
-  # Stores the formated output path in the options dictionary
-  out_file_path = os.path.join(output_dir,options['out_file_name'])
  
   args.sub_command(options, args)
 
