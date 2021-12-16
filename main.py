@@ -153,7 +153,7 @@ def MD(options):
         else:
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
-    coh_E_trajectory_file_name = "_coh_E.traj"
+    coh_E_trajectory_file_name = "_" + options['symbol'] + "_coh_E.traj"
     cohesive_energy_file_path = os.path.join(output_dir, coh_E_trajectory_file_name)
     if options.get("calculateCohesiveEnergy") and eqReached:
         cohesive_energy(options,atoms,initIterations + numberOfChecks*iterationsBetweenChecks,cohesive_energy_file_path)
