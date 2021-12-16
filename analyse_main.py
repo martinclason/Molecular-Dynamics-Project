@@ -160,45 +160,45 @@ def output_properties_to_file(options, traj):
                     retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
-                    outputGenericResultLazily(
-                        f,
-                        'Optimal Lattice Constant',
-                        retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Optimal Lattice Constant',
+                    retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
+                ),
             'Optimal Lattice Volume' :
-                    outputGenericResultLazily(
-                        f,
-                        'Optimal Lattice Volume',
-                        retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Optimal Lattice Volume',
+                    retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
+                ),
             'Bulk Modulus' :
-                    outputGenericResultLazily(
-                        f,
-                        'Bulk Modulus',
-                        retrieve_result=lambda: eos_results.get_bulk_modulus(),
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Bulk Modulus',
+                    retrieve_result=lambda: eos_results.get_bulk_modulus(),
+                ),
             'Transversal Sound Wave Velocity' :
-                    outputGenericResultLazily(
-                        f,
-                        'Transversal Sound Wave Velocity',
-                        retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Transversal Sound Wave Velocity',
+                    retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
+                ),
             'Longitudinal Sound Wave Velocity' :
-                    outputGenericResultLazily(
-                        f,
-                        'Longitudinal Sound Wave Velocity',
-                        retrieve_result=lambda: longitudinal_sound_wave_velocity(
-                                            last_atoms_object, 
-                                            options, 
-                                            eos_results.get_bulk_modulus()
-                                        )
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Longitudinal Sound Wave Velocity',
+                    retrieve_result=lambda: longitudinal_sound_wave_velocity(
+                                        last_atoms_object, 
+                                        options, 
+                                        eos_results.get_bulk_modulus()
+                                    )
+                ),
             'Shear Modulus' :
-                    outputGenericResultLazily(
-                        f,
-                        'Shear Modulus',
-                        retrieve_result=lambda: shear_modulus(options)
-                    ),
+                outputGenericResultLazily(
+                    f,
+                    'Shear Modulus',
+                    retrieve_result=lambda: shear_modulus(options)
+                ),
         }
 
         for prop in options['output']:
