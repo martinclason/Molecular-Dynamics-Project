@@ -1,4 +1,5 @@
 from asap3 import Atoms
+from bulk_modulus import calc_lattice_constant, read_cell, read_lattice_constant
 
 def createAtoms(options):
     """createAtoms(options) takes the argument options which is the key to read from the 
@@ -10,6 +11,8 @@ def createAtoms(options):
     size = options["size"]
     scaled_positions = options["scaled_positions"]
     cell = read_cell(options)
+    latticeconstant = read_lattice_constant(options)
+    cell = [[x*latticeconstant for x in y] for y in cell] #Add lattice constant to basis matrix
     atoms = Atoms(symbol, 
         scaled_positions = scaled_positions,
         cell=cell,
@@ -17,15 +20,3 @@ def createAtoms(options):
     atoms = atoms.repeat(size) #this is the same as: atoms = atoms * size
     atoms.set_tags(size) #Save the size of supercell for later use
     return atoms
-
-def read_cell(options):
-    cell = options["cell"]
-    if cell in ["fcc", "FCC", "facecenteredcubic", "FaceCenteredCubic"] :
-        cell = [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]]
-    elif cell in ["bcc", "BCC","bodycenteredcubic", "BodyCenteredCubic"] :
-        cell = [[-0.5, 0.5, 0.5], [0.5, -0.5, 0.5], [0.5, 0.5, -0.5]]
-    elif cell in ["sc", "SC","simplecubic","SimpleCubic"] :
-        cell = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-    latticeconstant = options["latticeconstant"]
-    cell = [[x*latticeconstant for x in y] for y in cell] #Add lattice constant to basis matrix
-    return cell
