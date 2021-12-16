@@ -2,13 +2,18 @@ from ase import Atoms
 import math
 from ase.calculators.kim.kim import KIM
 from create_potential import create_potential
-from createAtoms import read_cell
+from bulk_modulus import read_cell, read_lattice_constant_or_calculate
 
 def shear_modulus(options) :
     """Shear_modulus takes one argument, options (a config-file), 
     and returns the shear modulus for the element/molecule defined
     by the config-file."""
-    old_cell = read_cell(options)
+    symbols = options["symbol"]
+    interatomic_positions = options["scaled_positions"]
+    size = options["size"]
+    latticeconstant = read_lattice_constant_or_calculate(options)
+    old_basis_matrix = read_cell(options)
+    old_cell = [[x*latticeconstant for x in y] for y in old_basis_matrix] #Add lattice constant to basis matrix
     new_cell = old_cell #Initialize the sheared cell
     displacement_angle = math.radians(5)
     for i in range(2):
@@ -20,13 +25,9 @@ def shear_modulus(options) :
         
         new_z = old_z * math.cos(displacement_angle)
         new_cell[i][2] = new_z
-    
-    symbols = options["symbol"]
-    interatomic_positions = options["scaled_positions"]
-    size = options["size"]
-    atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
-    atoms = atoms.repeat([size,size,size]) 
 
+    atoms = Atoms(symbols, scaled_positions = interatomic_positions, cell = new_cell, pbc = True)
+    atoms = atoms.repeat([size,size,size])
     atoms.calc = create_potential(options)
     stress_z = (atoms.get_stress()[3]**2 + atoms.get_stress()[4]**2)**(1/2)
     unit_conversion = 160.21766208 * 10**9 # ev/Angstrom^3 to GPa to Pascal

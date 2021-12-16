@@ -45,10 +45,11 @@ def test_ale_small_simulation_ase():
 @pytest.mark.openkim
 def test_ale_small_simulation_builtin_LJ():
     """Test built in LJ potential that doesn't depend on openKIM"""
-
+    # TODO: This test should also test that analyze works. Currently it gives error:
+    # AsapError: The height of the cell (1.96299) must be larger than 13.25
     try:
         process = subprocess.run(
-                        f"./ale -c {small_test_config_builtin_lj}",
+                        f"./ale simulate -c {small_test_config_builtin_lj}",
                         shell=True,
                         check=True)
     except:

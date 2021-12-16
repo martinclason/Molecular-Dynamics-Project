@@ -14,7 +14,7 @@ def visualize(options, data_file_name="out.json"):
   the user in the config-file.
   """
   
-  print("Visualizing data")
+  print(f"Visualizing data with file {data_file_name}")
   data = inputSimulationData(data_file_name)
   dt = options['dt']
   dt = s_to_fs(dt)
@@ -23,9 +23,9 @@ def visualize(options, data_file_name="out.json"):
   dt = dt * interval
 
   known_visualizers = {
-    'temperature' : make_temperature_plotter(data, dt),
+    'Temperature' : make_temperature_plotter(data, 2),
     'MSD' : make_MSD_plotter(data),
-    'scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
+    'Scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
   }
 
   for visualizer_name, visualizer in known_visualizers.items():
@@ -41,8 +41,7 @@ def visualize(options, data_file_name="out.json"):
 
 def make_temperature_plotter(data, dt):
   def plotter():
-    temperatures = data['temperature']
-    dt = 2
+    temperatures = data['Temperature']
     t = np.arange(0, len(temperatures)*dt, dt)
 
     fig = plt.figure()

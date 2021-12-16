@@ -23,6 +23,12 @@ def built_in_LennardJones(options) :
         if not all (key in options for key in keys):
             print(f"Warning, using fallback values for some values in: {keys}")
 
+        print("Using following parameters for LJ:")
+        print(f"atomic_number: {atomic_number}")
+        print(f"epsilon: {epsilon}")
+        print(f"sigma: {sigma}")
+        print(f"cutoff: {cutoff}")
+
         return LennardJones(
                 [atomic_number],
                 [epsilon],

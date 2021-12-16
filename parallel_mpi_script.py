@@ -17,10 +17,19 @@ size = comm.Get_size()
 
 def do_work(options):
     print(f"process {rank} will write to traj: {options['out_dir']}/{options['traj_file_name']}")
-    simulate(options)
-    print(f"process {rank} done with simulation")
-    print(f"process {rank} starts analysis: {options['out_dir']}/{options['traj_file_name']}")
-    analyze(options)
+    try:
+        simulate(options)
+    except Exception as e:
+        print(f"Something went wrong when simulating {options['symbol']} in process {rank}")
+        print(f"---- error: {e}")
+
+    try:
+        print(f"process {rank} done with simulation")
+        print(f"process {rank} starts analysis: {options['out_dir']}/{options['traj_file_name']}")
+        analyze(options)
+    except Exception as e:
+        print(f"Something went wrong when analyzing {options['symbol']} in process {rank}")
+        print(f"---- error: {e}")
 
 def simulate(options):
     simulate_main(options)
