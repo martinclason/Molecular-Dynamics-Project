@@ -14,7 +14,7 @@ def visualize(options, data_file_name="out.json"):
   the user in the config-file.
   """
   
-  print("Visualizing data")
+  print(f"Visualizing data with file {data_file_name}")
   data = inputSimulationData(data_file_name)
   dt = options['dt']
   dt = s_to_fs(dt)
