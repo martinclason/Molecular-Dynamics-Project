@@ -12,7 +12,7 @@ def create_lattice_traj(options):
     value, a, of the chosen element. Using the linspace function to choose a range
     and number of variations created, and saves them all in a traj file."""
     a = 4 # approximate lattice constant, default value = 4
-    if options["guess_latticeconstant"] :
+    if options.get("guess_latticeconstant"):
         a = options["guess_latticeconstant"]
     symbol = options["symbol"]
     basis_matrix = read_cell(options)
