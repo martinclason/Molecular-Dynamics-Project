@@ -3,11 +3,8 @@ from ase.units import kJ
 from ase.eos import EquationOfState
 import math as m
 from asap3 import Trajectory
-from ase.lattice.cubic import FaceCenteredCubic
 import numpy as np
 from asap3 import Atoms
-from asap3 import EMT
-from ase.calculators.kim.kim import KIM
 from create_potential import create_potential
 
 def create_lattice_traj(options):
