@@ -17,8 +17,8 @@ def pressure(atoms_object):
     return instant_pressure
 
 def avg_pressure(traj):
-    pressure_sum = sum(pressure(atoms_object) for atoms in traj)
-    avg_pressure = pressure_sum / options['iterations']
+    pressure_sum = sum(pressure(atoms) for atoms in traj)
+    avg_pressure = pressure_sum / len(traj)
     return avg_pressure
 
 

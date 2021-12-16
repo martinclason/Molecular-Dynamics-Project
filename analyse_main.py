@@ -1,6 +1,6 @@
 from density import density
 from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
-from pressure import pressure
+from pressure import pressure, avg_pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
 from shear_modulus import shear_modulus
