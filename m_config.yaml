@@ -1,10 +1,18 @@
 elements:
-  - ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
-  #- ["Na", "Ca"]
+  #- ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
+  - ["Cu", "Au", "Ag", "Al", "Fe", "Co", "W", "Mg"]
   #- ["Na", "Ca"]
   #- ["Cl"]
 
 potentials:
   Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
   Ca: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Ca__MO_159753408472_004"
+  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Au: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Ag: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Mg: "openKIM:EAM_Dynamo_SunMendelevBecker_2006_Mg__MO_848345414202_005"
+  Al: "openKIM:EAM_Dynamo_ZhouJohnsonWadley_2004NISTretabulation_Al__MO_060567868558_000"
+  Fe: "openKIM:EAM_Dynamo_AcklandBaconCalder_1997_Fe__MO_142799717516_005"
+  Co: "openKIM:EAM_Dynamo_PunMishin_2012_Co__MO_885079680379_005"
+  W: "openKIM:EAM_Dynamo_Ackland_2003_W__MO_141627196590_005"
   default: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
