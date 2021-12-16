@@ -70,12 +70,18 @@ def output_properties_to_file(options, traj):
                     'Density',
                     density(last_atoms_object)
                 ),
-            'Pressure' : #TODO: Should this be tagged 'instant' pressure instead?
+            'Instant Pressure' :
                 outputSingleProperty(
                     f,
                     'Instant Pressure',
                     pressure(last_atoms_object)
                 ),
+            'Average Pressure' :
+                outputSingleProperty(
+                    f,
+                    'Average Pressure',
+                    avg_pressure(traj)
+                    ),
             'Self Diffusion Coefficient Array' :
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
