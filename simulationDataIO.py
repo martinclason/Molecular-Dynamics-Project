@@ -1,4 +1,5 @@
 import json
+import os
 
 def outputGenericFromTraj(traj, out_file, name, f):
     """Creates and returns outputter function that dumps some data
@@ -37,6 +38,11 @@ def outputGenericResultLazily(out_file, name, retrieve_result):
     return output
 
 def inputSimulationData(out_file_name="out.json"):
+    # TODO: Make this prettier...
+    if not os.path.isfile(out_file_name):
+        print(f"Couldn't find file {out_file_name} for visualization...")
+        return None
+
     read_data = {}
 
     with open(out_file_name, "r") as f:
