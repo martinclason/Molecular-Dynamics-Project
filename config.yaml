@@ -1,12 +1,12 @@
 ---
 #-----------Atoms Setup------------#
-latticeconstant : #Only supporting cubic lattices with one parameter
-guess_latticeconstant: 5
+latticeconstant : 4.09 #Only supporting cubic lattices with one parameter
+guess_latticeconstant:
 cell: "fcc" #(primitive unit cell vectors)
-scaled_positions : [[0,0,0], [0.5,0.5,0.5]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "NiMo"
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Ag"
 pbc : True #periodic boundary conditions
-size : 2   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+size : 5   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -17,7 +17,7 @@ temperature_K : 300
 checkForEquilibrium : False
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
-potential: "openKIM:SNAP_LiHuChen_2018_NiMo__MO_468686727341_000"
+potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
 iterations: 1000
 interval: 20
@@ -26,17 +26,20 @@ interval: 20
 output:
   - Temperature
   - Volume
-  - Debye Temperature
-  - Self Diffusion Coefficient
+  - Specific Heat Capacity
   - Density
   - Pressure
   - MSD
+  - Self Diffusion Coefficient
   - Self Diffusion Coefficient Array
-  - Specific Heat Capacity
   - Lindemann criterion
   - Optimal Lattice Constant
   - Optimal Lattice Volume
   - Bulk Modulus
+  - Debye Temperature
+  - Transversal Sound Wave Velocity
+  - Longitudinal Sound Wave Velocity
+  - Shear Modulus
 
 #-----------Visualize------------#
 visualize:

@@ -3,8 +3,11 @@ from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from pressure import pressure
 from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSingleProperty
 from debye_temperature import debye_temperature
+from shear_modulus import shear_modulus
+from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
 from specificHeatCapacity import specificHeatCapacity
 from bulk_modulus import calc_lattice_constant
+
 import numpy as np
 import os
 
@@ -31,6 +34,7 @@ def output_properties_to_file(options, traj):
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
         first_atoms_object = traj[0] #Take the first atoms object
+        optimal_stuff = calc_lattice_constant(options)
         known_property_outputters = {
             'Temperature' :
                 outputGenericFromTraj(
@@ -50,7 +54,7 @@ def output_properties_to_file(options, traj):
                 outputSingleProperty(
                     f,
                     'Debye Temperature',
-                    debye_temperature(first_atoms_object, options)
+                    debye_temperature(first_atoms_object, options, optimal_stuff[1])
                 ),
             'Self Diffusion Coefficient' :
                 outputSingleProperty(
@@ -90,19 +94,37 @@ def output_properties_to_file(options, traj):
                     outputSingleProperty(
                         f,
                         'Optimal Lattice Constant',
-                        calc_lattice_constant(options)[0]
+                        optimal_stuff[0]
                     ),
             'Optimal Lattice Volume' :
                     outputSingleProperty(
                         f,
                         'Optimal Lattice Volume',
-                        calc_lattice_constant(options)[2]
+                        optimal_stuff[2]
                     ),
             'Bulk Modulus' :
                     outputSingleProperty(
                         f,
                         'Bulk Modulus',
-                        calc_lattice_constant(options)[1]
+                        optimal_stuff[1]
+                    ),
+            'Transversal Sound Wave Velocity' :
+                    outputSingleProperty(
+                        f,
+                        'Transversal Sound Wave Velocity',
+                        transversal_sound_wave_velocity(last_atoms_object, options)
+                    ),
+            'Longitudinal Sound Wave Velocity' :
+                    outputSingleProperty(
+                        f,
+                        'Longitudinal Sound Wave Velocity',
+                        longitudinal_sound_wave_velocity(last_atoms_object, options, optimal_stuff[1])
+                    ),
+            'Shear Modulus' :
+                    outputSingleProperty(
+                        f,
+                        'Shear Modulus',
+                        shear_modulus(options)
                     ),
         }
 
