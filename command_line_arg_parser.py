@@ -96,6 +96,15 @@ data about the atoms for time steps in the simulation.
         # visualize
         visualize_parser = self.subparsers.add_parser('visualize')
         visualize_parser.set_defaults(sub_command=visualize)
+        visualize_parser.add_argument(
+                    '-s',
+                    '--scatter-dir',
+                    nargs='?',
+                    type=str,
+                    dest='scatter_dir',
+                    help='where to look for json data for scatter plots',
+                    metavar='scatter_dir',
+              )
 
     def parse_args(self, args=None):
         if args is not None:

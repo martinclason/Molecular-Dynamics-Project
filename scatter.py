@@ -34,6 +34,9 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
     if options.get("scatter_dir"):
         for file in filelist:
             file = os.path.join(options.get("scatter_dir"),file)
+
+    print(f"Scatter using files: {filelist}")
+    
     def scatter_plotter():
         if filelist is None:
             raise ConfigError(

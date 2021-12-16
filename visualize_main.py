@@ -15,6 +15,8 @@ def visualize(options, data_file_name="out.json"):
   """
   
   print(f"Visualizing data with file {data_file_name}")
+  print(f"Visualizing data from dir {options['out_dir']}")
+  print(f"Visualizing scatter data from dir {options['scatter_dir']}")
   data = inputSimulationData(data_file_name)
   dt = options['dt']
   dt = s_to_fs(dt)

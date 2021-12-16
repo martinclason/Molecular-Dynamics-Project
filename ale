@@ -55,6 +55,10 @@ def visualize(options, args=None):
   # pp.pprint(options)
   output_dir = options['out_dir']
   out_file_path = os.path.join(output_dir, options['out_file_name'])
+
+  if args.scatter_dir:
+    options['scatter_dir'] = args.scatter_dir
+
   visualize_simulation(options, out_file_path)
 
 def run(arguments=None):
