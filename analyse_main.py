@@ -120,44 +120,44 @@ def output_properties_to_file(options, traj):
                     retrieve_result=lambda: self_diffusion_coefficient(traj)
                 ),
             'Density' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Density',
-                    density(last_atoms_object)
+                    retrieve_result=lambda: density(last_atoms_object)
                 ),
             'Instant Pressure' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Instant Pressure',
-                    pressure(last_atoms_object)
+                    retrieve_result=lambda: pressure(last_atoms_object)
                 ),
             'Average Pressure' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Average Pressure',
-                    avg_pressure(traj)
+                    retrieve_result=lambda: avg_pressure(traj)
                     ),
             'Self Diffusion Coefficient Array' :
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
             'Cohesive Energy' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Cohesive Energy',
-                    retrieve_cohesive_energy(coh_E_path)
+                    retrieve_result=lambda: retrieve_cohesive_energy(coh_E_path)
                 ),
             'Lindemann criterion' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Lindemann criterion',
-                    lindemann_criterion(traj)
+                    retrieve_result=lambda: lindemann_criterion(traj)
                 ),
             'Specific Heat Capacity' :
-                outputSingleProperty(
+                outputGenericResultLazily(
                     f,
                     'Specific Heat Capacity',
-                    specificHeatCapacity(options['ensemble'],traj)
+                    retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
                     outputGenericResultLazily(
