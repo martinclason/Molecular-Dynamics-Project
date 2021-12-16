@@ -23,6 +23,19 @@ def outputGenericFromTraj(traj, out_file, name, f):
 
     return output
 
+def outputGenericResultLazily(out_file, name, retrieve_result):
+
+    def output():
+        result = retrieve_result()
+        data = {
+            name : result
+        }
+        json.dump(data, fp=out_file)
+        # Newline to generate JSON Lines data, one doc per line
+        out_file.write('\n')
+
+    return output
+
 def inputSimulationData(out_file_name="out.json"):
     read_data = {}
 
