@@ -1,9 +1,10 @@
 elements:
   - ["Ar", "Cu", "Au", "Ag", "C", "H", "Mg", "O", "Al", "Na", "Cl", "Ca"]
   #- ["Na", "Ca"]
+  #- ["Na", "Ca"]
   #- ["Cl"]
 
 potentials:
-  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
-  Ar: "LJ"
-  default: "LJ"
+  Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
+  Ca: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Ca__MO_159753408472_004"
+  default: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
