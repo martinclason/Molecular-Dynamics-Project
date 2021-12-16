@@ -5,6 +5,7 @@ from simulationDataIO import outputGenericFromTraj,outputarraytofile, outputSing
 from debye_temperature import debye_temperature
 from shear_modulus import shear_modulus
 from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
+from cohesive_energy import retrieve_cohesive_energy
 from specificHeatCapacity import specificHeatCapacity
 from bulk_modulus import calc_lattice_constant
 
@@ -30,6 +31,7 @@ def output_properties_to_file(options, traj):
     """
 
     out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+    coh_E_path = os.path.join(options['out_dir'],"_coh_E.traj")
 
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
@@ -78,6 +80,12 @@ def output_properties_to_file(options, traj):
                 outputarraytofile("Self Diffusion Coefficient Array",self_diffusion_coefficient_calc(traj),f),
             'MSD' :
                 outputarraytofile("MSD",MSD_data_calc(traj),f),
+            'Cohesive Energy' :
+                outputSingleProperty(
+                    f,
+                    'Cohesive Energy',
+                    retrieve_cohesive_energy(coh_E_path)
+                ),
             'Lindemann criterion' :
                 outputSingleProperty(
                     f,

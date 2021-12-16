@@ -14,6 +14,7 @@ from equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
 from simulationDataIO import outputGenericFromTraj, outputSingleProperty
 from aleErrors import ConfigError
+from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
 from create_potential import create_potential, built_in_LennardJones
 import os
 
@@ -153,7 +154,15 @@ def MD(options):
         else:
             print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
             print("Continues")
+    coh_E_trajectory_file_name = "_coh_E.traj"
+    cohesive_energy_file_path = os.path.join(output_dir, coh_E_trajectory_file_name)
+    if options.get("calculateCohesiveEnergy") and eqReached:
+        cohesive_energy(options,atoms,initIterations + numberOfChecks*iterationsBetweenChecks,cohesive_energy_file_path)
+    elif options.get("calculateCohesiveEnergy") and not eqReached:
+        cohesive_energy(options,atoms,options.get("max_iterations_coh_E"),cohesive_energy_file_path)
 
+    # Setup writing of simulation data to trajectory file
+    main_trajectory_file_name = options["symbol"]+".traj"
     main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
     print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
