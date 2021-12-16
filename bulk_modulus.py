@@ -6,6 +6,7 @@ from asap3 import Trajectory
 import numpy as np
 from asap3 import Atoms
 from create_potential import create_potential
+import functools
 
 def create_lattice_traj(options):
     """ This function creates atoms objects with varying lattice constants from a guessed
@@ -37,10 +38,30 @@ def create_lattice_traj(options):
 
     return traj
 
+calc_lattice_constant_counter = 0
+
+# Wrapper to make sure an expensive function for exapmle only is called once
+def call_only_once(f):
+    result = None
+    
+    @functools.wraps(f)
+    def wrapper(*args, **kwds):
+        nonlocal result
+        if not result:
+            result = f(*args, **kwds)
+        return result
+
+    return wrapper
+
+@call_only_once
 def calc_lattice_constant(options):
     """ This function takes a traj-file containing atom-objects wirh varying
     lattice constants, calculates the Bulk modulus B, optimal volume v0 and optimal
     lattice constant a0 through equation of state."""
+    print("--------- In calc_lattice_constant, should only be called once no matter parameters")
+    global calc_lattice_constant_counter
+    calc_lattice_constant_counter += 1
+    assert calc_lattice_constant_counter <= 1
     create_lattice_traj(options)
     element = options["symbol"]
     configs = Trajectory(element + "_X.traj")
@@ -53,6 +74,7 @@ def calc_lattice_constant(options):
     eos.plot('Pt-eos.png', show = False)
     a0 = (4 * v0)**(1/3)
     B0 = (B / kJ * 1.0e24)
+
     return [a0, B0, v0]
 
 def read_cell(options):
@@ -65,8 +87,10 @@ def read_cell(options):
         cell = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     return cell
 
-def read_lattice_constant(options) :
-    if options["latticeconstant"] :
+def read_lattice_constant_or_calculate(options):
+    if options.get("latticeconstant"):
         return options["latticeconstant"]
     else :
-        return calc_lattice_constant(options)[0]
+        a0 = calc_lattice_constant(options)[0]
+        options["latticeconstant"] = a0
+        return a0

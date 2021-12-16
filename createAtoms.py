@@ -1,5 +1,5 @@
 from asap3 import Atoms
-from bulk_modulus import calc_lattice_constant, read_cell, read_lattice_constant
+from bulk_modulus import calc_lattice_constant, read_cell, read_lattice_constant_or_calculate
 
 def createAtoms(options):
     """createAtoms(options) takes the argument options which is the key to read from the 
@@ -11,7 +11,7 @@ def createAtoms(options):
     size = options["size"]
     scaled_positions = options["scaled_positions"]
     cell = read_cell(options)
-    latticeconstant = read_lattice_constant(options)
+    latticeconstant = read_lattice_constant_or_calculate(options)
     cell = [[x*latticeconstant for x in y] for y in cell] #Add lattice constant to basis matrix
     atoms = Atoms(symbol, 
         scaled_positions = scaled_positions,

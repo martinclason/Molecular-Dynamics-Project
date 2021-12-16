@@ -2,7 +2,7 @@ from ase import Atoms
 import math
 from ase.calculators.kim.kim import KIM
 from create_potential import create_potential
-from bulk_modulus import read_cell, read_lattice_constant
+from bulk_modulus import read_cell, read_lattice_constant_or_calculate
 
 def shear_modulus(options) :
     """Shear_modulus takes one argument, options (a config-file), 
@@ -11,7 +11,7 @@ def shear_modulus(options) :
     symbols = options["symbol"]
     interatomic_positions = options["scaled_positions"]
     size = options["size"]
-    latticeconstant = read_lattice_constant(options)
+    latticeconstant = read_lattice_constant_or_calculate(options)
     old_basis_matrix = read_cell(options)
     old_cell = [[x*latticeconstant for x in y] for y in old_basis_matrix] #Add lattice constant to basis matrix
     new_cell = old_cell #Initialize the sheared cell
