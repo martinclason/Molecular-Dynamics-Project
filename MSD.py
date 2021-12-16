@@ -18,19 +18,18 @@ def MSD(t,atom_list):
     normsum = (1/N) * summ
     return normsum #Å^2
 #Calculates MSD for all the time steps and plots them
-def make_MSD_plotter(data):
+def make_MSD_plotter(data,dt):
     """The make_MSD_plotter function takes in data dictionary from .json file, takes 
     the MSD data out from it and returns a plotter that can plot MSD over time"""
     def plotter():
         MSD_data = data["MSD"]
-        dt = 2
         t = np.arange(0, len(MSD_data)*dt, dt)
 
         fig = plt.figure()
         ax = plt.axes()
         
-        plt.ylabel("MSD-[Å]")
-        plt.xlabel("Measured time step")
+        plt.ylabel("MSD-[Å^2]")
+        plt.xlabel("Time[fs]")
         plt.title("Mean Square Displacement") 
 
 
@@ -44,9 +43,11 @@ def self_diffusion_coefficient(atom_list) :
     The lindemann_critertion() first checks if the element is a solid or liquid. For
     solids we approximate the self_diffusion_coefficient as 0 and for liquids the self 
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
-    t = len(atom_list) - 1 #Take the system at the last accessible time
+    time_step = len(atom_list) - 1 #Take the system at the last accessible time
+    t = time_step * 5 * 1E-15 
+    MSD_meter = 1E-10 * MSD(time_step, atom_list) #Convert from Å to meter TODO: Angstrom^2????
     if lindemann_criterion(atom_list) :
-        return 1/(6*t) * MSD(t, atom_list)
+        return 1/(6*t) * MSD_meter
     else :
         return 0
 

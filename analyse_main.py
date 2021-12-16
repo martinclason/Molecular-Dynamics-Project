@@ -87,7 +87,7 @@ def output_properties_to_file(options, traj):
     """
 
     out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
-    coh_E_path = os.path.join(options['out_dir'],"_coh_E.traj")
+    coh_E_path = os.path.join(options['out_dir'],"_" + options['symbol'] + "_coh_E.traj")
 
     with open(out_file_path, 'a') as f:
         last_atoms_object = traj[-1] #Take the last atoms object
