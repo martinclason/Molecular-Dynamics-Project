@@ -1,5 +1,5 @@
 from createAtoms import createAtoms
-
+import pytest
 import yaml 
 
 config_file = open("test/config.yaml")
@@ -36,4 +36,3 @@ def test_createAtoms():
         errors.append("Primitive unit cell intialized incorrectly.")
 
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
-            
