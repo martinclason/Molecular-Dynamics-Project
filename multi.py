@@ -39,7 +39,7 @@ def multi(multi_config, options, simulate, analyze):
 
 def serialize_element_combination(element_combination):
     # TODO: Fix for multiple elements aswell
-    return element_combination[0]
+    return "".join(element_combination)
 
 
 def options_from_element_combination(element_combination, multi_config, template_options, output_dir):
@@ -56,7 +56,9 @@ def options_from_element_combination(element_combination, multi_config, template
     map_to_each_element_combination = {
         'potentials': 'potential',
         'cells': 'cell',
-        'scaled_positions': 'scaled_positions'
+        'scaled_positions': 'scaled_positions',
+        'latticeconstants': 'latticeconstant',
+        'temperatures': 'temperature_K',
     }
 
     for (known_key, target_prop) in map_to_each_element_combination.items():
