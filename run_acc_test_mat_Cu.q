@@ -25,9 +25,12 @@ conda activate tfya99
 # called 'this_sims_config_394395' where it will store
 # all output and the slurmcopy-394395.out
 ############################################################
+job_name=change_me_to_whatever_the_config_is_named_but_without_.yaml
 
+
+SBATCH_JOB_NAME=$job_name
 # Setup out_dir
-out_dir=$SBATCH_JOB_NAME_$SLURM_JOB_ID
+out_dir=$job_name-$SLURM_JOB_ID
 mkdir -p $out_dir && echo "Created $out_dir"
 # Remove potential files in this folder
 rm $out_dir/* && echo "Cleared $out_dir"
@@ -35,7 +38,7 @@ echo "Storing output in directory: $out_dir"
 
 #time ./ale multi m_config_metals.yaml $out_dir -c config_min.yaml
 #time ./ale multi m_config_metals.yaml $out_dir -c config_larger_longer.yaml
-time ./ale -d $out_dir -c $SBATCH_JOB_NAME.yaml
+time ./ale -d $out_dir -c $job_name.yaml
 #time mpirun python3 parallel_mpi_script.py
 
 echo "job completed"
