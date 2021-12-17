@@ -30,6 +30,7 @@ conda activate tfya99
 # IMPORTANT: 
 #     Remember to set -n above to minimum processes needed
 #     Remember to set -t above to max time before suspending job
+#     If running multi instead, comment out applicable lin below Actual job
 
 # output folder will be named to this plus jobid
 job_name=change_me_to_whatever_the_config_is_named_but_without_.yaml
@@ -52,8 +53,10 @@ echo "Storing output in directory: $out_dir"
 
 ############################################################
 # Actual job
-time ./ale multi $multi_config $out_dir -c $normal_config
+#time ./ale multi $multi_config $out_dir -c $normal_config
 time ./ale -d $out_dir -c $normal_config
+
+# Should not be required to run this also since ale multi should call this
 #time mpirun python3 parallel_mpi_script.py
 
 echo "job completed"
