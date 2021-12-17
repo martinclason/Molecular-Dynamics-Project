@@ -74,7 +74,8 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
                 )
                 y = data[data_type2]
                 
-                ax.scatter(x,y,label=os.path.basename(file).removesuffix('.json').removesuffix('_out'))
+                # ax.scatter(x,y,label=os.path.basename(file).removesuffix('.json').removesuffix('_out'))
+                ax.scatter(x,y,label=os.path.basename(file).split('.json')[0].split('_out')[0])
 
                 plt.xlabel(data_type1)
                 plt.ylabel(data_type2)
