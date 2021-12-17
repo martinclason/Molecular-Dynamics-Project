@@ -19,7 +19,7 @@ conda activate tfya99
 
 # Setup out dir
 #out_dir=out_metals_larger_longer2
-out_dir=out_acc_test_Al_mat
+out_dir=out_acc_test_Al_mat_$SLURM_JOB_ID
 mkdir -p $out_dir && echo "Created $out_dir"
 rm $out_dir/* && echo "Cleared $out_dir"
 echo $out_dir
