@@ -3,7 +3,7 @@
 #SBATCH -J testjob
 #SBATCH -A liu-compute-2021-30
 #SBATCH -t 03:00:00
-#SBATCH -n 10
+#SBATCH -n 2
 #SBATCH --mail-type=ALL
 #
 export NSC_MODULE_SILENT=1

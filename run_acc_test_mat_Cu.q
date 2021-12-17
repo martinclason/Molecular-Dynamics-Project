@@ -20,14 +20,14 @@ conda activate /home/x_marcl/.conda/envs/tfya99
 
 # Setup out dir
 #out_dir=out_metals_larger_longer2
-out_dir=out_acc_test_Fe_mat
+out_dir=out_acc_test_Cu_mat
 mkdir -p $out_dir
 rm $out_dir/*
 echo $out_dir
 
 #time ./ale multi m_config_metals.yaml $out_dir -c config_min.yaml
 #time ./ale multi m_config_metals.yaml $out_dir -c config_larger_longer.yaml
-time ./ale -d $out_dir -c acc_test_mat_Fe.yaml
+time ./ale -d $out_dir -c acc_test_mat_Cu.yaml
 #time mpirun python3 parallel_mpi_script.py
 
 echo "job completed"
