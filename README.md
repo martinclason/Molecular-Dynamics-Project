@@ -3,11 +3,12 @@
 ## Install dependencies
 
 ### Using conda
-This oneliner could be executed:
+Conda can be used to create an environment suitable for ale to run in. This environment could be called tfya99 for example.
+This oneliner could be executed to create the environment and install the packages in one go:
 ```
 conda create -c conda-forge -n tfya99 python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
 ```
-Followed by
+Followed by:
 ```
 conda activate tfya99
 ```
@@ -15,9 +16,12 @@ conda activate tfya99
 Alternatively, the `requirements.txt` could be used instead:
 ```
 conda create -c conda-forge -n tfya99 python=3
+conda activate tfya99
 conda install -c conda-forge --file requirements.txt
 ```
 ### Using pip
+Pip could be used instead of conda but we have stuck with conda in this project.
+
 Install ASE:
 ```
 pip install ase
@@ -27,7 +31,6 @@ Install ASAP:
 ```
 pip install asap3
 ```
-
 
 ### On LiU Linux lab computer:
 
