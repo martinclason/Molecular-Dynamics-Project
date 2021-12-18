@@ -36,6 +36,19 @@ Install ASE and ASAP Python modules:
 source/TFYA74/software/bin/init.sh
 ```
 
+## Install the software
+To be able to run ale in the terminal in your current environment, download this git repository and navigate into it. Then run:
+```
+python -m pip install .
+```
+
+This will read the script `setup.py` and pip will install `ale` as a command line tool. To test if this worked you can now run:
+```
+ale -h
+```
+
+If it shows help message the installation worked!
+
 ## Running the software
 Run ale (both simulation and analyzation):
 ```
