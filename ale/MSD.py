@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import math
-from simulationDataIO import inputSimulationData
+from ale.simulationDataIO import inputSimulationData
 import numpy as np
 import os
 

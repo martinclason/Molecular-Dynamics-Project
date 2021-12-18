@@ -3,7 +3,7 @@ import os
 import pickle
 from subprocess import Popen
 from copy import deepcopy
-from md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import config_parser as config_file_parser
 import pprint
 
 def get_combinations_of_elements(elements):

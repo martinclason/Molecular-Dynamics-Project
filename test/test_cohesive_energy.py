@@ -1,5 +1,5 @@
-from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
-from md_config_reader import config_parser
+from ale.cohesive_energy import cohesive_energy, retrieve_cohesive_energy
+from ale.md_config_reader import config_parser
 
 import pytest
 
@@ -7,8 +7,8 @@ import pytest
 # then checks with the real value for cohesive energy for copper.
 @pytest.mark.openkim 
 def test_cohesive_energy():
-    from createAtoms import createAtoms
-    from create_potential import create_potential
+    from ale.createAtoms import createAtoms
+    from ale.create_potential import create_potential
     from ase.calculators.kim.kim import KIM
     parsed_config_file = config_parser(open("test/config_Cu.yaml"))
     atoms = createAtoms(parsed_config_file)

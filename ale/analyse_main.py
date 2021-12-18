@@ -1,13 +1,13 @@
-from density import density
-from MSD import MSD, self_diffusion_coefficient, lindemann_criterion
-from pressure import pressure, avg_pressure
-from simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
-from debye_temperature import debye_temperature
-from shear_modulus import shear_modulus
-from effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
-from cohesive_energy import retrieve_cohesive_energy
-from specificHeatCapacity import specificHeatCapacity
-from bulk_modulus import calc_lattice_constant
+from ale.density import density
+from ale.MSD import MSD, self_diffusion_coefficient, lindemann_criterion
+from ale.pressure import pressure, avg_pressure
+from ale.simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
+from ale.debye_temperature import debye_temperature
+from ale.shear_modulus import shear_modulus
+from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
+from ale.cohesive_energy import retrieve_cohesive_energy
+from ale.specificHeatCapacity import specificHeatCapacity
+from ale.bulk_modulus import calc_lattice_constant
 
 import numpy as np
 import os

@@ -5,7 +5,7 @@ from os.path import isfile
 import signal
 import pytest
 # from time import sleep
-from md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import config_parser as config_file_parser
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"

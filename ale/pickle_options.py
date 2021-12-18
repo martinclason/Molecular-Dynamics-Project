@@ -1,4 +1,4 @@
-from md_config_reader import config_parser
+from ale.md_config_reader import config_parser
 import pickle
 
 def pickle_options():

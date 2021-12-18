@@ -1,10 +1,10 @@
-from command_line_arg_parser import CreateParser
-from md_config_reader import config_parser as config_file_parser
-from main import main
-from analyse_main import analyse_main
-from visualize_main import visualize as visualize_simulation
+from ale.command_line_arg_parser import CreateParser
+from ale.md_config_reader import config_parser as config_file_parser
+from ale.simulate import main
+from ale.analyse_main import analyse_main
+from ale.visualize_main import visualize as visualize_simulation
 import os
-from multi import multi as multi_main
+from ale.multi import multi as multi_main
 
 from asap3 import Trajectory
 

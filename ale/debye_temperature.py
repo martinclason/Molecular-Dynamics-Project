@@ -1,7 +1,7 @@
 import math 
-from effective_velocity import effective_velocity
-from density import density
-from atomic_masses import atomic_masses
+from ale.effective_velocity import effective_velocity
+from ale.density import density
+from ale.atomic_masses import atomic_masses
 
 def debye_temperature(atoms_object, options, bulk_modulus) :
     """debyeTemperature(atoms_object) takes two argument, an atoms objects and

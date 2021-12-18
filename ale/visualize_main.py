@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from scatter import make_scatter_plotter
+from ale.scatter import make_scatter_plotter
 
-from simulationDataIO import inputSimulationData
-from MSD import make_MSD_plotter
+from ale.simulationDataIO import inputSimulationData
+from ale.MSD import make_MSD_plotter
 
 def s_to_fs(t):
   return t*10e-15

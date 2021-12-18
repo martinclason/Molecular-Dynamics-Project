@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from aleErrors import ConfigError
+from ale.errors import ConfigError
 
 
 import glob, os, sys
 
-from simulationDataIO import inputSimulationData
+from ale.simulationDataIO import inputSimulationData
 
 #A help function to extract the .json files in the outfiles directory
 def find_json_files(options):
