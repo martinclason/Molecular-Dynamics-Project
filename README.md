@@ -43,11 +43,20 @@ python -m pip install .
 ```
 
 This will read the script `setup.py` and pip will install `ale` as a command line tool. To test if this worked you can now run:
+
+IMPORTANT:
+To develop without having to reinstall ale all the time you can instead run:
+```
+python -m pip install --no-deps -e .
+```
+This will install `ale` without dependencies and in editable mode so the source code can be edited.
+
+To test if this worked you can now run:
 ```
 ale -h
 ```
 
-If it shows help message the installation worked!
+If it shows the help message the installation worked!
 
 ## Running the software
 Run ale (both simulation and analyzation):
