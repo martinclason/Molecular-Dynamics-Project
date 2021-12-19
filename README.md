@@ -97,6 +97,7 @@ This line can be followed by the arguments, e.g. `python -m ale -h`, as usual.
 
 It's probably better to try to install it as a package using `pip` though. That way it will be possible to run `ale` from any directory (as long as you have activated your conda environment if you're using conda).
 
+Running `ale multi` currently requires `ale` to be installed with `pip`.
 
 # Documentation
 
