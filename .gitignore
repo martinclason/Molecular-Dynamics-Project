@@ -1,6 +1,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
 *~ 
 docs/_build
 *.traj
