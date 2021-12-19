@@ -3,20 +3,20 @@
 ## Install dependencies
 
 ### Using conda
-Conda can be used to create an environment suitable for ale to run in. This environment could be called tfya99 for example.
+Conda can be used to create an environment suitable for ale to run in. This environment could be called `my-md-env` for example.
 This oneliner could be executed to create the environment and install the packages in one go:
 ```
-conda create -c conda-forge -n tfya99 python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
+conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
 ```
 Followed by:
 ```
-conda activate tfya99
+conda activate my-md-env
 ```
 
 Alternatively, the `requirements.txt` could be used instead:
 ```
-conda create -c conda-forge -n tfya99 python=3
-conda activate tfya99
+conda create -c conda-forge -n my-md-env python=3
+conda activate my-md-env
 conda install -c conda-forge --file requirements.txt
 ```
 ### Using pip
@@ -36,7 +36,7 @@ pip install asap3
 
 Install ASE and ASAP Python modules:
 ```
-source/TFYA74/software/bin/init.sh
+source /courses/TFYA74/software/bin/init.sh
 ```
 
 ## Install the software
