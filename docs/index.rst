@@ -14,7 +14,6 @@ Welcome to Molecular Dynamics Project's documentation!
     how_to_run
     config
     limitations
-    config
     output
     source/ale
 
