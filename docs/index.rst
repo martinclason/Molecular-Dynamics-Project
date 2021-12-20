@@ -7,35 +7,100 @@ Welcome to Molecular Dynamics Project's documentation!
 ======================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-This is the documentation for the Molecular Dynamics Project in the course 
-TFYA99 CDIO Project in Applied Physics.
+    ale:
+        * :ref:`ale`
+        * :ref:`analyse_main`
+        * :ref:`ale_errors`    
+        * :ref:`main`
+        * :ref:`create_potential`
+        * :ref:`create_atoms`
+        * :ref:`simulation_data_IO`
+   
+    Property calculations:
+        * :ref:`atomic_masses`
+        * :ref:`bulk_modulus`
+        * :ref:`cohesive_energy`
+        * :ref:`debye_temperature`
+        * :ref:`density`
+        * :ref:`effective_velocity`
+        * :ref:`MSD`
+        * :ref:`pressure`
+        * :ref:`shear_modulus`
+        * :ref:`specific_heat_capacity`
+    
+    ale visualize:
+        * :ref:`visualize_main`
+        * :ref:`scatter`
 
-Update the documentation
-========================
-To add files to be tracked by the automatic documentation system run the following from the top directory::
+    ale multi:
+        * :ref:`multi`
+        * :ref:`parallel_mpi_script`
+        * :ref:`picle_options` 
 
-    sphinx-apidoc -o docs/source/ .
-To make the documentation system regenerate the html documentation, run the following from the ``docs`` directory::
+This is the documentation for the molecular dynamics program .
 
-    sphinx-build . _build
+.. Update the documentation
+.. ========================
+.. To add files to be tracked by the automatic documentation system run the following from the top directory::
 
-or::
+..     sphinx-apidoc -o docs/ .
+.. To make the documentation system regenerate the html documentation, run the following from the ``docs`` directory::
 
-    make html
+..     sphinx-build . _build
 
-Read documentation
-==================
-To read the documentation cd to the docs directory and run
-'<web-browser-name> index.html>' in the terminal.
+.. or::
+
+..     make html
+
+.. Read documentation
+.. ==================
+.. To read the documentation cd to the docs directory and run
+.. '<web-browser-name> index.html>' in the terminal.
 
 .. contents:: Table of contents
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    ale::
+    -----
+        # :ref:`ale`
+        # :ref:`analyse_main`
+        # :ref:`ale_errors`    
+        # :ref:`main`
+        # :ref:`create_potential`
+        # :ref:`create_atoms`
+        # :ref:`simulation_data_IO`
+   
+    Property calculations::
+    -----------------------
+        # :ref:`atomic_masses`
+        # :ref:`bulk_modulus`
+        # :ref:`cohesive_energy`
+        # :ref:`debye_temperature`
+        # :ref:`density`
+        # :ref:`effective_velocity`
+        # :ref:`MSD`
+        # :ref:`pressure`
+        # :ref:`shear_modulus`
+        # :ref:`specific_heat_capacity`
+    
+    ale visualize::
+    ---------------
+        # :ref:`visualize_main`
+        # :ref:`scatter`
+
+    ale multi::
+    -----------
+        # :ref:`multi`
+        # :ref:`parallel_mpi_script`
+        # :ref:`pickle_options` 
+    
+    other::
+    -------
+        # :ref:`genindex`
+        # :ref:`modindex`
+        # :ref:`search`

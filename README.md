@@ -64,16 +64,19 @@ Run visualization:
 
 # Documentation
 
+
 ## Update the documentation
 Navigate to the docs directory and run:
 ```
+sphinx-apidoc -o docs/source/ ..
 sphinx-build . _build
 ```
+
 or:
 ```
+sphinx-apidoc -o docs/source/ ..
 make html
 ```
-
 
 ## Read documentation
 To read the documentation cd to the docs directory and run:
