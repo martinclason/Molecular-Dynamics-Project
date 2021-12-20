@@ -1,8 +1,9 @@
 import pytest
 import yaml 
 
-config_file = open("test/config.yaml")
-parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
+if __name__ == "__main__":
+    config_file = open("test/config.yaml")
+    parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
 
 #Make sure all data from config file gets stored in Atoms correctly
 @pytest.mark.openkim

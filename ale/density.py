@@ -25,3 +25,4 @@ def density_plot(time,atom_list,options):
     plt.xlabel("Measured time step")
     plt.title("The density of " + options["symbol"] + " over time")
     plt.show()
+

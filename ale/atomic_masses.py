@@ -12,4 +12,3 @@ def atomic_masses(atoms_object) :
     molecule_masses = all_masses[0:number_of_atoms] #Retrieve masses from one molecule
 
     return sum(molecule_masses)
-

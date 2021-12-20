@@ -3,8 +3,9 @@ from asap3 import Trajectory
 import sys
 import os
 
-arTraj = Trajectory('test/Ar.traj')
-cuTraj = Trajectory('test/Cu.traj')
+if __name__ == "__main__":
+    arTraj = Trajectory('test/Ar.traj')
+    cuTraj = Trajectory('test/Cu.traj')
 
 # Test if the calculated specific heat capacity of Argon is somewhat
 # close to the real value.
