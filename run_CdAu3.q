@@ -53,8 +53,8 @@ echo "Storing output in directory: $out_dir"
 
 ############################################################
 # Actual job
-#time ./ale multi $multi_config $out_dir -c $normal_config
-time ./ale -d $out_dir -c $normal_config
+#time ale multi $multi_config $out_dir -c $normal_config
+time ale -d $out_dir -c $normal_config
 
 # Should not be required to run this also since ale multi should call this
 #time mpirun python3 parallel_mpi_script.py
