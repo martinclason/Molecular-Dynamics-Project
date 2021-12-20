@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import os
+from ase.visualize import view
+from ale.createAtoms import createAtoms
 
 from ale.scatter import make_scatter_plotter
 
@@ -29,6 +31,7 @@ def visualize(options, data_file_path):
   print(data)
 
   known_visualizers = {
+    'Lattice' : make_lattice_viewer(options),
     'Temperature' : make_generic_time_plotter(
                         data=data['Temperature'],
                         label='Temperature',
@@ -51,3 +54,9 @@ def visualize(options, data_file_path):
 
   plt.show()
 
+def make_lattice_viewer(options):
+    def viewer():
+        atoms = createAtoms(options)
+        view(atoms)
+
+    return viewer
