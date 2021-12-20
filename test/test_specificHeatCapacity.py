@@ -1,4 +1,4 @@
-from specificHeatCapacity import specificHeatCapacity
+from ale.specificHeatCapacity import specificHeatCapacity
 from asap3 import Trajectory
 import sys
 import os

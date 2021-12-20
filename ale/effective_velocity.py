@@ -1,6 +1,6 @@
-from shear_modulus import shear_modulus
-from density import density
-from bulk_modulus import calc_lattice_constant
+from ale.shear_modulus import shear_modulus
+from ale.density import density
+from ale.bulk_modulus import calc_lattice_constant
 
 def longitudinal_sound_wave_velocity(atoms_object, options, bulk_modulus) :
     """longitudinal_sound_wave_velocity takes two arguments,

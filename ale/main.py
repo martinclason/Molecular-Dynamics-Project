@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
-
-from command_line_arg_parser import CreateParser
-from md_config_reader import config_parser as config_file_parser
-from main import main
-from analyse_main import analyse_main
-from visualize_main import visualize as visualize_simulation
+from ale.command_line_arg_parser import CreateParser
+from ale.md_config_reader import config_parser as config_file_parser
+from ale.simulate import main
+from ale.analyse_main import analyse_main
+from ale.visualize_main import visualize as visualize_simulation
 import os
-from multi import multi as multi_main
+from ale.multi import multi as multi_main
 
 from asap3 import Trajectory
 
@@ -28,7 +26,7 @@ def default(options, args=None):
 
 def multi(options, args):
   print("Should run multiple simulations and analyzations parallelized on multiple cores")
-  
+
   multi_config_file = args.multi_config_file
   print(f"multi_config_file: {multi_config_file}")
   multi_config = config_file_parser(multi_config_file)
@@ -101,7 +99,7 @@ def run(arguments=None):
   else:
     # Defaults to current working directory
     options['out_dir'] = options.get('out_dir', os.getcwd())
- 
+
   args.sub_command(options, args)
 
 if __name__=="__main__":

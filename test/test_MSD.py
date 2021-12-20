@@ -1,4 +1,4 @@
-from MSD import self_diffusion_coefficient, lindemann_criterion
+from ale.MSD import self_diffusion_coefficient, lindemann_criterion
 from ase.io.trajectory import Trajectory
 import pytest
 

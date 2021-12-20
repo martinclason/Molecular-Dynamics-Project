@@ -5,7 +5,7 @@ import math as m
 from ase.io import Trajectory
 import numpy as np
 from asap3 import Atoms
-from create_potential import create_potential
+from ale.create_potential import create_potential
 import functools
 import os
 

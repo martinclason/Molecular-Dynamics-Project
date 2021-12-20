@@ -2,10 +2,11 @@ import subprocess
 import os
 from os.path import join as joinPath
 from os.path import isfile
+import shutil
 import signal
 import pytest
 # from time import sleep
-from md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import config_parser as config_file_parser
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
@@ -17,11 +18,11 @@ def test_test() :
     pass
 
 @pytest.mark.integration
-@pytest.mark.openkim    
+@pytest.mark.openkim
 def test_ale_help():
     try:
         process = subprocess.run(
-                        f"./ale -h",
+                        f"ale -h",
                         shell=True,
                         check=True)
     except:
@@ -34,7 +35,7 @@ def test_ale_small_simulation_ase():
 
     try:
         process = subprocess.run(
-                        f"./ale --no-asap -c {small_test_config}",
+                        f"ale --no-asap -c {small_test_config}",
                         shell=True,
                         check=True)
     except:
@@ -49,7 +50,7 @@ def test_ale_small_simulation_builtin_LJ():
     # AsapError: The height of the cell (1.96299) must be larger than 13.25
     try:
         process = subprocess.run(
-                        f"./ale simulate -c {small_test_config_builtin_lj}",
+                        f"ale simulate -c {small_test_config_builtin_lj}",
                         shell=True,
                         check=True)
     except:
@@ -61,8 +62,14 @@ def test_ale_small_simulation_builtin_LJ():
 def test_ale_short_multi():
     """Tests that multi runs and creates traj files in specified output directory"""
 
-    output_dir = 'out'
+    output_dir = 'out_test'
     multi_config_file = 'test/multi_config_Cu_Ar.yaml'
+    if os.path.isdir(output_dir):
+        shutil.rmtree(output_dir)
+
+    os.mkdir(output_dir)
+
+    assert os.path.isdir(output_dir)
 
     with open(multi_config_file, 'r') as f:
         multi_config = config_file_parser(f)
@@ -71,7 +78,7 @@ def test_ale_short_multi():
 
     try:
         process = subprocess.run(
-                        f"./ale multi {multi_config_file} {output_dir} -c {short_test_config}",
+                        f"ale multi {multi_config_file} {output_dir} -c {short_test_config}",
                         shell=True,
                         check=True)
 
@@ -87,7 +94,7 @@ def test_ale_short_multi():
 def test_ale_small_simulation():
     try:
         process = subprocess.run(
-                        f"./ale -c {small_test_config}",
+                        f"ale -c {small_test_config}",
                         shell=True,
                         check=True)
     except:
@@ -99,7 +106,7 @@ def test_ale_small_simulation():
 def test_ale_simulate():
     try:
         process = subprocess.run(
-                    f"./ale simulate -c {small_test_config}",
+                    f"ale simulate -c {small_test_config}",
                     shell=True,
                     check=True)
     except:
@@ -117,7 +124,7 @@ def test_ale_analyze():
 
     try:
         process = subprocess.run(
-                    f"./ale analyze -c {small_test_config} --out {out_test_file}",
+                    f"ale analyze -c {small_test_config} --out {out_test_file}",
                     shell=True,
                     check=True)
     except:
@@ -132,7 +139,7 @@ def test_ale_analyze():
 def test_ale_visualize():
     try:
         process = subprocess.Popen(
-                    f"./ale visualize",
+                    f"ale visualize",
                     shell=True,
                     preexec_fn=os.setsid)
         # sleep(1)

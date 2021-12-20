@@ -1,8 +1,8 @@
 from ase import Atoms
 import math
 from ase.calculators.kim.kim import KIM
-from create_potential import create_potential
-from bulk_modulus import read_cell, read_lattice_constant_or_calculate
+from ale.create_potential import create_potential
+from ale.bulk_modulus import read_cell, read_lattice_constant_or_calculate
 
 def shear_modulus(options) :
     """Shear_modulus takes one argument, options (a config-file), 

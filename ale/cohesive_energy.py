@@ -2,7 +2,7 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 from ase.md.verlet import VelocityVerlet
 from ase.io import Trajectory
 from ase import units
-from equilibriumCondition import equilibiriumCheck
+from ale.equilibriumCondition import equilibiriumCheck
 import sys
 import os
 

@@ -1,4 +1,4 @@
-from pickle_options import pickle_options
+from ale.pickle_options import pickle_options
 from subprocess import Popen, PIPE
 import os
 import pytest
