@@ -7,32 +7,20 @@ Welcome to Molecular Dynamics Project's documentation!
 ======================================================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 4
     :caption: Contents:
 
-    ale
+    install
+    how_to_run
+    config
+    limitations
+    config
+    output
+    source/ale
 
-This is the documentation for the molecular dynamics program .
+This is the documentation for the molecular dynamics program Ale. Lägga te babbel här om programmets syfte
 
 .. contents:: Table of contents
-
-Update the documentation
-========================
-To add files to be tracked by the automatic documentation system run the following from the top directory::
-
-    sphinx-apidoc -o docs/ .
-To make the documentation system regenerate the html documentation, run the following from the ``docs`` directory::
-
-    sphinx-build . _build
-
-or::
-
-    make html
-
-Read documentation
-==================
-To read the documentation cd to the docs directory and run
-'<web-browser-name> index.html>' in the terminal.
 
 
 Main functions
@@ -40,4 +28,16 @@ Main functions
 
 Ale
 ---
-Ao deru
+Massa text och sånt
+
+Ale analyze
+-----------
+Massa text och sånt
+
+Ale simulate
+------------
+Massa text och sånt
+
+Ale multi
+---------
+Mer bös

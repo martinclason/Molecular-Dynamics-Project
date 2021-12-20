@@ -1,4 +1,6 @@
-ale package
+.. _ale:
+
+Ale package
 ===========
 
 Subpackages

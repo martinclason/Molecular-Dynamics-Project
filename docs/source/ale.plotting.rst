@@ -1,3 +1,5 @@
+.. _ase.plotting:
+
 ale.plotting package
 ====================
 
