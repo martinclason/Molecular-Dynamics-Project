@@ -39,7 +39,7 @@ checkForEquilibrium : True
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
 #potential: "openKIM:Morse_EIP_GuthikondaElliott_2011_AuCd__MO_703849496106_002"
-potential: "openKIM:EMT_Asap_Standard_Jacobsen_Stoltze_Norskov_AlAgAuCuNiPdPt__MO_118428466217_002"
+potential: "openKIM:EMT_Asap_Standard_JacobsenStoltzeNorskov_1996_AlAgAuCuNiPdPt__MO_115316750986_001"
 dt: 5 # simulation time step [fs]
 iterations: 10000
 interval: 100
