@@ -1,5 +1,5 @@
 from asap3 import Atoms
-from bulk_modulus import calc_lattice_constant, read_cell, read_lattice_constant_or_calculate
+from ale.bulk_modulus import calc_lattice_constant, read_cell, read_lattice_constant_or_calculate
 
 def createAtoms(options):
     """createAtoms(options) takes the argument options which is the key to read from the 

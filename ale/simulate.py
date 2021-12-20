@@ -9,13 +9,13 @@ import numpy as np
 from ase import units
 
 
-from createAtoms import createAtoms
-from equilibriumCondition import equilibiriumCheck
+from ale.createAtoms import createAtoms
+from ale.equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from simulationDataIO import outputGenericFromTraj, outputSingleProperty
-from aleErrors import ConfigError
-from cohesive_energy import cohesive_energy, retrieve_cohesive_energy
-from create_potential import create_potential, built_in_LennardJones
+from ale.simulationDataIO import outputGenericFromTraj, outputSingleProperty
+from ale.errors import ConfigError
+from ale.cohesive_energy import cohesive_energy, retrieve_cohesive_energy
+from ale.create_potential import create_potential, built_in_LennardJones
 import os
 
 

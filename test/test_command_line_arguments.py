@@ -1,5 +1,5 @@
 import pytest
-from command_line_arg_parser import CreateParser, parser
+from ale.command_line_arg_parser import CreateParser, parser
 
 # asap option
 def test_default_option():

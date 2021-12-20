@@ -5,8 +5,8 @@ import argparse
 import pprint
 import os
 
-from main import main as simulate_main
-from analyse_main import analyse_main as analyze_main
+from ale.main import main as simulate_main
+from ale.analyse_main import analyse_main as analyze_main
 
 # TODO: Should this use asap3?
 from asap3 import Trajectory

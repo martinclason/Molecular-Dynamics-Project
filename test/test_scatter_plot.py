@@ -1,6 +1,6 @@
-from scatter import make_scatter_plotter, find_json_files
+from ale.scatter import make_scatter_plotter, find_json_files
 from ase.io.trajectory import Trajectory
-from md_config_reader import config_parser
+from ale.md_config_reader import config_parser
 import matplotlib.pyplot as plt
 import sys
 import os

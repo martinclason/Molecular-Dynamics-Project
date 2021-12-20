@@ -3,7 +3,7 @@ import os
 import pickle
 from subprocess import Popen
 from copy import deepcopy
-from md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import config_parser as config_file_parser
 import pprint
 
 def get_combinations_of_elements(elements):
@@ -25,7 +25,7 @@ def generate_options_list(multi_config, options):
     print("Combinations:")
     print(element_combinations)
 
-    options_list = [options_from_element_combination(element_combination, multi_config, options, output_dir) 
+    options_list = [options_from_element_combination(element_combination, multi_config, options, output_dir)
                         for element_combination in element_combinations]
 
     return options_list
@@ -67,7 +67,7 @@ def options_from_element_combination(element_combination, multi_config, template
             element_combination_maps_for_prop = multi_config[known_key]
             # Only keeping entries matching this element combination
             prop_map_for_this_element_combination = {
-                k:v for k,v in element_combination_maps_for_prop.items() 
+                k:v for k,v in element_combination_maps_for_prop.items()
                     if k == element_combination_serialized
             }
             for specified_element, new_value in prop_map_for_this_element_combination.items():
@@ -80,7 +80,7 @@ def options_from_element_combination(element_combination, multi_config, template
                     options[target_prop] = default_value
                 else:
                     print(f"No specific {target_prop} for {element_combination_serialized} was specified. Will try to use {target_prop}: {options.get(target_prop)} specified in config file instead.")
-                
+
 
     # Setup traj file
     traj_file_name = f"{element_combination_serialized}.traj"
@@ -99,7 +99,7 @@ def run_in_parallell(options_list):
 
     # start mpi process
     print("Calling mpirun...")
-    parallel_mpi_script = 'parallel_mpi_script.py'
+    parallel_mpi_script = 'ale/parallel_mpi_script.py'
     n_options = len(options_list)
     arguments = ['mpirun', 'python3', parallel_mpi_script]
     print(f"Will call mpirun with arguments: {arguments}")
@@ -123,7 +123,7 @@ if __name__=="__main__":
 
     with open(config_file, 'r') as f:
         options = config_file_parser(f)
-    
+
     # mock options
     options['out_dir'] = 'out'
 

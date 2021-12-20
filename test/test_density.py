@@ -1,4 +1,4 @@
-from density import density, density_plot
+from ale.density import density, density_plot
 from asap3 import Trajectory
 
 import yaml
