@@ -37,15 +37,15 @@ def outputGenericResultLazily(out_file, name, retrieve_result):
 
     return output
 
-def inputSimulationData(out_file_name="out.json"):
+def inputSimulationData(out_file_path):
     # TODO: Make this prettier...
-    if not os.path.isfile(out_file_name):
-        print(f"Couldn't find file {out_file_name} for visualization...")
+    if not os.path.isfile(out_file_path):
+        print(f"Couldn't find file {out_file_path} for visualization...")
         return None
 
     read_data = {}
 
-    with open(out_file_name, "r") as f:
+    with open(out_file_path, "r") as f:
         for line in f:
             read_data.update(json.loads(line))
 
