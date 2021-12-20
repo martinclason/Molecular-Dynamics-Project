@@ -17,7 +17,6 @@ conda activate my-md-env
 ```
 
 Alternatively, the `requirements.txt` could be used instead:
-
 ```
 conda create -c conda-forge -n my-md-env python=3
 conda activate my-md-env
