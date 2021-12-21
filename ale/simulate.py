@@ -90,70 +90,16 @@ def MD(options):
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
-
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
-        # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-        rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
-        dyn.attach(rawTraj.write, interval=interval)
+        eqReached, initIterations, numberOfChecks, iterationsBetweenChecks = try_to_run_to_equilibrium(
+            options=options,
+            raw_trajectory_file_path=raw_trajectory_file_path,
+            dyn=dyn,
+            atoms=atoms,
+            interval=interval,
+            number_of_atoms=atoms_number_of_atoms,
+        )
 
-        # Condtions for equilibrium.
-        eqCheckInterval = 10
-        initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000
-        iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
-        eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 30) else 30
-        ensamble = options.get("ensemble", "NVE") # default to NVE
-
-        # Variables that are updated in the process
-        eqReached = False
-        numberOfChecks = 0
-
-        # Runs for first couple of itterations
-        dyn.run(initIterations)
-
-        while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-            eqReached = equilibiriumCheck(raw_trajectory_file_path,
-                            atoms_number_of_atoms,
-                            ensamble,
-                            eqCheckInterval)
-
-            numberOfChecks = numberOfChecks + 1
-
-            dyn.run(iterationsBetweenChecks)
-
-        # When equilibrium is or isn't reached the elapsed time is calculated
-        # and a statement is written in the terminal on wheter the system reached
-        # equilibrium and how long it took or how long the simulation waited.
-        timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
-
-        out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
-
-        # Writes meta data about the equilibrium to the output .json-file
-        f = open(out_file_path, 'a')
-        equilibiriumProp = {
-            'Equilibrium reached':
-                outputSingleProperty(
-                    f,
-                    'Equilibrium reached',
-                    eqReached
-                ),
-            'Time before equilibrium':
-                outputSingleProperty(
-                    f,
-                    'Time before equilibrium',
-                    timeToEquilibrium
-                )
-        }
-
-        for prop in list(equilibiriumProp):
-            equilibiriumProp[prop]()
-
-        f.close()
-
-        if eqReached:
-            print("System reached equilibirium after",timeToEquilibrium,"fs")
-        else:
-            print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
-            print("Continues")
     coh_E_trajectory_file_name = "_" + options['symbol'] + "_coh_E.traj"
     cohesive_energy_file_path = os.path.join(output_dir, coh_E_trajectory_file_name)
     if options.get("calculateCohesiveEnergy") and eqReached:
@@ -181,6 +127,76 @@ def MD(options):
     traj.close()
     print(f"Traj {main_trajectory_file_path} should be written")
 
+
+def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, interval, number_of_atoms):
+    """This function tries to run the simulation until equilibrium is obtained.
+    It writes this data to a raw traj-file.
+    """
+
+    # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
+    rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
+    dyn.attach(rawTraj.write, interval=interval)
+
+    # Condtions for equilibrium.
+    eqCheckInterval = 10
+    initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000
+    iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
+    eqLimit = number_of_atoms if (number_of_atoms > 30) else 30
+    ensemble = options.get("ensemble", "NVE") # default to NVE
+
+    # Variables that are updated in the process
+    eqReached = False
+    numberOfChecks = 0
+
+    # Runs for first couple of itterations
+    dyn.run(initIterations)
+
+    while ((not eqReached) and (not (numberOfChecks > eqLimit))):
+        eqReached = equilibiriumCheck(raw_trajectory_file_path,
+                        number_of_atoms,
+                        ensemble,
+                        eqCheckInterval)
+
+        numberOfChecks = numberOfChecks + 1
+
+        dyn.run(iterationsBetweenChecks)
+
+    # When equilibrium is or isn't reached the elapsed time is calculated
+    # and a statement is written in the terminal on wheter the system reached
+    # equilibrium and how long it took or how long the simulation waited.
+    timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+
+    out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
+
+    # Writes meta data about the equilibrium to the output .json-file
+    f = open(out_file_path, 'a')
+    equilibiriumProp = {
+        'Equilibrium reached':
+            outputSingleProperty(
+                f,
+                'Equilibrium reached',
+                eqReached
+            ),
+        'Time before equilibrium':
+            outputSingleProperty(
+                f,
+                'Time before equilibrium',
+                timeToEquilibrium
+            )
+    }
+
+    for prop in list(equilibiriumProp):
+        equilibiriumProp[prop]()
+
+    f.close()
+
+    if eqReached:
+        print("System reached equilibirium after",timeToEquilibrium,"fs")
+    else:
+        print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
+        print("Continues")
+
+    return (eqReached, initIterations, numberOfChecks, iterationsBetweenChecks)
 
 def run_simulation(options):
     """The 'run_simulation()' function runs the 'MD()' function which runs the simulation.
