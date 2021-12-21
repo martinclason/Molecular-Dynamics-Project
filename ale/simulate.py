@@ -12,11 +12,12 @@ from ase import units
 from ale.createAtoms import createAtoms
 from ale.equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from ale.simulationDataIO import outputGenericFromTraj, outputSingleProperty
+from ale.simulationDataIO import outputSingleProperty
 from ale.errors import ConfigError
 from ale.cohesive_energy import cohesive_energy, retrieve_cohesive_energy
 from ale.create_potential import create_potential, built_in_LennardJones
 import os
+import logging
 
 
 def MD(options):
@@ -42,14 +43,14 @@ def MD(options):
     calc = create_potential(options)
     print(f"Using potential: {calc}")
     atoms.calc = calc
-    
+
     time_step = options["dt"] * units.fs
     temperature = options["temperature_K"]
     nvt_friction = options.get("NVT_friction", 0.002) # default to 0.002
-    print(f"nvt_friction {nvt_friction}")
+    logging.debug(f"nvt_friction {nvt_friction}")
 
     # Set the momenta corresponding to the temperature
-    # The communicator is set to 'serial' to inhibit this function trying 
+    # The communicator is set to 'serial' to inhibit this function trying
     # to communicate between processes. This would send a broadcast which seems to deadlock
     # the program if processes calls this function a different number of times.
     MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
@@ -97,7 +98,7 @@ def MD(options):
 
         # Condtions for equilibrium.
         eqCheckInterval = 10
-        initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000 
+        initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000
         iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
         eqLimit = atoms_number_of_atoms if (atoms_number_of_atoms > 30) else 30
         ensamble = options.get("ensemble", "NVE") # default to NVE
@@ -114,11 +115,11 @@ def MD(options):
                             atoms_number_of_atoms,
                             ensamble,
                             eqCheckInterval)
-        
+
             numberOfChecks = numberOfChecks + 1
 
             dyn.run(iterationsBetweenChecks)
-        
+
         # When equilibrium is or isn't reached the elapsed time is calculated
         # and a statement is written in the terminal on wheter the system reached
         # equilibrium and how long it took or how long the simulation waited.
@@ -166,24 +167,24 @@ def MD(options):
     print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
                 main_trajectory_file_path,
-                "w", 
-                atoms, 
+                "w",
+                atoms,
                 properties="energy, forces",
                 # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
                 master=True, # Let processes write to their own respective traj-files
             )
-    
+
     dyn.attach(traj.write, interval=interval)
-    
+
     dyn.run(iterations)
 
     traj.close()
     print(f"Traj {main_trajectory_file_path} should be written")
 
-    
-def main(options):
-    """The 'main()' function runs the 'MD()' function which runs the simulation.
-    'main()' also prints out the density or other properties of the material at
+
+def run_simulation(options):
+    """The 'run_simulation()' function runs the 'MD()' function which runs the simulation.
+    'run_simulation()' also prints out the density or other properties of the material at
     hand (which is to be implemented in future versions of this program, as of
     only density excists). What to print out during the run is defined in the
     'config.yaml' file."""
@@ -192,7 +193,6 @@ def main(options):
 
 if __name__ == "__main__":
     import os
-    import sys
     import argparse
     import yaml
 
@@ -211,5 +211,5 @@ if __name__ == "__main__":
     parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
     parsed_config_file["use_asap"] = args.use_asap
 
-    main(parsed_config_file)
-    
+    run_simulation(parsed_config_file)
+

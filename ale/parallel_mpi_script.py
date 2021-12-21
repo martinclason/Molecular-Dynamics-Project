@@ -5,8 +5,8 @@ import argparse
 import pprint
 import os
 
-from ale.main import main as simulate_main
-from ale.analyse_main import analyse_main as analyze_main
+from ale.simulate import run_simulation
+from ale.analyze import run_analysis
 
 # TODO: Should this use asap3?
 from asap3 import Trajectory
@@ -28,19 +28,17 @@ def do_work(options):
         print(f"---- error: {e}")
 
 def simulate(options):
-    simulate_main(options)
+    run_simulation(options)
 
 def analyze(options):
     print(f"process {rank} writes output to: {options['out_dir']}/{options['out_file_name']}")
-    traj_read_path = os.path.join(options['out_dir'], options['traj_file_name'])
-    traj_read = Trajectory(traj_read_path)
-    analyze_main(options, traj_read)
+    run_analysis(options)
 
 def get_symbol(options):
     return options['symbol']
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()

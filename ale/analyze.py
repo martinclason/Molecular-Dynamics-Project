@@ -9,12 +9,14 @@ from ale.cohesive_energy import retrieve_cohesive_energy
 from ale.specificHeatCapacity import specificHeatCapacity
 from ale.bulk_modulus import calc_lattice_constant
 
+from ase.io import Trajectory
+
 import numpy as np
 import os
 
-def analyse_main(options,traj_read):
-    """The function analyse_main takes options and a traj_read as arguments where options are the
-    options for analysing the simulated material. It is specified in config file exactly what
+def run_analysis(options):
+    """The function run_analysis takes options as arguments where options are the
+    options for analyzing the simulated material. It is specified in config file exactly what
     the user wants to calculate"""
 
 
@@ -40,10 +42,13 @@ def analyse_main(options,traj_read):
           f = open(out_file_path, 'x')
           f.close()
 
+    traj_file_path = os.path.join(output_dir, options['traj_file_name'])
+    traj_read = Trajectory(traj_file_path)
+
     output_properties_to_file(options, traj_read)
 
 class EoSResults:
-    """EoSResults stores results from EoS equations lazily. 
+    """EoSResults stores results from EoS equations lazily.
     The class can be instantiated without running the costly computation but when
     someone tries to access a value, the computation will be run if it hasn't
     been run yet."""
@@ -113,8 +118,8 @@ def output_properties_to_file(options, traj):
                     f,
                     'Debye Temperature',
                     retrieve_result=lambda: debye_temperature(
-                                                first_atoms_object, 
-                                                options, 
+                                                first_atoms_object,
+                                                options,
                                                 eos_results.get_bulk_modulus()
                                             )
                 ),
@@ -201,8 +206,8 @@ def output_properties_to_file(options, traj):
                     f,
                     'Longitudinal Sound Wave Velocity',
                     retrieve_result=lambda: longitudinal_sound_wave_velocity(
-                                        last_atoms_object, 
-                                        options, 
+                                        last_atoms_object,
+                                        options,
                                         eos_results.get_bulk_modulus()
                                     )
                 ),
@@ -244,4 +249,4 @@ if __name__=="__main__":
     options['use_asap'] = args.use_asap
 
     traj_read = Trajectory(options["symbol"]+".traj")
-    analyse_main(options,traj_read)
+    run_analysis(options,traj_read)
