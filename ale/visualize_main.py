@@ -33,7 +33,7 @@ def visualize(options, data_file_path):
   known_visualizers = {
     'Lattice' : make_lattice_viewer(options),
     'Temperature' : make_generic_time_plotter(
-                        data=data['Temperature'],
+                        data=data.get('Temperature'),
                         label='Temperature',
                         dt=dt,
                         time_unit='fs',
