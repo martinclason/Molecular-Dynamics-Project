@@ -8,6 +8,7 @@ from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal
 from ale.cohesive_energy import retrieve_cohesive_energy
 from ale.specificHeatCapacity import specificHeatCapacity
 from ale.bulk_modulus import calc_lattice_constant
+from ale.utils import EoSResults
 
 from ase.io import Trajectory
 
@@ -19,17 +20,11 @@ def run_analysis(options):
     options for analyzing the simulated material. It is specified in config file exactly what
     the user wants to calculate"""
 
-
-    # # Output specified data to outfile
-    # output_dir = options['out_dir']
-    # out_file_path = os.path.join(output_dir, options['out_file_name'])
-
     if not options.get('output'):
         print("Nothing to analyze since output list in config is empty.")
         return
 
     output_dir = options['out_dir']
-    # Stores the formated output path in the options dictionary
     out_file_path = os.path.join(output_dir, options['out_file_name'])
 
     # Creates or wipes the properties file if the user asks for output.
@@ -47,44 +42,6 @@ def run_analysis(options):
 
     output_properties_to_file(options, traj_read)
 
-class EoSResults:
-    """EoSResults stores results from EoS equations lazily.
-    The class can be instantiated without running the costly computation but when
-    someone tries to access a value, the computation will be run if it hasn't
-    been run yet."""
-
-    def __init__(self, options):
-        self.options = options
-        self.__optimal_lattice_constant = None
-        self.__bulk_modulus = None
-        self.__optimal_lattice_volume = None
-        self._counter = 0
-
-    def _run_calculations(self):
-        self._counter = self._counter + 1
-        a0, B0, v0 = calc_lattice_constant(self.options)
-        self.__optimal_lattice_constant = a0
-        self.__bulk_modulus = B0
-        self.__optimal_lattice_volume = v0
-
-    def get_optimal_lattice_constant(self):
-        if not self.__optimal_lattice_constant:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__optimal_lattice_constant
-
-    def get_bulk_modulus(self):
-        if not self.__bulk_modulus:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__bulk_modulus
-
-    def get_bulk_optimal_lattice_volume(self):
-        if not self.__optimal_lattice_volume:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__optimal_lattice_volume
-
 
 def output_properties_to_file(options, traj):
     """ Outputs the chosen properties from a traj file to
@@ -98,6 +55,11 @@ def output_properties_to_file(options, traj):
         last_atoms_object = traj[-1] #Take the last atoms object
         first_atoms_object = traj[0] #Take the first atoms object
         eos_results = EoSResults(options)
+
+        # Dictionary which contains a function for each key
+        # which can be called to output the data to file.
+        # This way the data is accessed only when needed only for those properties
+        # that the user chose.
         known_property_outputters = {
             'Temperature' :
                 outputGenericFromTraj(
@@ -219,6 +181,7 @@ def output_properties_to_file(options, traj):
                 ),
         }
 
+        # Output the data specified in options using the known property outputters
         for prop in options['output']:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
