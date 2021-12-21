@@ -1,4 +1,4 @@
-from ale.md_config_reader import config_parser
+from ale.md_config_reader import parse_config
 import pickle
 
 def pickle_options():
@@ -8,7 +8,7 @@ def pickle_options():
 
     for filename in filenames:
         with open(filename, 'r') as f:
-            option = config_parser(f)
+            option = parse_config(f)
             options.append(option)
 
 

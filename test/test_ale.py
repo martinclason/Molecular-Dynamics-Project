@@ -6,7 +6,7 @@ import shutil
 import signal
 import pytest
 # from time import sleep
-from ale.md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import parse_config
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
@@ -72,7 +72,7 @@ def test_ale_short_multi():
     assert os.path.isdir(output_dir)
 
     with open(multi_config_file, 'r') as f:
-        multi_config = config_file_parser(f)
+        multi_config = parse_config(f)
     print(multi_config['elements'])
     elements = multi_config['elements'][0]
 

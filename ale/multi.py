@@ -3,7 +3,7 @@ import os
 import pickle
 from subprocess import Popen
 from copy import deepcopy
-from ale.md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import parse_config
 import pprint
 
 def get_combinations_of_elements(elements):
@@ -119,10 +119,10 @@ if __name__=="__main__":
     print(f"using config_file: {config_file}")
 
     with open(multi_config_file, 'r') as f:
-        multi_config = config_file_parser(f)
+        multi_config = parse_config(f)
 
     with open(config_file, 'r') as f:
-        options = config_file_parser(f)
+        options = parse_config(f)
 
     # mock options
     options['out_dir'] = 'out'

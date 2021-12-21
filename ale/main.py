@@ -1,5 +1,5 @@
 from ale.command_line_arg_parser import CreateParser
-from ale.md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import parse_config
 from ale.simulate import main
 from ale.analyse_main import analyse_main
 from ale.visualize_main import visualize as visualize_simulation
@@ -24,7 +24,7 @@ def multi(options, args):
 
   multi_config_file = args.multi_config_file
   print(f"multi_config_file: {multi_config_file}")
-  multi_config = config_file_parser(multi_config_file)
+  multi_config = parse_config(multi_config_file)
 
   output_dir = args.out_dir
   options['out_dir'] = output_dir
@@ -81,7 +81,7 @@ def run(arguments=None):
     # parse arguments from argv from command line
     args = parser.parse_args()
 
-  parsed_config_file = config_file_parser(args.config_file)
+  parsed_config_file = parse_config(args.config_file)
 
   options = parsed_config_file
   options['use_asap'] = args.use_asap

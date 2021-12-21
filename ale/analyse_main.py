@@ -233,12 +233,12 @@ def self_diffusion_coefficient_calc(traj_read):
 
 if __name__=="__main__":
     from command_line_arg_parser import parser
-    from md_config_reader import config_parser as config_file_parser
+    from md_config_reader import parse_config
 
     from asap3 import Trajectory
 
     args = parser.parse_args()
-    parsed_config_file = config_file_parser(args.config_file)
+    parsed_config_file = parse_config(args.config_file)
 
     options = parsed_config_file
     options['use_asap'] = args.use_asap
