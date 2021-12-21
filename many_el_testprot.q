@@ -33,7 +33,7 @@ conda activate md
 #     If running multi instead, comment out applicable lin below Actual job
 
 # output folder will be named to this plus jobid
-job_name=testprot
+job_name=many_el_testprot
 
 # Only needed if running ale multi, specify multiconfig below
 multi_config=m_many_el_testprot.yaml
