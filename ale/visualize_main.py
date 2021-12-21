@@ -6,6 +6,10 @@ from ale.plotting.generic_plotter import make_generic_time_plotter
 
 import matplotlib.pyplot as plt
 from ase.visualize import view
+import pprint
+
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 def visualize(options, data_file_path):
@@ -22,7 +26,7 @@ def visualize(options, data_file_path):
     dt = dt * interval
 
     print("Visualizing data:")
-    print(data)
+    pp.pprint(data)
 
     # Dictionary mapping keys to functions which create visualizations when called
     known_visualizers = {
