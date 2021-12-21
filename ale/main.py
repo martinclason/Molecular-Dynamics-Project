@@ -3,19 +3,14 @@ from ale.md_config_reader import config_parser as config_file_parser
 from ale.simulate import main
 from ale.analyse_main import analyse_main
 from ale.visualize_main import visualize as visualize_simulation
-import os
 from ale.multi import multi as multi_main
-
 from asap3 import Trajectory
-
+import os
 import pprint
-"""There is a parser for passing flags from the command line to the MD which enables
-or disables the use of asap on the current run with the flags '--asap' for enable-
-ing it and '--no-asap' to disable it.
 
-Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
-in the terminal since some machines cannot run the current version of ASAP which
-is used in this project. """
+"""This file is the entry point for the CLI interface and 
+calls all other parts of the ale software.
+"""
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -60,6 +55,17 @@ def visualize(options, args=None):
   visualize_simulation(options, out_file_path)
 
 def run(arguments=None):
+  """This function is the main entrypoint for ale. It takes an optional argument which
+  if passed makes the parser read those arguments instead of argv from the command line.
+
+  The argument parser takes a flag which enables
+  or disables the use of asap on the current run with the flags '--asap' for 
+  enabling it and '--no-asap' to disable it.
+
+  Passing this flag is to avoid getting the error 'illegal instruction (core dumped)'
+  in the terminal since some machines cannot run the current version of ASAP which
+  is used in this project. """
+
   parser = CreateParser(
                 default=default,
                 multi=multi,
@@ -69,8 +75,10 @@ def run(arguments=None):
            )
 
   if arguments:
+    # parse arguments from the arguments parameter
     args = parser.parse_args(arguments.split(" "))
   else:
+    # parse arguments from argv from command line
     args = parser.parse_args()
 
   parsed_config_file = config_file_parser(args.config_file)
