@@ -1,13 +1,11 @@
-import matplotlib.pyplot as plt
-import os
-from ase.visualize import view
 from ale.createAtoms import createAtoms
-
 from ale.scatter import make_scatter_plotter
-
 from ale.simulationDataIO import inputSimulationData
 from ale.MSD import make_MSD_plotter
 from ale.plotting.generic_plotter import make_generic_time_plotter
+
+import matplotlib.pyplot as plt
+from ase.visualize import view
 
 
 def visualize(options, data_file_path):
@@ -16,7 +14,6 @@ def visualize(options, data_file_path):
     """
 
     print(f"Visualizing data from file: {data_file_path}")
-    print(f"Visualizing scatter data from dir: {options['scatter_dir']}")
 
     data = inputSimulationData(data_file_path)
 
@@ -24,9 +21,10 @@ def visualize(options, data_file_path):
     interval = options['interval'] if ('interval' in options) else 1
     dt = dt * interval
 
-    print("Data:")
+    print("Visualizing data:")
     print(data)
 
+    # Dictionary mapping keys to functions which create visualizations when called
     known_visualizers = {
         'Lattice': make_lattice_viewer(options),
         'Temperature': make_generic_time_plotter(
@@ -37,10 +35,18 @@ def visualize(options, data_file_path):
             title=f"Temperature of ensemble for {options['symbol']}",
             unit='K',
         ),
-        'MSD': make_MSD_plotter(data, options.get('dt')),
-        'Scatter': make_scatter_plotter(options, data_type1=options['scatter_type_d1'], data_type2=options['scatter_type_d2']),
+        'MSD': make_MSD_plotter(
+            data,
+            options.get('dt')
+        ),
+        'Scatter': make_scatter_plotter(
+            options,
+            data_type1=options['scatter_type_d1'],
+            data_type2=options['scatter_type_d2']
+        ),
     }
 
+    # Generate chosen visualizations
     for visualizer_name, visualizer in known_visualizers.items():
         if not 'visualize' in options:
             print("Nothing to visualize")
@@ -49,6 +55,7 @@ def visualize(options, data_file_path):
         if visualizer_name in options['visualize']:
             visualizer()
 
+    # Plot all generated figures
     plt.show()
 
 
