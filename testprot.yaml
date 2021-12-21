@@ -4,9 +4,9 @@ latticeconstant : 4.09 #Only supporting cubic lattices with one parameter
 guess_latticeconstant:
 cell: "fcc" #(primitive unit cell vectors)
 scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
-symbol : "Ag"
+symbol : "Cu"
 pbc : True #periodic boundary conditions
-size : 16   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+size : 50   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
 
 #-----------Simulation Setup------------#
 make_traj: True
@@ -19,7 +19,7 @@ checkForEquilibrium : False
 # prefix with 'openKIM:' to use corresponding openKIM potential
 potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
 dt: 5 # simulation time step [fs]
-iterations: 2000
+iterations: 5000
 interval: 10
 checkForEquilibrium: True
 calculateCohesiveEnergy: True
