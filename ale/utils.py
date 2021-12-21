@@ -1,3 +1,6 @@
+from ale.bulk_modulus import calc_lattice_constant
+
+
 class EoSResults:
     """EoSResults stores results from EoS equations lazily.
     The class can be instantiated without running the costly computation but when
