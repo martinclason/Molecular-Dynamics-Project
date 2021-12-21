@@ -1,12 +1,15 @@
 import pytest
-import yaml 
+import yaml
 
-config_file = open("test/config.yaml")
-parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
+@pytest.fixture()
+def parsed_config_file():
+    config_file = open("test/config.yaml")
+    parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
+    yield parsed_config_file
 
 #Make sure all data from config file gets stored in Atoms correctly
 @pytest.mark.openkim
-def test_createAtoms(): 
+def test_createAtoms(parsed_config_file):
     from ale.createAtoms import createAtoms
     atoms = createAtoms(parsed_config_file)
     config_cell = parsed_config_file["cell"]
@@ -23,7 +26,7 @@ def test_createAtoms():
     atoms_pbc_z = atoms.get_pbc()[2]
 
     pbc_bool = ((atoms_pbc_x == config_pbc) and
-               (atoms_pbc_y == config_pbc) and 
+               (atoms_pbc_y == config_pbc) and
                (atoms_pbc_z == config_pbc))
 
     errors = [] #List of possible errors

@@ -1,8 +1,7 @@
-Molecular-Dynamics-Project
-==========================
+ale
+===
 
 .. toctree::
    :maxdepth: 4
 
-   main
-   test_density
+   ale
