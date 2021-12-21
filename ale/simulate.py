@@ -107,8 +107,6 @@ def MD(options):
     elif options.get("calculateCohesiveEnergy") and not eqReached:
         cohesive_energy(options,atoms,options.get("max_iterations_coh_E"),cohesive_energy_file_path)
 
-    # Setup writing of simulation data to trajectory file
-    main_trajectory_file_name = options["symbol"]+".traj"
     main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
     print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
