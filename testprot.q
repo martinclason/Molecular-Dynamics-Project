@@ -33,7 +33,7 @@ conda activate tfya99
 #     If running multi instead, comment out applicable lin below Actual job
 
 # output folder will be named to this plus jobid
-job_name=change_me_to_whatever_the_config_is_named_but_without_.yaml
+job_name=testprot
 
 # Only needed if running ale multi, specify multiconfig below
 multi_config=m_testprot.yaml
