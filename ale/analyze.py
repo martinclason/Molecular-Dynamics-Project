@@ -1,7 +1,7 @@
 from ale.density import density
 from ale.MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from ale.pressure import pressure, avg_pressure
-from ale.simulation_data_IO import output_generic_from_traj, output_single_property, output_generic_result_lazily
+from ale.simulation_data_IO import output_generic_from_traj, output_generic_result_lazily
 from ale.debye_temperature import debye_temperature
 from ale.shear_modulus import shear_modulus
 from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity

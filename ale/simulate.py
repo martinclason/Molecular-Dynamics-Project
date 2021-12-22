@@ -1,21 +1,17 @@
-from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary,ZeroRotation)
+from ase.md.velocitydistribution import (
+    MaxwellBoltzmannDistribution, Stationary, ZeroRotation)
 
-#from ase.md.verlet import VelocityVerlet
 from ase.md.langevin import Langevin
 
 # Use ase.io to make traj-writing from different processes work
 from ase.io import Trajectory
-import numpy as np
 from ase import units
-
 
 from ale.createAtoms import createAtoms
 from ale.equilibriumCondition import equilibiriumCheck
-from ase.calculators.kim.kim import KIM
 from ale.simulation_data_IO import output_single_property
-from ale.errors import ConfigError
-from ale.cohesive_energy import cohesive_energy, retrieve_cohesive_energy
-from ale.create_potential import create_potential, built_in_LennardJones
+from ale.cohesive_energy import cohesive_energy
+from ale.create_potential import create_potential
 import os
 import logging
 
@@ -46,27 +42,30 @@ def MD(options):
 
     time_step = options["dt"] * units.fs
     temperature = options["temperature_K"]
-    nvt_friction = options.get("NVT_friction", 0.002) # default to 0.002
+    nvt_friction = options.get("NVT_friction", 0.002)  # default to 0.002
     logging.debug(f"nvt_friction {nvt_friction}")
 
     # Set the momenta corresponding to the temperature
     # The communicator is set to 'serial' to inhibit this function trying
     # to communicate between processes. This would send a broadcast which seems to deadlock
     # the program if processes calls this function a different number of times.
-    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature, communicator='serial')
+    MaxwellBoltzmannDistribution(
+        atoms, temperature_K=temperature, communicator='serial')
     Stationary(atoms)
     ZeroRotation(atoms)
 
     dynamics_from_ensemble = {
         # Run MD with constant energy using the VelocityVerlet algorithm
-        'NVE' : VelocityVerlet(atoms, time_step),
+        'NVE': VelocityVerlet(atoms, time_step),
         # Langevin dynamics for NVT dynamics
-        'NVT' : Langevin(atoms, time_step, temperature_K=temperature, friction=nvt_friction),
+        'NVT': Langevin(atoms, time_step, temperature_K=temperature, friction=nvt_friction),
     }
 
-    dyn = dynamics_from_ensemble[options.get("ensemble", "NVE")] # default to NVE
+    dyn = dynamics_from_ensemble[options.get(
+        "ensemble", "NVE")]  # default to NVE
 
-    print(f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
+    print(
+        f"Using ensemble: {options['ensemble']}, resulting in dynamics: {type(dyn).__name__}")
 
     def printenergy(a=atoms):  # store a reference to atoms in the definition.
         """Function to print the potential, kinetic and total energy."""
@@ -74,7 +73,6 @@ def MD(options):
         ekin = a.get_kinetic_energy() / len(a)
         print('Energy per atom: Epot = %.3feV  Ekin = %.3feV (T=%3.0fK)  '
               'Etot = %.3feV' % (epot, ekin, ekin / (1.5 * units.kB), epot + ekin))
-
 
     atoms_positions = atoms.get_positions()
     atoms_number_of_atoms = len(atoms_positions)
@@ -90,7 +88,8 @@ def MD(options):
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
     if options.get("checkForEquilibrium", None):
-        raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
+        raw_trajectory_file_path = os.path.join(
+            output_dir, f"raw{main_trajectory_file_name}")
         eqReached, initIterations, numberOfChecks, iterationsBetweenChecks = try_to_run_to_equilibrium(
             options=options,
             raw_trajectory_file_path=raw_trajectory_file_path,
@@ -101,22 +100,26 @@ def MD(options):
         )
 
     coh_E_trajectory_file_name = "_" + options['symbol'] + "_coh_E.traj"
-    cohesive_energy_file_path = os.path.join(output_dir, coh_E_trajectory_file_name)
+    cohesive_energy_file_path = os.path.join(
+        output_dir, coh_E_trajectory_file_name)
     if options.get("calculateCohesiveEnergy") and eqReached:
-        cohesive_energy(options,atoms,initIterations + numberOfChecks*iterationsBetweenChecks,cohesive_energy_file_path)
+        cohesive_energy(options, atoms, initIterations + numberOfChecks *
+                        iterationsBetweenChecks, cohesive_energy_file_path)
     elif options.get("calculateCohesiveEnergy") and not eqReached:
-        cohesive_energy(options,atoms,options.get("max_iterations_coh_E"),cohesive_energy_file_path)
+        cohesive_energy(options, atoms, options.get(
+            "max_iterations_coh_E"), cohesive_energy_file_path)
 
-    main_trajectory_file_path = os.path.join(output_dir, main_trajectory_file_name)
+    main_trajectory_file_path = os.path.join(
+        output_dir, main_trajectory_file_name)
     print(f"Traj will be written to: {main_trajectory_file_path}")
     traj = Trajectory(
-                main_trajectory_file_path,
-                "w",
-                atoms,
-                properties="energy, forces",
-                # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
-                master=True, # Let processes write to their own respective traj-files
-            )
+        main_trajectory_file_path,
+        "w",
+        atoms,
+        properties="energy, forces",
+        # TODO: Write about how processes seem to work in ase and asap and our tradeoff...
+        master=True,  # Let processes write to their own respective traj-files
+    )
 
     dyn.attach(traj.write, interval=interval)
 
@@ -132,15 +135,17 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     """
 
     # Defines the full, pre-equilibrium, .traj-file to work with during the simulation
-    rawTraj = Trajectory(raw_trajectory_file_path, "w", atoms, properties="energy, forces", master=True)
+    rawTraj = Trajectory(raw_trajectory_file_path, "w",
+                         atoms, properties="energy, forces", master=True)
     dyn.attach(rawTraj.write, interval=interval)
 
     # Condtions for equilibrium.
     eqCheckInterval = 10
     initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000
-    iterationsBetweenChecks = 4*interval # Uses moving averages when checking for equilibrium
+    # Uses moving averages when checking for equilibrium
+    iterationsBetweenChecks = 4*interval
     eqLimit = number_of_atoms if (number_of_atoms > 30) else 30
-    ensemble = options.get("ensemble", "NVE") # default to NVE
+    ensemble = options.get("ensemble", "NVE")  # default to NVE
 
     # Variables that are updated in the process
     eqReached = False
@@ -151,9 +156,9 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
 
     while ((not eqReached) and (not (numberOfChecks > eqLimit))):
         eqReached = equilibiriumCheck(raw_trajectory_file_path,
-                        number_of_atoms,
-                        ensemble,
-                        eqCheckInterval)
+                                      number_of_atoms,
+                                      ensemble,
+                                      eqCheckInterval)
 
         numberOfChecks = numberOfChecks + 1
 
@@ -162,7 +167,8 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     # When equilibrium is or isn't reached the elapsed time is calculated
     # and a statement is written in the terminal on wheter the system reached
     # equilibrium and how long it took or how long the simulation waited.
-    timeToEquilibrium = (initIterations + numberOfChecks*iterationsBetweenChecks) / options["dt"]
+    timeToEquilibrium = (initIterations + numberOfChecks *
+                         iterationsBetweenChecks) / options["dt"]
 
     out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
 
@@ -189,12 +195,13 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     f.close()
 
     if eqReached:
-        print("System reached equilibirium after",timeToEquilibrium,"fs")
+        print("System reached equilibirium after", timeToEquilibrium, "fs")
     else:
-        print("Equilibriumcheck timeout after",timeToEquilibrium,"fs")
+        print("Equilibriumcheck timeout after", timeToEquilibrium, "fs")
         print("Continues")
 
     return (eqReached, initIterations, numberOfChecks, iterationsBetweenChecks)
+
 
 def run_simulation(options):
     """The 'run_simulation()' function runs the 'MD()' function which runs the simulation.
@@ -204,6 +211,7 @@ def run_simulation(options):
     'config.yaml' file."""
 
     MD(options)
+
 
 if __name__ == "__main__":
     import os
@@ -226,4 +234,3 @@ if __name__ == "__main__":
     parsed_config_file["use_asap"] = args.use_asap
 
     run_simulation(parsed_config_file)
-
