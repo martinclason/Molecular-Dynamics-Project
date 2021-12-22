@@ -7,7 +7,7 @@ from ase.md.langevin import Langevin
 from ase.io import Trajectory
 from ase import units
 
-from ale.createAtoms import createAtoms
+from ale.create_atoms import create_atoms
 from ale.equilibrium_condition import equilibrium_check
 from ale.simulation_data_IO import output_single_property
 from ale.cohesive_energy import cohesive_energy
@@ -35,7 +35,7 @@ def MD(options):
         from ase.md.verlet import VelocityVerlet
 
     # Set up a crystal
-    atoms = createAtoms(options)
+    atoms = create_atoms(options)
     calc = create_potential(options)
     print(f"Using potential: {calc}")
     atoms.calc = calc

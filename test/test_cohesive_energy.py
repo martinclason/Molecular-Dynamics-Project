@@ -3,15 +3,15 @@ from ale.md_config_reader import parse_config
 
 import pytest
 
-#Creates an atom object and run cohesive energy simulation and 
+#Creates an atom object and run cohesive energy simulation and
 # then checks with the real value for cohesive energy for copper.
-@pytest.mark.openkim 
+@pytest.mark.openkim
 def test_cohesive_energy():
-    from ale.createAtoms import createAtoms
+    from ale.create_atoms import create_atoms
     from ale.create_potential import create_potential
     from ase.calculators.kim.kim import KIM
     parsed_config_file = parse_config(open("test/config_Cu.yaml"))
-    atoms = createAtoms(parsed_config_file)
+    atoms = create_atoms(parsed_config_file)
     calc = create_potential(parsed_config_file)
     atoms.calc = calc
     iterations = 2000

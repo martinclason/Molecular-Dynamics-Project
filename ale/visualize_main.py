@@ -1,4 +1,4 @@
-from ale.createAtoms import createAtoms
+from ale.create_atoms import create_atoms
 from ale.scatter import make_scatter_plotter
 from ale.simulation_data_IO import input_simulation_data
 from ale.MSD import make_MSD_plotter
@@ -69,7 +69,7 @@ def visualize(options, data_file_path):
 
 def make_lattice_viewer(options):
     def viewer():
-        atoms = createAtoms(options)
+        atoms = create_atoms(options)
         view(atoms)
 
     return viewer
