@@ -36,7 +36,7 @@ def multi(options, args):
     logging.debug(f"Using multi config: {multi_config_file}")
 
     # Run simulate and analyze distributed on many processes
-    multi_main(multi_config, options, simulate=simulate, analyze=analyze)
+    multi_main(multi_config, options)
 
     print("exiting multi run")
 
