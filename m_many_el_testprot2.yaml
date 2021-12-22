@@ -8,6 +8,7 @@ elements:
 
 latticeconstants:
    Cu: 3.597
+   Na: 4.2906
    Au: 4.065
    Ag: 4.079
    Al: 4.046
@@ -17,14 +18,14 @@ latticeconstants:
    C: 2.52699457
 
 potentials:
-  Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
+  #Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
   Ca: "openKIM:EAM_IMD_BrommerGaehlerMihalkovic_2007_CaCd__MO_145183423516_003"
   Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
   Au: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
   Ag: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
   Mg: "openKIM:EAM_Dynamo_SunMendelevBecker_2006_Mg__MO_848345414202_005"
   Al: "openKIM:EAM_Dynamo_ZhouJohnsonWadley_2004NISTretabulation_Al__MO_060567868558_000"
-  # Na: "openKIM:EAM_Dynamo_NicholAckland_2016_Na__MO_048172193005_000"
+  Na: "openKIM:EAM_Dynamo_NicholAckland_2016_Na__MO_048172193005_000"
   Fe: "openKIM:EAM_Dynamo_BonnyCastinBullens_2013_FeW__MO_737567242631_000"
   Co: "openKIM:EAM_Dynamo_PunMishin_2012_Co__MO_885079680379_005"
   W: "openKIM:EAM_Dynamo_BonnyBakaevTerentyev_2017_WRe__MO_234187151804_000"
@@ -42,9 +43,6 @@ cells:
   C: "SC"
   default: "FCC"
 
-cells:
-  Na: FCC
-  default: FCC
 
 scaled_positions:
   Na: [[0,0,0]]
