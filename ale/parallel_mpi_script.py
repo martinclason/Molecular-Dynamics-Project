@@ -1,7 +1,6 @@
 from mpi4py import MPI
 from itertools import accumulate as acc
 import pickle
-import argparse
 import pprint
 import os
 
@@ -12,6 +11,11 @@ from ale.analyze import run_analysis
 from asap3 import Trajectory
 
 def do_work(options):
+    """The work that one process should do, i.e. simulate and analyze with its assigned options.
+    If the process has many simulations to perform it will call this function many times in sequence.
+
+    If an issue arises it will catch those exceptions and continue with the next computation.
+    """
     print(f"process {rank} will write to traj: {options['out_dir']}/{options['traj_file_name']}")
     try:
         simulate(options)
@@ -44,12 +48,20 @@ if __name__ == "__main__":
     size = comm.Get_size()
 
     if rank == 0:
+        # The rank 0 process unpickles to options list from file and handles
+        # the distribution of work to all processes. It calculates start and stop indices
+        # for each process that they use to index the options list
+
         print(f"Number of processes: {size}")
 
         # parser = argparse.ArgumentParser()
         # parser.add_argument("options_pickle_file_path")
         # parser.parse_args()
         #options_pickle_file_path = parser.options_pickle_file_path
+
+        # TODO: Hard coded string representing file name of pickle file,
+        # should probably be implemented in a safer way.
+        # Maybe pass as command line argument?
         options_pickle_file_path = 'options_pickle'
 
         with open(options_pickle_file_path, 'rb') as f:
@@ -62,6 +74,7 @@ if __name__ == "__main__":
         n_options = len(options_list)
         q, r = divmod(n_options, size)
 
+        # the amount of simulations each process has to run
         lengths = [q + 1 if i < r else q for i in range(size)]
 
         # create lists with start index and stop index for each process
@@ -76,29 +89,22 @@ if __name__ == "__main__":
         stops = None
         options_list = None
 
+    # Distribute needed data to all processes
     start = comm.scatter(starts, root=0)
     stop = comm.scatter(stops, root=0)
+    # Every thread gets access to the whole options list
     options_list = comm.bcast(options_list, root=0)
 
+    # Only do work if this process has work to do in options list
     if rank < len(options_list):
         print(f"\n\n\nProcess: {rank}, start: {start}, stop: {stop}\n\n\n")
-        # if rank == 1:
-        #     assert False
-        # for i in range(start, stop):
         for options in options_list[start:stop]:
             print(f"rank: {rank}, option: {get_symbol(options)}")
             traj_path = os.path.join(options['out_dir'], options['traj_file_name'])
-            # open(traj_path, 'w').close()
             print(f"rank: {rank}, traj_path before work: {traj_path}")
             do_work(options)
             print(f"process {rank} done with work")
             print(f"rank: {rank}, traj_path after work: {traj_path}")
-
-            # try:
-            #     assert os.path.isfile(traj_path), f"Didn't exist: {traj_path}"
-            # except AssertionError:
-            #     comm.Barrier()
-            #     raise Exception(f"File {traj_path} didn't exist, ending this process with rank: {rank}")
     else:
         print(f"\n\n\nprocess {rank} did no work\n\n\n")
 
