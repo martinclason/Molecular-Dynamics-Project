@@ -1,7 +1,7 @@
 from ale.density import density
 from ale.MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from ale.pressure import pressure, avg_pressure
-from ale.simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
+from ale.simulation_data_IO import output_generic_from_traj, output_single_property, output_generic_result_lazily
 from ale.debye_temperature import debye_temperature
 from ale.shear_modulus import shear_modulus
 from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
@@ -61,21 +61,21 @@ def output_properties_to_file(options, traj):
         # that the user chose.
         known_property_outputters = {
             'Temperature' :
-                outputGenericFromTraj(
+                output_generic_from_traj(
                     traj,
                     f,
                     'Temperature',
                     lambda atoms: atoms.get_temperature(),
                 ),
             'Volume' :
-                outputGenericFromTraj(
+                output_generic_from_traj(
                     traj,
                     f,
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
             'Debye Temperature' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Debye Temperature',
                     retrieve_result=lambda: debye_temperature(
@@ -85,85 +85,85 @@ def output_properties_to_file(options, traj):
                                             )
                 ),
             'Self Diffusion Coefficient' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Self Diffusion Coefficient',
                     retrieve_result=lambda: self_diffusion_coefficient(traj)
                 ),
             'Density' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Density',
                     retrieve_result=lambda: density(last_atoms_object)
                 ),
             'Instant Pressure' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Instant Pressure',
                     retrieve_result=lambda: pressure(last_atoms_object)
                 ),
             'Average Pressure' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Average Pressure',
                     retrieve_result=lambda: avg_pressure(traj)
                     ),
             'Self Diffusion Coefficient Array' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     "Self Diffusion Coefficient Array",
                     retrieve_result=lambda: list(self_diffusion_coefficient_calc(traj)),
                 ),
             'MSD' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     "MSD",
                     retrieve_result=lambda: list(MSD_data_calc(traj)),
                 ),
             'Cohesive Energy' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Cohesive Energy',
                     retrieve_result=lambda: retrieve_cohesive_energy(coh_E_path)
                 ),
             'Lindemann criterion' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Lindemann criterion',
                     retrieve_result=lambda: lindemann_criterion(traj)
                 ),
             'Specific Heat Capacity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Specific Heat Capacity',
                     retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Optimal Lattice Constant',
                     retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
                 ),
             'Optimal Lattice Volume' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Optimal Lattice Volume',
                     retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
                 ),
             'Bulk Modulus' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Bulk Modulus',
                     retrieve_result=lambda: eos_results.get_bulk_modulus(),
                 ),
             'Transversal Sound Wave Velocity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Transversal Sound Wave Velocity',
                     retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
                 ),
             'Longitudinal Sound Wave Velocity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Longitudinal Sound Wave Velocity',
                     retrieve_result=lambda: longitudinal_sound_wave_velocity(
@@ -173,7 +173,7 @@ def output_properties_to_file(options, traj):
                                     )
                 ),
             'Shear Modulus' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Shear Modulus',
                     retrieve_result=lambda: shear_modulus(options)

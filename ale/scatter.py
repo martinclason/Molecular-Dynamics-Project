@@ -1,11 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from ale.errors import ConfigError
-
+from ale.simulation_data_IO import input_simulation_data
 
 import glob, os, sys
+import numpy as np
+import matplotlib.pyplot as plt
 
-from ale.simulationDataIO import inputSimulationData
 
 #A help function to extract the .json files in the outfiles directory
 def find_json_files(options):
@@ -50,7 +49,7 @@ def make_scatter_plotter(options,data_type1,data_type2,filelist=[]):
             ax = plt.axes()
             for file in filelist:
                 try:
-                    data = inputSimulationData(file)
+                    data = input_simulation_data(file)
                 except OSError:
                     raise ConfigError(
                             message = "Filename " + file + " does not exist.",

@@ -12,7 +12,7 @@ from ase import units
 from ale.createAtoms import createAtoms
 from ale.equilibriumCondition import equilibiriumCheck
 from ase.calculators.kim.kim import KIM
-from ale.simulationDataIO import outputSingleProperty
+from ale.simulation_data_IO import output_single_property
 from ale.errors import ConfigError
 from ale.cohesive_energy import cohesive_energy, retrieve_cohesive_energy
 from ale.create_potential import create_potential, built_in_LennardJones
@@ -170,13 +170,13 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     f = open(out_file_path, 'a')
     equilibiriumProp = {
         'Equilibrium reached':
-            outputSingleProperty(
+            output_single_property(
                 f,
                 'Equilibrium reached',
                 eqReached
             ),
         'Time before equilibrium':
-            outputSingleProperty(
+            output_single_property(
                 f,
                 'Time before equilibrium',
                 timeToEquilibrium

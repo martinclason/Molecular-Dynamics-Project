@@ -1,6 +1,6 @@
 from ale.createAtoms import createAtoms
 from ale.scatter import make_scatter_plotter
-from ale.simulationDataIO import inputSimulationData
+from ale.simulation_data_IO import input_simulation_data
 from ale.MSD import make_MSD_plotter
 from ale.plotting.generic_plotter import make_generic_time_plotter
 from ale.errors import ConfigError
@@ -20,7 +20,7 @@ def visualize(options, data_file_path):
 
     print(f"Visualizing data from file: {data_file_path}")
 
-    data = inputSimulationData(data_file_path)
+    data = input_simulation_data(data_file_path)
 
     if not options.get('visualize'):
         raise ConfigError(['visualize'], "Nothing to visualize, please add some options below 'visualize' in config.")
