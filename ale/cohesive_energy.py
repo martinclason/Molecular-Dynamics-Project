@@ -2,7 +2,6 @@ from ase.md.velocitydistribution import (MaxwellBoltzmannDistribution,Stationary
 from ase.md.verlet import VelocityVerlet
 from ase.io import Trajectory
 from ase import units
-from ale.equilibriumCondition import equilibiriumCheck
 import sys
 import os
 
@@ -17,9 +16,9 @@ def cohesive_energy(options,atoms,iterations,file_output_path):
     ZeroRotation(atoms)
     coh_dyn = VelocityVerlet(atoms, options.get('dt') * units.fs)
     coh_traj = Trajectory(
-                file_output_path, 
-                "w", 
-                atoms, 
+                file_output_path,
+                "w",
+                atoms,
                 properties="energy, forces",
                 master = True
             )

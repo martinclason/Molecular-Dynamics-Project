@@ -8,7 +8,7 @@ from ase.io import Trajectory
 from ase import units
 
 from ale.createAtoms import createAtoms
-from ale.equilibriumCondition import equilibiriumCheck
+from ale.equilibrium_condition import equilibrium_check
 from ale.simulation_data_IO import output_single_property
 from ale.cohesive_energy import cohesive_energy
 from ale.create_potential import create_potential
@@ -155,7 +155,7 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     dyn.run(initIterations)
 
     while ((not eqReached) and (not (numberOfChecks > eqLimit))):
-        eqReached = equilibiriumCheck(raw_trajectory_file_path,
+        eqReached = equilibrium_check(raw_trajectory_file_path,
                                       number_of_atoms,
                                       ensemble,
                                       eqCheckInterval)
