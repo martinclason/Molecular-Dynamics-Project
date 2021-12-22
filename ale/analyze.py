@@ -6,7 +6,7 @@ from ale.debye_temperature import debye_temperature
 from ale.shear_modulus import shear_modulus
 from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
 from ale.cohesive_energy import retrieve_cohesive_energy
-from ale.specificHeatCapacity import specificHeatCapacity
+from ale.specific_heat_capacity import specific_heat_capacity
 from ale.utils import EoSResults
 
 from ase.io import Trajectory
@@ -136,7 +136,7 @@ def output_properties_to_file(options, traj):
                 output_generic_result_lazily(
                     f,
                     'Specific Heat Capacity',
-                    retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
+                    retrieve_result=lambda: specific_heat_capacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
                 output_generic_result_lazily(
