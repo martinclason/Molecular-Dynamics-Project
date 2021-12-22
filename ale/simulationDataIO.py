@@ -25,6 +25,18 @@ def outputGenericFromTraj(traj, out_file, name, f):
     return output
 
 def outputGenericResultLazily(out_file, name, retrieve_result):
+    """This function is used to output data to file. It doesn't do this straight away
+    but instead returns a function which can be called when the data actually should
+    be written.
+
+    When the returned function is called a complete JSON-document containing data
+    from retrieve_result will be written as one line to the JSON-file.
+
+    :param out_file: file handle to write data to.
+    :param name: name to store data under in file.
+    :param retrieve_result: function that returns data to write. This should take
+                            no arguments and is only called when calling the returned function.
+    """
 
     def output():
         result = retrieve_result()
@@ -38,9 +50,14 @@ def outputGenericResultLazily(out_file, name, retrieve_result):
     return output
 
 def inputSimulationData(out_file_path):
+    """This function returns data found in file at out_file_path.
+    If this file can't be read it will return None.
+
+    :param str out_file_path: file path from which to read data.
+    """
     # TODO: Make this prettier...
     if not os.path.isfile(out_file_path):
-        print(f"Couldn't find file {out_file_path} for visualization...")
+        print(f"Couldn't find file {out_file_path}")
         return None
 
     read_data = {}
@@ -52,7 +69,18 @@ def inputSimulationData(out_file_path):
     return read_data
 
 def outputSingleProperty(out_file, name, value) :
-    """Writes single value to json file"""
+    """Returns a function which writes a single value to a JSON-file.
+
+    When the returned function is called a complete JSON-document containing the value
+    will be written as one line to the JSON-file.
+
+    The resulting file will be in the JSON Lines format, i.e. one JSON-document
+    on each line.
+
+    :param out_file: file handle to write data to.
+    :param str name: key that value should be stored under in file.
+    :param value: value to write to file.
+    """
     def output():
         data = {
             name : value
