@@ -3,6 +3,7 @@ from ale.scatter import make_scatter_plotter
 from ale.simulationDataIO import inputSimulationData
 from ale.MSD import make_MSD_plotter
 from ale.plotting.generic_plotter import make_generic_time_plotter
+from ale.errors import ConfigError
 
 import matplotlib.pyplot as plt
 from ase.visualize import view
@@ -21,6 +22,9 @@ def visualize(options, data_file_path):
 
     data = inputSimulationData(data_file_path)
 
+    if not options.get('visualize'):
+        raise ConfigError(['visualize'], "Nothing to visualize, please add some options below 'visualize' in config.")
+
     dt = options['dt']
     interval = options['interval'] if ('interval' in options) else 1
     dt = dt * interval
@@ -32,7 +36,7 @@ def visualize(options, data_file_path):
     known_visualizers = {
         'Lattice': make_lattice_viewer(options),
         'Temperature': make_generic_time_plotter(
-            data=data['Temperature'],
+            retrieve_data=lambda: data['Temperature'],
             label='Temperature',
             dt=dt,
             time_unit='fs',
