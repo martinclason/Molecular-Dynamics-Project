@@ -67,5 +67,5 @@ def lindemann_criterion(atom_list) :
     #Nearest Neighbour distance from basis matrix
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2)
     t = len(atom_list) - 1 #Take the system at the last accessible time
-    return bool(MSD(t,atom_list) > 0.1 * NN)
+    return bool(sqrt(MSD(t,atom_list)) > 0.1 * NN)
 
