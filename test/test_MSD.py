@@ -5,7 +5,7 @@ import yaml
 
 #Tests if the slab of solid copper has no self-diffusion
 def test_self_diffusion_coefficient() :
-    cuTraj = Trajectory('test/config.traj')
+    cuTraj = Trajectory('test/Cu.traj')
     config_file = open("test/config_Cu.yaml")
     parsed_config_file = yaml.load(config_file, Loader=yaml.FullLoader)
     SDC = self_diffusion_coefficient(parsed_config_file, cuTraj)
