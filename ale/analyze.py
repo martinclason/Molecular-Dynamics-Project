@@ -88,7 +88,7 @@ def output_properties_to_file(options, traj):
                 output_generic_result_lazily(
                     f,
                     'Self Diffusion Coefficient',
-                    retrieve_result=lambda: self_diffusion_coefficient(traj)
+                    retrieve_result=lambda: self_diffusion_coefficient(options, traj)
                 ),
             'Density' :
                 output_generic_result_lazily(
