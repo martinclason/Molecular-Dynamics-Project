@@ -36,7 +36,7 @@ def make_MSD_plotter(data,dt):
     return plotter
 
 def self_diffusion_coefficient(atom_list) :
-    """The self_diffusion_coefficient(t, atom_list) function calculates and returns the
+    """The self_diffusion_coefficient(atom_list) function calculates and returns the
     self diffusion coefficient. The function takes an atom_list at different time steps
     which it sends to the MSD(t,atom_list) function to retrieve the MSD.
     The lindemann_critertion() first checks if the element is a solid or liquid. For
@@ -44,7 +44,7 @@ def self_diffusion_coefficient(atom_list) :
     diffusion coefficient is taken as the slope of the mean-square-displacement."""
     time_step = len(atom_list) - 1 #Take the system at the last accessible time
     t = time_step * 5 * 1E-15
-    MSD_meter = 1E-10 * MSD(time_step, atom_list) #Convert from Å to meter TODO: Angstrom^2????
+    MSD_meter = 1E-20 * MSD(time_step, atom_list) #Convert from Å^2 to m^2
     if lindemann_criterion(atom_list) :
         return 1/(6*t) * MSD_meter
     else :
