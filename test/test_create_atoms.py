@@ -9,9 +9,9 @@ def parsed_config_file():
 
 #Make sure all data from config file gets stored in Atoms correctly
 @pytest.mark.openkim
-def test_createAtoms(parsed_config_file):
-    from ale.createAtoms import createAtoms
-    atoms = createAtoms(parsed_config_file)
+def test_create_atoms(parsed_config_file):
+    from ale.create_atoms import create_atoms
+    atoms = create_atoms(parsed_config_file)
     config_cell = parsed_config_file["cell"]
     config_scaled_positions = parsed_config_file["scaled_positions"]
     config_pbc = parsed_config_file["pbc"]
