@@ -1,62 +1,75 @@
-import matplotlib.pyplot as plt
-import os
-from ase.visualize import view
-from ale.createAtoms import createAtoms
-
+from ale.create_atoms import create_atoms
 from ale.scatter import make_scatter_plotter
-
-from ale.simulationDataIO import inputSimulationData
+from ale.simulation_data_IO import input_simulation_data
 from ale.MSD import make_MSD_plotter
 from ale.plotting.generic_plotter import make_generic_time_plotter
+from ale.errors import ConfigError
 
-def s_to_fs(t):
-  return t*10e-15
+import matplotlib.pyplot as plt
+from ase.visualize import view
+import pprint
+
+
+pp = pprint.PrettyPrinter(indent=4)
+
 
 def visualize(options, data_file_path):
-  """This function visualizes properties specified by
-  the user in the config-file.
-  """
+    """This function visualizes properties specified by
+    the user in the config-file.
+    """
 
-  print(f"Visualizing data with file {data_file_path}")
-  print(f"Visualizing scatter data from dir {options['scatter_dir']}")
+    print(f"Visualizing data from file: {data_file_path}")
 
-  data = inputSimulationData(data_file_path)
-  dt = options['dt']
-  dt = s_to_fs(dt)
+    data = input_simulation_data(data_file_path)
 
-  interval = options['interval'] if ('interval' in options) else 1
-  dt = dt * interval
+    if not options.get('visualize'):
+        raise ConfigError(['visualize'], "Nothing to visualize, please add some options below 'visualize' in config.")
 
-  print("Data:")
-  print(data)
+    dt = options['dt']
+    interval = options['interval'] if ('interval' in options) else 1
+    dt = dt * interval
 
-  known_visualizers = {
-    'Lattice' : make_lattice_viewer(options),
-    'Temperature' : make_generic_time_plotter(
-                        data=data['Temperature'],
-                        label='Temperature',
-                        dt=dt,
-                        time_unit='fs',
-                        title=f"Temperature of ensemble for {options['symbol']}",
-                        unit='K',
-                    ),
-    'MSD' : make_MSD_plotter(data,options.get('dt')),
-    'Scatter' : make_scatter_plotter(options,data_type1=options['scatter_type_d1'],data_type2 = options['scatter_type_d2']),
-  }
+    print("Visualizing data:")
+    pp.pprint(data)
 
-  for visualizer_name, visualizer in known_visualizers.items():
-    if not 'visualize' in options:
-      print("Nothing to visualize")
-      return
+    # Dictionary mapping keys to functions which create visualizations when called
+    known_visualizers = {
+        'Lattice': make_lattice_viewer(options),
+        'Temperature': make_generic_time_plotter(
+            retrieve_data=lambda: data['Temperature'],
+            label='Temperature',
+            dt=dt,
+            time_unit='fs',
+            title=f"Temperature of ensemble for {options['symbol']}",
+            unit='K',
+        ),
+        'MSD': make_MSD_plotter(
+            data,
+            options.get('dt')
+        ),
+        'Scatter': make_scatter_plotter(
+            options,
+            data_type1=options['scatter_type_d1'],
+            data_type2=options['scatter_type_d2']
+        ),
+    }
 
-    if visualizer_name in options['visualize']:
-      visualizer()
+    # Generate chosen visualizations
+    for visualizer_name, visualizer in known_visualizers.items():
+        if not 'visualize' in options:
+            print("Nothing to visualize")
+            return
 
-  plt.show()
+        if visualizer_name in options['visualize']:
+            visualizer()
+
+    # Plot all generated figures
+    plt.show()
+
 
 def make_lattice_viewer(options):
     def viewer():
-        atoms = createAtoms(options)
+        atoms = create_atoms(options)
         view(atoms)
 
     return viewer

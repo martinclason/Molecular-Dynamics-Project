@@ -1,4 +1,4 @@
 import yaml
 
-def config_parser(config_file):
+def parse_config(config_file):
     return yaml.load(config_file, Loader=yaml.FullLoader)
