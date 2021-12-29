@@ -1,0 +1,58 @@
+---
+#-----------Atoms Setup------------#
+latticeconstant : 3.597 #Only supporting cubic lattices with one parameter
+guess_latticeconstant:
+cell: "fcc" #(primitive unit cell vectors)
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Cu"
+pbc : True #periodic boundary conditions
+size : 22   # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+
+#-----------Simulation Setup------------#
+make_traj: True
+run_MD: True
+ensemble: "NVT" #Choose NVT or NVE
+NVT_friction: 0.2
+temperature_K : 3500
+checkForEquilibrium : True
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:EAM_Dynamo_AcklandTichyVitek_1987_Cu__MO_179025990738_005"
+dt: 5 # simulation time step [fs]
+iterations: 7000
+interval: 100
+checkForEquilibrium: True
+calculateCohesiveEnergy: True
+max_iterations_coh_E: 200
+
+#-----------Analyse------------#
+output:
+  - Temperature
+  - Volume
+  - Specific Heat Capacity
+  - Density
+  - Instant Pressure
+  - Average Pressure
+  - MSD
+  - Self Diffusion Coefficient
+  - Self Diffusion Coefficient Array
+  - Lindemann criterion
+  - Optimal Lattice Constant
+  - Optimal Lattice Volume
+  - Bulk Modulus
+  - Debye Temperature
+  - Transversal Sound Wave Velocity
+  - Longitudinal Sound Wave Velocity
+  - Shear Modulus
+  - Cohesive Energy
+
+#-----------Visualize------------#
+visualize:
+  - Temperature
+  - Scatter
+scatter_type_d1: "Debye Temperature" #chooses which type of data to write to x-axis.
+scatter_type_d2: "Specific Heat Capacity" #chooses which type of data to write to y-axis.
+scatter_dir: out #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.
+scatter_files: [] #Chooses which .json files that user wants to do scatterplot of. Leave empty and it will use all the files in choosen directory.
+run_density_plot: False
+run_MSD_plot: False
