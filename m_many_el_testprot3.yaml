@@ -1,0 +1,96 @@
+elements:
+  - ["Cu", "Au", "Ag", "Al", "Na", "Fe", "W","Li","Ne","Ar","K","Ca","V","Cr","Mn","Ni","Kr","Rb","Sr","Nb","Mo","Pd","Xe","Cs","Ba","Pb"]
+
+latticeconstants:
+   Cu: 3.597
+   Na: 4.2906
+   Au: 4.065
+   Ag: 4.079
+   Al: 4.046
+   Fe: 2.856
+   W: 3.155
+   Li: 3.51
+   Ne: 4.429
+   Ar: 5.256
+   K: 5.328
+   Ca: 5.5884
+   V: 3.03
+   Cr: 2.91
+   Mn: 8.9125
+   Ni: 3.524
+   Kr: 5.706
+   Rb: 5.585
+   Sr: 6.0849
+   Nb: 3.3004
+   Mo: 3.147
+   Pd: 3.8907
+   Xe: 6.2023
+   Cs: 6.141
+   Ba: 5.028
+   Pb: 4.9508 
+
+potentials:
+  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Au: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Ag: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Al: "openKIM:EAM_Dynamo_ZhouJohnsonWadley_2004NISTretabulation_Al__MO_060567868558_000"
+  Na: "openKIM:EAM_Dynamo_NicholAckland_2016_Na__MO_048172193005_000"
+  Fe: "openKIM:EAM_Dynamo_BonnyCastinBullens_2013_FeW__MO_737567242631_000"
+  W: "openKIM:EAM_Dynamo_BonnyBakaevTerentyev_2017_WRe__MO_234187151804_000"
+  Li: "openKIM:MEAM_2NN_Fe_to_Ga__MO_145522277939_001"
+  Ne: "openKIM:Exp6_KongChakrabarty_1973_ArNe__MO_946046425752_002"
+  Ar: "openKIM:LJ_Shifted_Bernardes_1958HighCutoff_Ar__MO_242741380554_004"
+  K: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_K__MO_836927321152_004"
+  Ca: "openKIM:EAM_IMD_BrommerGaehlerMihalkovic_2007_CaCd__MO_145183423516_003"
+  V: "openKIM:EAM_Dynamo_HanZepedaAckland_2003_V__MO_411020944797_000"
+  Cr: "openKIM:EAM_Dynamo_DeluigiPasianotValencia_2021_FeNiCrCoCu__MO_657255834688_000"
+  Mn: "openKIM:EAM_Dynamo_SchopfBrommerFrigan_2012_AlMnPd__MO_137572817842_000"
+  Ni: "openKIM:EAM_CubicNaturalSpline_AngeloMoodyBaskes_1995_Ni__MO_800536961967_003"
+  Kr: "openKIM:LJ_Shifted_Bernardes_1958HighCutoff_Kr__MO_923895531627_004"
+  Rb: "openKIM:EAM_Dynamo_NicholAckland_2016v2_Rb__MO_874930365376_000"
+  Sr: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Sr__MO_497591319122_004"
+  Nb: "openKIM:EAM_Dynamo_FarkasJones_1996_NbTiAl__MO_042691367780_000"
+  Mo: "openKIM:EAM_Dynamo_SmirnovaKuskinStarikov_2013_UMoXe__MO_679329885632_005"
+  Pd: "openKIM:EAM_Dynamo_AdamsFoilesWolfer_1989Universal6_Pd__MO_169076431435_000"
+  Xe: "openKIM:EAM_Dynamo_SmirnovaKuskinStarikov_2013_UMoXe__MO_679329885632_005"
+  Cs: "openKIM:EAM_Dynamo_NicholAckland_2016v2_Cs__MO_144828415103_000"
+  Ba: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Ba__MO_676977998912_004"
+  Pb: "openKIM:EAM_Dynamo_HoytGarvinWebb_2003_PbCu__MO_119135752160_005"
+  default: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"
+
+cells:
+  Cu: "FCC"
+  Au: "FCC"
+  Ag: "FCC"
+  Al: "FCC"
+  Na: "BCC" 
+  Fe: "BCC"
+  W: "BCC"
+  Li: "BCC"
+  Ne: "FCC"
+  Ar: "FCC"
+  K: "BCC"
+  Ca: "FCC"
+  V: "BCC"
+  Cr: "BCC"
+  Mn: "BCC"
+  Ni: "FCC"
+  Kr: "FCC"
+  Rb: "BCC"
+  Sr: "FCC"
+  Nb: "BCC"
+  Mo: "BCC"
+  Rh: "FCC"
+  Pd: "FCC"
+  Xe: "FCC"
+  Cs: "BCC"
+  Ba: "BCC"
+  Pb: "FCC"
+  default: "FCC"
+
+
+scaled_positions:
+  Na: [[0,0,0]]
+  Al: [[0,0,0]]
+  Cu: [[0,0,0]]
+  default: [[0,0,0]]
