@@ -1,33 +1,29 @@
 from ale.density import density
 from ale.MSD import MSD, self_diffusion_coefficient, lindemann_criterion
 from ale.pressure import pressure, avg_pressure
-from ale.simulationDataIO import outputGenericFromTraj, outputSingleProperty, outputGenericResultLazily
+from ale.simulation_data_IO import output_generic_from_traj, output_generic_result_lazily
 from ale.debye_temperature import debye_temperature
 from ale.shear_modulus import shear_modulus
 from ale.effective_velocity import longitudinal_sound_wave_velocity, transversal_sound_wave_velocity
 from ale.cohesive_energy import retrieve_cohesive_energy
-from ale.specificHeatCapacity import specificHeatCapacity
-from ale.bulk_modulus import calc_lattice_constant
+from ale.specific_heat_capacity import specific_heat_capacity
+from ale.utils import EoSResults
+
+from ase.io import Trajectory
 
 import numpy as np
 import os
 
-def analyse_main(options,traj_read):
-    """The function analyse_main takes options and a traj_read as arguments where options are the
-    options for analysing the simulated material. It is specified in config file exactly what
+def run_analysis(options):
+    """The function run_analysis takes options as arguments where options are the
+    options for analyzing the simulated material. It is specified in config file exactly what
     the user wants to calculate"""
-
-
-    # # Output specified data to outfile
-    # output_dir = options['out_dir']
-    # out_file_path = os.path.join(output_dir, options['out_file_name'])
 
     if not options.get('output'):
         print("Nothing to analyze since output list in config is empty.")
         return
 
     output_dir = options['out_dir']
-    # Stores the formated output path in the options dictionary
     out_file_path = os.path.join(output_dir, options['out_file_name'])
 
     # Creates or wipes the properties file if the user asks for output.
@@ -40,45 +36,10 @@ def analyse_main(options,traj_read):
           f = open(out_file_path, 'x')
           f.close()
 
+    traj_file_path = os.path.join(output_dir, options['traj_file_name'])
+    traj_read = Trajectory(traj_file_path)
+
     output_properties_to_file(options, traj_read)
-
-class EoSResults:
-    """EoSResults stores results from EoS equations lazily. 
-    The class can be instantiated without running the costly computation but when
-    someone tries to access a value, the computation will be run if it hasn't
-    been run yet."""
-
-    def __init__(self, options):
-        self.options = options
-        self.__optimal_lattice_constant = None
-        self.__bulk_modulus = None
-        self.__optimal_lattice_volume = None
-        self._counter = 0
-
-    def _run_calculations(self):
-        self._counter = self._counter + 1
-        a0, B0, v0 = calc_lattice_constant(self.options)
-        self.__optimal_lattice_constant = a0
-        self.__bulk_modulus = B0
-        self.__optimal_lattice_volume = v0
-
-    def get_optimal_lattice_constant(self):
-        if not self.__optimal_lattice_constant:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__optimal_lattice_constant
-
-    def get_bulk_modulus(self):
-        if not self.__bulk_modulus:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__bulk_modulus
-
-    def get_bulk_optimal_lattice_volume(self):
-        if not self.__optimal_lattice_volume:
-            self._run_calculations()
-        assert self._counter <= 1
-        return self.__optimal_lattice_volume
 
 
 def output_properties_to_file(options, traj):
@@ -93,127 +54,133 @@ def output_properties_to_file(options, traj):
         last_atoms_object = traj[-1] #Take the last atoms object
         first_atoms_object = traj[0] #Take the first atoms object
         eos_results = EoSResults(options)
+
+        # Dictionary which contains a function for each key
+        # which can be called to output the data to file.
+        # This way the data is accessed only when needed only for those properties
+        # that the user chose.
         known_property_outputters = {
             'Temperature' :
-                outputGenericFromTraj(
+                output_generic_from_traj(
                     traj,
                     f,
                     'Temperature',
                     lambda atoms: atoms.get_temperature(),
                 ),
             'Volume' :
-                outputGenericFromTraj(
+                output_generic_from_traj(
                     traj,
                     f,
                     'Volume',
                     lambda atoms: atoms.get_volume(),
                 ),
             'Debye Temperature' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Debye Temperature',
                     retrieve_result=lambda: debye_temperature(
-                                                first_atoms_object, 
-                                                options, 
+                                                first_atoms_object,
+                                                options,
                                                 eos_results.get_bulk_modulus()
                                             )
                 ),
             'Self Diffusion Coefficient' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Self Diffusion Coefficient',
                     retrieve_result=lambda: self_diffusion_coefficient(traj)
                 ),
             'Density' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Density',
                     retrieve_result=lambda: density(last_atoms_object)
                 ),
             'Instant Pressure' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Instant Pressure',
                     retrieve_result=lambda: pressure(last_atoms_object)
                 ),
             'Average Pressure' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Average Pressure',
                     retrieve_result=lambda: avg_pressure(traj)
                     ),
             'Self Diffusion Coefficient Array' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     "Self Diffusion Coefficient Array",
                     retrieve_result=lambda: list(self_diffusion_coefficient_calc(traj)),
                 ),
             'MSD' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     "MSD",
                     retrieve_result=lambda: list(MSD_data_calc(traj)),
                 ),
             'Cohesive Energy' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Cohesive Energy',
                     retrieve_result=lambda: retrieve_cohesive_energy(coh_E_path)
                 ),
             'Lindemann criterion' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Lindemann criterion',
                     retrieve_result=lambda: lindemann_criterion(traj)
                 ),
             'Specific Heat Capacity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Specific Heat Capacity',
-                    retrieve_result=lambda: specificHeatCapacity(options['ensemble'], traj)
+                    retrieve_result=lambda: specific_heat_capacity(options['ensemble'], traj)
                 ),
             'Optimal Lattice Constant' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Optimal Lattice Constant',
                     retrieve_result=lambda: eos_results.get_optimal_lattice_constant()
                 ),
             'Optimal Lattice Volume' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Optimal Lattice Volume',
                     retrieve_result=lambda: eos_results.get_bulk_optimal_lattice_volume()
                 ),
             'Bulk Modulus' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Bulk Modulus',
                     retrieve_result=lambda: eos_results.get_bulk_modulus(),
                 ),
             'Transversal Sound Wave Velocity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Transversal Sound Wave Velocity',
                     retrieve_result=lambda: transversal_sound_wave_velocity(last_atoms_object, options)
                 ),
             'Longitudinal Sound Wave Velocity' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Longitudinal Sound Wave Velocity',
                     retrieve_result=lambda: longitudinal_sound_wave_velocity(
-                                        last_atoms_object, 
-                                        options, 
+                                        last_atoms_object,
+                                        options,
                                         eos_results.get_bulk_modulus()
                                     )
                 ),
             'Shear Modulus' :
-                outputGenericResultLazily(
+                output_generic_result_lazily(
                     f,
                     'Shear Modulus',
                     retrieve_result=lambda: shear_modulus(options)
                 ),
         }
 
+        # Output the data specified in options using the known property outputters
         for prop in options['output']:
             if prop in known_property_outputters:
                 known_property_outputters[prop]()
@@ -233,15 +200,15 @@ def self_diffusion_coefficient_calc(traj_read):
 
 if __name__=="__main__":
     from command_line_arg_parser import parser
-    from md_config_reader import config_parser as config_file_parser
+    from md_config_reader import parse_config
 
     from asap3 import Trajectory
 
     args = parser.parse_args()
-    parsed_config_file = config_file_parser(args.config_file)
+    parsed_config_file = parse_config(args.config_file)
 
     options = parsed_config_file
     options['use_asap'] = args.use_asap
 
     traj_read = Trajectory(options["symbol"]+".traj")
-    analyse_main(options,traj_read)
+    run_analysis(options,traj_read)

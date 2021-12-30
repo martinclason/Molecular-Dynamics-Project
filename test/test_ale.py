@@ -6,7 +6,7 @@ import shutil
 import signal
 import pytest
 # from time import sleep
-from ale.md_config_reader import config_parser as config_file_parser
+from ale.md_config_reader import parse_config
 
 small_test_config = "test/config_small_test.yaml"
 small_test_config_builtin_lj = "test/config_small_test_builtin_lj.yaml"
@@ -57,36 +57,69 @@ def test_ale_small_simulation_builtin_LJ():
         assert False, "ale couldn't run with built in LJ potential"
 
 
-@pytest.mark.integration
-@pytest.mark.openkim
-def test_ale_short_multi():
-    """Tests that multi runs and creates traj files in specified output directory"""
-
+@pytest.fixture()
+def output_directory():
     output_dir = 'out_test'
-    multi_config_file = 'test/multi_config_Cu_Ar.yaml'
     if os.path.isdir(output_dir):
         shutil.rmtree(output_dir)
 
     os.mkdir(output_dir)
 
-    assert os.path.isdir(output_dir)
+    yield output_dir
+    print("Could teardown this directory here")
+
+@pytest.mark.integration
+@pytest.mark.openkim
+def test_ale_short_multi(output_directory):
+    """Tests that multi runs and creates traj files in specified output directory"""
+
+
+    multi_config_file = 'test/multi_config_Cu_Ar.yaml'
+
+    assert os.path.isdir(output_directory)
 
     with open(multi_config_file, 'r') as f:
-        multi_config = config_file_parser(f)
+        multi_config = parse_config(f)
     print(multi_config['elements'])
     elements = multi_config['elements'][0]
 
     try:
         process = subprocess.run(
-                        f"ale multi {multi_config_file} {output_dir} -c {short_test_config}",
+                        f"ale multi {multi_config_file} {output_directory} -c {short_test_config}",
                         shell=True,
                         check=True)
 
         for element in elements:
-            assert isfile(joinPath(output_dir, f'{element}.traj')), \
+            assert isfile(joinPath(output_directory, f'{element}.traj')), \
                    f"Out file wasn't created by multi simulation run for {element}"
     except:
         assert False, "ale multi couldn't run"
+
+
+@pytest.mark.integration
+@pytest.mark.openkim
+def test_ale_simulation_equilibrium(output_directory):
+    """Tests that simulation can run until equilibrium. This doesn't test the quality of the output raw traj-file"""
+
+    assert os.path.isdir(output_directory)
+
+    config_file = 'test/config_equil.yaml'
+
+    with open(config_file, 'r') as f:
+        options = parse_config(f)
+    symbol = options['symbol']
+
+    try:
+        process = subprocess.run(
+                        f"ale simulate -c {config_file} -d {output_directory}",
+                        shell=True,
+                        check=True)
+
+
+        assert isfile(joinPath(output_directory, f'raw{symbol}.traj')), \
+                f"raw traj file wasn't created by simulation run in equilibrium"
+    except:
+        assert False, "ale couldn't run in equilibrium"
 
 
 @pytest.mark.integration

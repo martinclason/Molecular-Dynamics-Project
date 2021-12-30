@@ -7,35 +7,36 @@ Welcome to Molecular Dynamics Project's documentation!
 ======================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 4
+    :caption: Contents:
 
-This is the documentation for the Molecular Dynamics Project in the course 
-TFYA99 CDIO Project in Applied Physics.
+    install
+    how_to_run
+    config
+    limitations
+    output
+    source/ale
 
-Update the documentation
-========================
-To add files to be tracked by the automatic documentation system run the following from the top directory::
-
-    sphinx-apidoc -o docs/source/ .
-To make the documentation system regenerate the html documentation, run the following from the ``docs`` directory::
-
-    sphinx-build . _build
-
-or::
-
-    make html
-
-Read documentation
-==================
-To read the documentation cd to the docs directory and run
-'<web-browser-name> index.html>' in the terminal.
+This is the documentation for the molecular dynamics program Ale. Lägga te babbel här om programmets syfte
 
 .. contents:: Table of contents
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Main functions
+==============
+
+Ale
+---
+Massa text och sånt
+
+Ale analyze
+-----------
+Massa text och sånt
+
+Ale simulate
+------------
+Massa text och sånt
+
+Ale multi
+---------
+Mer bös

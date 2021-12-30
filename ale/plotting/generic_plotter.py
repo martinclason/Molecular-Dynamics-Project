@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def make_generic_time_plotter(
-        data,
+        retrieve_data,
         label,
         dt,
         time_unit=None,
@@ -11,10 +11,10 @@ def make_generic_time_plotter(
     ):
     """Factory function for creating plotters that can plot data over time.
     The function returns a function which can be called whenever the plot should be drawn.
-    This funciton takes no arguments and will create a new figure and plot the given data when called. 
+    This function takes no arguments and will create a new figure and plot the given data when called.
     This function doesn't call plt.show() so this must be done by the calling code.
 
-    :param data: data to plot over time.
+    :param retrive_data: function that returns data to plot over time when called with no arguments.
     :param str label: Label representing the data.
     :param number dt: delta time between time steps in data.
     :param str time_unit: unit of time, e.g. 'fs'.
@@ -23,6 +23,7 @@ def make_generic_time_plotter(
     """
 
     def plotter():
+        data = retrieve_data()
         t = np.arange(0, len(data)*dt, dt)
 
         fig = plt.figure()
