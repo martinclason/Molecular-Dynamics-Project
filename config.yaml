@@ -14,7 +14,6 @@ run_MD: True
 ensemble: "NVE" #Choose NVT or NVE
 NVT_friction: 0.2
 temperature_K : 300
-checkForEquilibrium : False
 # set potential to 'LJ' to use built in LennardJones
 # prefix with 'openKIM:' to use corresponding openKIM potential
 potential: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
