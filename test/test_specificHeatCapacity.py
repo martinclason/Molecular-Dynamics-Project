@@ -4,7 +4,7 @@ import sys
 import os
 
 arTraj = Trajectory('test/Ar.traj')
-cuTraj = Trajectory('test/Cu.traj')
+cuTraj = Trajectory('Cu.traj')
 
 # Test if the calculated specific heat capacity of Argon is somewhat
 # close to the real value.
@@ -16,7 +16,7 @@ def test_specificHeatCapacity_Ar():
 
 def test_specificHeatCapacity_Cu():
     C_v_Cu = specificHeatCapacity("NVT",cuTraj)
-    assert (C_v_Cu >= 0.1) and (C_v_Cu <= 0.6)
+    assert (C_v_Cu >= 0.32) and (C_v_Cu <= 0.45)
 
 # Tests if the function throws an exception when an unsupported
 # ensemble is specified.

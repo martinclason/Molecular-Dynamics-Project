@@ -88,7 +88,7 @@ def MD(options):
 
     # This process makes the simulation wait for equilibrium before it starts
     # writing data to the outpul .traj-file.
-    if options.get("checkForEquilibrium", None):
+    if options["checkForEquilibrium"]:
 
         raw_trajectory_file_path = os.path.join(output_dir, f"raw{main_trajectory_file_name}")
         # Defines the full, pre-equilibrium, .traj-file to work with during the simulation

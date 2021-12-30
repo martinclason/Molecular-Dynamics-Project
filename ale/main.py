@@ -90,7 +90,7 @@ def run(arguments=None):
     options['out_file_name'] = args.out_file_name
   else:
     # Defaults to <symbol>.json if not provided in the command line.
-    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}_out.json")
+    options['out_file_name'] = options.get("out_file_name", f"{options['symbol']}.json")
 
   # Sets the output directory of the properties file.
   if args.out_dir:
