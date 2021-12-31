@@ -215,3 +215,5 @@ entire simulation.
 Multi-config:
 -------------
 
+Ale supports using several processes to start multiple simulations in parallel which can be 
+run locally (on a machine with a multi core processor) or on a supercomputer
