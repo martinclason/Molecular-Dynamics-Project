@@ -8,6 +8,7 @@ analisys can be created from this file.
 
 Simulate:
 *********
+
 ```
 latticeconstant: <double [Å]>
 guess_latticeconstant: <double>
@@ -216,4 +217,20 @@ Multi-config:
 -------------
 
 Ale supports using several processes to start multiple simulations in parallel which can be 
-run locally (on a machine with a multi core processor) or on a supercomputer
+run locally (on a machine with a multi core processor) or on a supercomputer. This is run using
+`multi` command such as 
+```
+ale -c som de skriver i gruppen lemao
+```
+
+The multi program then takes the fields in the `<multi_config>` and generates serveral simulations
+with the `<base_config>` as the base and substitutes the fields specified in the `<multi_config>`.
+
+For example:
+
+>>>elements:
+>>>  - ["AlCu", "CuZr"] 
+>>>
+>>>potentials:
+>>>  AlCu: "openKIM:EAM_Dynamo_CaiYe_1996_AlCu__MO_942551040047_005"
+>>>  CuZr: "openKIM:EAM_Dynamo_BorovikovMendelevKing_2016_CuZr__MO_097471813275_000"
