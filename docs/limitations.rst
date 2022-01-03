@@ -1,3 +1,5 @@
+.. _Limitations:
+
 Limitations
 ===========
 
@@ -31,12 +33,50 @@ interatomic potentials have not been cataloged by the Ale team.
 
 Built in Lennard Jones potential
 ********************************
+The built in Lennard Jones is a kind of back-up potential and for it to function properly it 
+needs to have the model parameters `epsilon` and `sigma` supplied. The simulation will start
+without the model parameters but the fallback parameters are designed for solid argon and it's 
+not recomended to use for anything else if the user's goal is to make predictions on material 
+properties.
 
+The fallback parameters for the Lennard Jones potential ARE:
+
+::
+
+  atomic_number = 1 # unit charge
+  epsilon = 0.010323 # eV
+  sigma = 3.40 # Å
+  cutoff = 6.625 # Å
+
+|
 
 Lattice constant calculation
 ----------------------------
+The lattice constant calculation is heavily dependent on the intial guess
+made in the config file (`guess_latticeconstant`). If no lattice constant 
+is provided at all there is a fallback guess of 4 Å but ale only checks an 
+interval of guess +- 15%*guess. This means that if the real or expected 
+lattice constant lies above 4.6 Å or below 3.4 Å a guess should be provided 
+or undefined behavior might occur in the simulation. 
 
+The quality of the calculated lattice constant also improves as the distance
+between the `guess_latticeconstant` and the real/expected lattice constant 
+decreases. This includes the case where the real/expected lattice constant is 
+included in the interval created from the guessed lattice constant.
 
 Equilibrium check
 -----------------
+The built in equilibrium check has only proven effective for sufficienty large
+systems (around 1000 atoms or a size of 10 for an FCC lattice). A smaller 
+number of atoms tends to generate more oscilliative behaivor in the temperature 
+and energy, which is used to calculate if the system has reached equilibrium. 
 
+If the system doesn't reach equilibrium within a certain time, depending on the 
+size of the system and the write-to-trajectory-file-interval (`inteval:` in the 
+config file), the simulation will continue anyway and start producing the output 
+file in case the system reaches equilibrium later or if the system has reached 
+equilibrium but it hasn't been detected by Ale. 
+
+The output `<element(s)>.json` file contains information on the equilibrium 
+check, if the system reached equilibrium and how long it took to reach 
+equilibrium or for the equilibrium check to timeout.  

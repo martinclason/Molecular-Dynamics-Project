@@ -2,11 +2,14 @@ Output from `ale`
 =================
 
 The simulation output consists of three files (which can be placed in a directory
-if specified by the user), one called `raw<element(s)>.traj` (if the equilibirium check 
+if specified by the user), one called `raw<element(s)>.traj` (if the equilibrium check 
 is enabled) which stores the entire simulation from start to finnish, on file named 
-`<element(s)>.traj` which stores the simulation from equilibirium and onwards and this 
+`<element(s)>.traj` which stores the simulation from equilibrium and onwards and this 
 file is what `ale analyze` uses to calculate the output properties (specified in the 
-config file) in the last output file named `<element(s)>.json`. 
+config file) in the last output file named `<element(s)>.json`. The `<element(s)>.json` 
+file also includes a note on the equilibrium check (if enable) which is a flag indicating
+if the system reached equilibrium and how long it took to do so or how long it took for 
+the check to reach timeout.
 
 The properties .json-file is a line json file which enables large data sets to be handled 
 since the computer only reads a single line into memory each time rather than the entire 
