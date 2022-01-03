@@ -1,6 +1,8 @@
 The config files
 ================
 
+.. _openKIM: https://openkim.org/browse/models/by-species
+
 Stand-alone config file:
 ------------------------
 The stand-alone config file contains the following fields and an entire simulation and
@@ -93,7 +95,7 @@ sigma: <double>
 epsilon: <double>
 ```
 This field specifies which interatomic potential to use. The recomended potentials are those 
-found in the openKIM <https://openkim.org/browse/models/by-species> _ library and these are designated with `"openKIM:<potential_name>"`, in this 
+found in the openKIM_ library and these are designated with `"openKIM:<potential_name>"`, in this 
 case sigma and epsilon aren't needed. Sigma and epsilon is only used if the built in Lennard 
 Jones potential is used, this potential is potential is specified with `"LJ"`.
 
@@ -136,26 +138,26 @@ output: <yaml list of strings>
 ```
 This field specifies a list of properties that Ale will calculate in the analyse step. The 
 properties that can be calculated are:
-```
-- Temperature
-- Volume
-- Specific Heat Capacity
-- Density
-- Instant Pressure
-- Average Pressure
-- MSD # Mean Square Displacement
-- Self Diffusion Coefficient
-- Self Diffusion Coefficient Array
-- Lindemann criterion
-- Optimal Lattice Constant
-- Optimal Lattice Volume
-- Bulk Modulus
-- Debye Temperature
-- Transversal Sound Wave Velocity
-- Longitudinal Sound Wave Velocity
-- Shear Modulus
-- Cohesive Energy
-```
+
+:Properties:  - Temperature
+              - Volume
+              - Specific Heat Capacity
+              - Density
+              - Instant Pressure
+              - Average Pressure
+              - MSD # Mean Square Displacement
+              - Self Diffusion Coefficient
+              - Self Diffusion Coefficient Array
+              - Lindemann criterion
+              - Optimal Lattice Constant
+              - Optimal Lattice Volume
+              - Bulk Modulus
+              - Debye Temperature
+              - Transversal Sound Wave Velocity
+              - Longitudinal Sound Wave Velocity
+              - Shear Modulus
+              - Cohesive Energy
+
 
 Visualize:
 **********
@@ -165,10 +167,9 @@ visualize:
 ```
 This field specifies which properties to plot when `ale visualize` is run. The properties 
 that can be visualized are:
-```
-- Temperature
-- Scatter
-```
+
+:visualisations:  - Temperature
+                  - Scatter
 
 ```
 scatter_type_d1: <string>
@@ -176,23 +177,22 @@ scatter_type_d2: <string>
 ```
 These fields specify which two properties that will be plotted in a scatter plot with d1 on 
 one axis and d2 on the other. The properties that can be shown in a scatterplot are:
-```
-- Temperature
-- Volume
-- Specific Heat Capacity
-- Density
-- Average Pressure
-- Self Diffusion Coefficient
-- Lindemann criterion
-- Optimal Lattice Constant
-- Optimal Lattice Volume
-- Bulk Modulus
-- Debye Temperature
-- Transversal Sound Wave Velocity
-- Longitudinal Sound Wave Velocity
-- Shear Modulus
-- Cohesive Energy
-```
+
+:scatter_types:  - Temperature
+                 - Volume
+                 - Specific Heat Capacity
+                 - Density
+                 - Average Pressure
+                 - Self Diffusion Coefficient
+                 - Lindemann criterion
+                 - Optimal Lattice Constant
+                 - Optimal Lattice Volume
+                 - Bulk Modulus
+                 - Debye Temperature
+                 - Transversal Sound Wave Velocity
+                 - Longitudinal Sound Wave Velocity
+                 - Shear Modulus
+                 - Cohesive Energy
 
 ```
 scatter_dir: <string>
@@ -228,9 +228,94 @@ with the `<base_config>` as the base and substitutes the fields specified in the
 
 For example:
 
->>>elements:
->>>  - ["AlCu", "CuZr"] 
->>>
->>>potentials:
->>>  AlCu: "openKIM:EAM_Dynamo_CaiYe_1996_AlCu__MO_942551040047_005"
->>>  CuZr: "openKIM:EAM_Dynamo_BorovikovMendelevKing_2016_CuZr__MO_097471813275_000"
+`base_config.yaml`
+::
+  #-----------Atoms Setup------------#
+  guess_latticeconstant: 5
+  cell: # Given by m_config 
+  scaled_positions : # Given by multi_config
+  symbol : # Given by multi_config
+  pbc : True 
+  size : 22
+
+  #-----------Simulation Setup------------#
+  make_traj: True
+  run_MD: True
+  ensemble: "NVE" 
+  temperature_K : # Given by multi_config
+  checkForEquilibrium : True
+  potential: # Given by multi_config.yaml
+  dt: 5 # simulation time step [fs]
+  iterations: 5000
+  interval: 50
+
+  #-----------Analyse------------#
+  output:
+    - Temperature
+    - Volume
+    - Debye Temperature
+    - Self Diffusion Coefficient
+    - Density
+    - Pressure
+    - MSD
+    - Self Diffusion Coefficient Array
+    - Specific Heat Capacity
+    - Lindemann criterion
+
+  #-----------Visualize------------#
+  visualize:
+    - Temperature
+    - Scatter
+  scatter_type_d1: "Density" 
+  scatter_type_d2: "Specific Heat Capacity" 
+  scatter_files: [] 
+  run_MSD_plot: False
+
+`multi_config.yaml`
+::
+  elements:
+    - ["AlCu", "CuZr"] 
+
+  potentials:
+    AlCu: "openKIM:EAM_Dynamo_CaiYe_1996_AlCu__MO_942551040047_005"
+    CuZr: "openKIM:EAM_Dynamo_BorovikovMendelevKing_2016_CuZr__MO_097471813275_000"
+    default: "LJ"
+
+  temperatures:
+    AlCu: 17
+    default: 600
+
+  cells:
+    CuZr: "BCC"
+    default: "FCC"
+
+  scaled_positions:
+    AlCu: [[0, 0, 0], [0.17, 0.17, 0.17]]
+    default: [[0, 0, 0], [0.5, 0.5, 0.5]]
+
+With these input files `ale multi` will read the `multi_config.yaml` and create as many 
+simulations as there are entries in the `elements` list and substitute the fields in the 
+`base_config.yaml` with the fields specified in the `multi_config.yaml`. This allows the 
+user to specify certain configurations for certain simulations and have a default setting 
+in other cases to ease the configuration of a large number of simulations. The user can 
+also define default values by specifying a value in the corresponding field in the 
+`base_config.yaml`. 
+
+The fields maps as follows:
+
+================ ================
+multi_config     base_config
+================ ================
+elements         element
+temperatures     temperature_K
+cells            cell 
+scaled_positions scaled_positions
+================ ================
+
+These two files will therefore create two simulations when run with `ale multi`, one with an 
+aluminium and copper aloy at 17 K set in an FCC bravais lattice with the aluminium atoms place 
+in the origin of the unit cell and repeated from there and the copper atoms shiftet inwards in 
+the cell and and repeated in an FCC bravais lattice from there. The other simulation will be 
+copper and zirconium placed in two BCC bravias lattices with the copper lattice beginning at 
+the origin and the zirconium lattice being shifted a half unit cell in all directions and all 
+of this will be simulated at 600 K.

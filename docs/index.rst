@@ -25,9 +25,16 @@ This is the documentation for the molecular dynamics program Ale. Lägga te babb
 Main functions
 ==============
 
-Ale
----
-Massa text och sånt
+Ale simulate
+------------
+Ale simulate runs the molecular dynamics simulation using classical mechanincs to evaluate 
+the equations of motion for the system that is simulated. This does not limit the program 
+to use only classical interatomic potentials in the simulations and it's highly encouraged 
+to use the built in support to import interatomic potentials from openKIM which comes in a 
+variaty of forms and is in most cases specific to the system that is simulated, which 
+yields the best prediction of properties.
+
+mer text om simuleringen
 
 Ale analyze
 -----------
