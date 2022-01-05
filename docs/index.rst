@@ -62,4 +62,3 @@ categories.
     limitations
     output
     source/ale
-    source/modules
