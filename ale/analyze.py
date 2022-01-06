@@ -88,7 +88,7 @@ def output_properties_to_file(options, traj):
                 output_generic_result_lazily(
                     f,
                     'Self Diffusion Coefficient',
-                    retrieve_result=lambda: self_diffusion_coefficient(traj)
+                    retrieve_result=lambda: self_diffusion_coefficient(options, traj)
                 ),
             'Density' :
                 output_generic_result_lazily(
@@ -112,7 +112,7 @@ def output_properties_to_file(options, traj):
                 output_generic_result_lazily(
                     f,
                     "Self Diffusion Coefficient Array",
-                    retrieve_result=lambda: list(self_diffusion_coefficient_calc(traj)),
+                    retrieve_result=lambda: list(self_diffusion_coefficient_calc(options, traj)),
                 ),
             'MSD' :
                 output_generic_result_lazily(
@@ -192,10 +192,10 @@ def MSD_data_calc(traj_read):
         MSD_data = np.append(MSD_data,MSD(t,traj_read))
     return MSD_data
 
-def self_diffusion_coefficient_calc(traj_read):
+def self_diffusion_coefficient_calc(options, traj_read):
     sdc = np.array([])
     for t in range(len(traj_read)):
-        sdc = np.append(sdc,self_diffusion_coefficient(traj_read))
+        sdc = np.append(sdc,self_diffusion_coefficient(options, traj_read))
     return sdc
 
 if __name__=="__main__":
