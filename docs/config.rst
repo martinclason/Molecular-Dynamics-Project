@@ -32,9 +32,9 @@ parameter cubic lattices.
 |
 
 The field `cell` is the instruction on where to but different species of atoms relative to the 
-origin of the unit cell and the length scale is normalized to the unit cell sixe. This 
-paramater is only important for multi element systems and  `[[0,0,0]]` should be used when 
-simulating single element sytems.
+origin of the unit cell and the length scale is normalized to the unit cell size (to the lattice 
+constant). This paramater is only important for multi element systems and  `[[0,0,0]]` should 
+be used when simulating single element sytems.
 ::
 
   scaled_positions: <array of 3D positions>

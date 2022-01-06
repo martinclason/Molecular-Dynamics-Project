@@ -37,7 +37,7 @@ without the model parameters but the fallback parameters are designed for solid 
 not recomended to use for anything else if the user's goal is to make predictions on material 
 properties.
 
-The fallback parameters for the Lennard Jones potential ARE:
+The fallback parameters for the Lennard Jones potential are:
 
 ::
 

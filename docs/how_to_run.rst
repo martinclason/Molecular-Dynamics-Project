@@ -30,7 +30,7 @@ To only run a simulation:
 
 Only run analyzation and calculate properties from existing output files. The user doesn't 
 have to specify a trajectory file if `ale analyze` is started from a directory where both 
-the config file and the corresponding trajectory file are present located. The command looks 
+the config file and the corresponding trajectory file are located. The command looks 
 as follows:
 ::
 
@@ -55,7 +55,7 @@ directory containing the properties for the scatter can be specified with the fl
 run visualization:
 :: 
 
-  $ ale visualize
+  $ ale visualize -c my_config.yaml -d out_dir -s scatter_dir
 
 |
 
