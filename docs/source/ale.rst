@@ -1,6 +1,4 @@
-.. _ale:
-
-Ale package
+ale package
 ===========
 
 Subpackages
@@ -22,10 +20,10 @@ ale.MSD module
    :undoc-members:
    :show-inheritance:
 
-ale.analyse\_main module
-------------------------
+ale.analyze module
+------------------
 
-.. automodule:: ale.analyse_main
+.. automodule:: ale.analyze
    :members:
    :undoc-members:
    :show-inheritance:
@@ -62,10 +60,10 @@ ale.command\_line\_arg\_parser module
    :undoc-members:
    :show-inheritance:
 
-ale.createAtoms module
-----------------------
+ale.create\_atoms module
+------------------------
 
-.. automodule:: ale.createAtoms
+.. automodule:: ale.create_atoms
    :members:
    :undoc-members:
    :show-inheritance:
@@ -110,10 +108,10 @@ ale.eos module
    :undoc-members:
    :show-inheritance:
 
-ale.equilibriumCondition module
--------------------------------
+ale.equilibrium\_condition module
+---------------------------------
 
-.. automodule:: ale.equilibriumCondition
+.. automodule:: ale.equilibrium_condition
    :members:
    :undoc-members:
    :show-inheritance:
@@ -198,18 +196,26 @@ ale.simulate module
    :undoc-members:
    :show-inheritance:
 
-ale.simulationDataIO module
----------------------------
+ale.simulation\_data\_IO module
+-------------------------------
 
-.. automodule:: ale.simulationDataIO
+.. automodule:: ale.simulation_data_IO
    :members:
    :undoc-members:
    :show-inheritance:
 
-ale.specificHeatCapacity module
--------------------------------
+ale.specific\_heat\_capacity module
+-----------------------------------
 
-.. automodule:: ale.specificHeatCapacity
+.. automodule:: ale.specific_heat_capacity
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ale.utils module
+----------------
+
+.. automodule:: ale.utils
    :members:
    :undoc-members:
    :show-inheritance:

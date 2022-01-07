@@ -103,9 +103,9 @@ Running `ale multi` currently requires `ale` to be installed with `pip`.
 
 
 ## Update the documentation
-Navigate to the `docs` directory and run:
+Navigate to the root directory and run:
 ```
-sphinx-apidoc -o docs/source/ ../ale
+sphinx-apidoc -o docs/source/ ale
 sphinx-build . _build
 ```
 
