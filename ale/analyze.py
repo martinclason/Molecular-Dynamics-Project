@@ -199,17 +199,3 @@ def self_diffusion_coefficient_calc(options, traj_read):
         sdc = np.append(sdc,self_diffusion_coefficient(options, traj_read))
     return sdc
 
-if __name__=="__main__":
-    from command_line_arg_parser import parser
-    from md_config_reader import parse_config
-
-    from asap3 import Trajectory
-
-    args = parser.parse_args()
-    parsed_config_file = parse_config(args.config_file)
-
-    options = parsed_config_file
-    options['use_asap'] = args.use_asap
-
-    traj_read = Trajectory(options["symbol"]+".traj")
-    run_analysis(options,traj_read)

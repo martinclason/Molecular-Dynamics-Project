@@ -142,12 +142,9 @@ data about the atoms for time steps in the simulation.
             parsed_args = self.parser.parse_args(parsed_args[1], parsed_args[0])
             return parsed_args
         else:
-            # multipass strategy: 
+            # multipass strategy:
             # https://stackoverflow.com/questions/46962065/add-top-level-argparse-arguments-after-subparser-args
             args = self.parser.parse_known_args()
             args = self.parser.parse_args(args[1], args[0])
             return args
 
-
-nop = lambda: None
-parser = CreateParser(nop, nop, nop, nop, nop)
