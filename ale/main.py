@@ -55,6 +55,9 @@ def analyze(options, args=None):
 
 
 def visualize(options, args=None):
+    """This function creates vizualisations of the simulated and analyzed data.
+    What visualizations and to create is specified in the options object.
+    """
     out_file_path = os.path.join(options['out_dir'], options['out_file_name'])
 
     if args.scatter_dir:
