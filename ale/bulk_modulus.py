@@ -9,6 +9,7 @@ from ale.create_potential import create_potential
 from ale.utils import call_only_once
 import functools
 import os
+import logging
 
 
 def create_lattice_traj(options):
@@ -42,15 +43,16 @@ def create_lattice_traj(options):
 
     return traj
 
-calc_lattice_constant_counter = 0
 
+# Used to verify call_only_once works as intended
+calc_lattice_constant_counter = 0
 
 @call_only_once
 def calc_lattice_constant(options):
     """ This function takes a traj-file containing atom-objects wirh varying
     lattice constants, calculates the Bulk modulus B, optimal volume v0 and optimal
     lattice constant a0 through equation of state."""
-    print("--------- In calc_lattice_constant, should only be called once no matter parameters")
+    logging.debug("--------- In calc_lattice_constant, should only be called once no matter parameters")
     global calc_lattice_constant_counter
     calc_lattice_constant_counter += 1
     assert calc_lattice_constant_counter <= 1
