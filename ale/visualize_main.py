@@ -68,6 +68,11 @@ def visualize(options, data_file_path):
 
 
 def make_lattice_viewer(options):
+    """Creates viewer to visualize atoms with ase gui visualizer.
+
+    It visualizes the initial positions of the atoms in the lattice.
+    """
+
     def viewer():
         atoms = create_atoms(options)
         view(atoms)
