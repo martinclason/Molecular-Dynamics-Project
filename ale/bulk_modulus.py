@@ -6,8 +6,10 @@ from ase.io import Trajectory
 import numpy as np
 from asap3 import Atoms
 from ale.create_potential import create_potential
+from ale.utils import call_only_once
 import functools
 import os
+
 
 def create_lattice_traj(options):
     """ This function creates atoms objects with varying lattice constants from a guessed
@@ -42,18 +44,6 @@ def create_lattice_traj(options):
 
 calc_lattice_constant_counter = 0
 
-# Wrapper to make sure an expensive function for exapmle only is called once
-def call_only_once(f):
-    result = None
-    
-    @functools.wraps(f)
-    def wrapper(*args, **kwds):
-        nonlocal result
-        if not result:
-            result = f(*args, **kwds)
-        return result
-
-    return wrapper
 
 @call_only_once
 def calc_lattice_constant(options):
