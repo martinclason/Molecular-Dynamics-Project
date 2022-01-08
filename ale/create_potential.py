@@ -60,6 +60,13 @@ def built_in_LennardJones(options) :
             )
 
 def create_potential(options) :
+    """Creates potential from options passed by user in configuration.
+    A built in Lennard-Jones potential or openKIM potential is supported.
+
+    Will raise :class:`ale.errors.ConfigError` if it fails to create a
+    potential from the configuration.
+    """
+
     use_asap = options["use_asap"]
     potential_str = options["potential"]
     if potential_str.lower() in ("lj", "LennardJones".lower()):
