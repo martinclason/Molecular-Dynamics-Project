@@ -1,5 +1,9 @@
 import pytest
-from ale.command_line_arg_parser import CreateParser, parser
+from ale.command_line_arg_parser import CreateParser
+
+nop = lambda: None
+# Dummy parser used for testing
+parser = CreateParser(nop, nop, nop, nop, nop)
 
 # asap option
 def test_default_option():
@@ -81,7 +85,7 @@ class TestParserSubcommands():
 def test_traj_file_argument():
     args = parser.parse_args(['-t', 'test/Cu.traj'])
     assert args.traj_file_name == 'test/Cu.traj'
-    
+
     args = parser.parse_args(['--traj', 'test/Cu.traj'])
     assert args.traj_file_name == 'test/Cu.traj'
 
@@ -91,7 +95,7 @@ def test_out_file_argument():
 
     args = parser.parse_args(['-o', 'my_out.json'])
     assert args.out_file_name == 'my_out.json'
-    
+
     args = parser.parse_args(['--out', 'my_out.json'])
     assert args.out_file_name == 'my_out.json'
 
