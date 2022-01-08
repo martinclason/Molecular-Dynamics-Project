@@ -1,0 +1,14 @@
+ase
+asap3
+pyyaml
+sphinx
+kimpy
+kim-api
+openkim-models
+Cython
+numpy
+scipy
+matplotlib
+mpi4py
+pytest
+openmpi

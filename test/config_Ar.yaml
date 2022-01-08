@@ -1,0 +1,40 @@
+---
+#-----------Atoms Setup------------#
+latticeconstant : 5.260 #Only supporting cubic lattices with one parameter
+cell: [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]] #(primitive unit cell vectors) #fcc currently
+scaled_positions : [[0,0,0]] #Set position of each atom relative to each other in the molecule (lists in list)
+symbol : "Ar" 
+pbc : True #periodic boundary conditions
+size : 13 # Repeating unit cell in each dimension (e.g. 2 -> 2^3 = 8 times as large)
+
+
+#-----------Simulation Setup------------#
+make_traj: True
+run_MD: True
+ensemble: "NVE" #Choose NVT or NVE
+NVT_friction: 0.2
+temperature_K : 80
+# set potential to 'LJ' to use built in LennardJones
+# prefix with 'openKIM:' to use corresponding openKIM potential
+potential: "openKIM:LJ_Smoothed_Bernardes_1958_Ar__MO_764178710049_001"
+dt: 5 # simulation time step [fs]
+# Equilibrium checks only supports about 700+ atoms systems reliably. For more info
+# consult the documentation
+checkForEquilibrium : True
+# Number of iterations after equilibrium has been reached or timeout in the equilibrium
+# check
+iterations: 4500 
+# Number of timesteps between each save to the .traj file
+interval: 100
+
+#-----------Analyse------------#
+output: #What material parameters to calculate and output from the traj-file?
+  - Temperature
+  - Volume
+
+
+#-----------Visualize------------#
+visualize:
+  - Temperature
+run_density_plot: False
+run_MSD_plot: False

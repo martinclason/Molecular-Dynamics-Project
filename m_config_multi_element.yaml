@@ -1,0 +1,116 @@
+elements:
+  - ["AlCu", 
+     "CuZr", 
+     "PbCu", 
+     "CuC", 
+     "PdCu", 
+     "PtCu", 
+     "NiCu", 
+     "FeCu", 
+     "CuCo", 
+     "CuMo", 
+     "FeC", 
+     "FeW", 
+     "FeNi", 
+     "VFe", 
+     "CoFe", 
+     "PdFe", 
+     "PtFe", 
+     "FeMn", 
+     "FeP", 
+     "FeH", 
+     "AlFe",
+     "FeN",
+     "FeTi",
+     "NbFe",
+     "NiFe",
+     "AlPb",
+     "AlMg",
+     "AlCo",
+     "AlTi",
+     "AlNi",
+     "AlPd",
+     "AlH",
+     "AlU",
+     "AlLi",
+     "WRe",
+     "CoCr",
+     "CrMn",
+     "NiCr",
+     "CoMn",
+     "PdTi",
+     "NiTi",
+     "CoTi",
+     "CaCd",
+     "NiZr",
+     "CuMg",
+     "ZrH",
+     "UZr",
+     "TiN",
+     "GaN",
+     "GaAs",
+     "NiNb",
+     "NbFe"]
+
+potentials:
+  AlCu: "openKIM:EAM_Dynamo_CaiYe_1996_AlCu__MO_942551040047_005"
+  CuZr: "openKIM:EAM_Dynamo_BorovikovMendelevKing_2016_CuZr__MO_097471813275_000"
+  PbCu: "openKIM:EAM_Dynamo_HoytGarvinWebb_2003_PbCu__MO_119135752160_005"
+  CuC: "openKIM:MEAM_LAMMPS_AgrawalMirzaeifar_2021_CuC__MO_028979335952_001"
+  PdCu: "openKIM:MEAM_LAMMPS_JeongParkDo_2018_PdCu__MO_353393547686_001"
+  PtCu: "openKIM:MEAM_LAMMPS_KimSeolJi_2017_PtCu__MO_070797404269_001"
+  NiCu: "openKIM:MEAM_LAMMPS_LeeShim_2004_NiCu__MO_409065472403_001"
+  FeCu: "openKIM:MEAM_LAMMPS_LeeWirthShim_2005_FeCu__MO_063626065437_001"
+  CuCo: "openKIM:MEAM_LAMMPS_WangOhLee_2020_CuCo__MO_849011491644_001"
+  CuMo: "openKIM:MEAM_LAMMPS_WangOhLee_2020_CuMo__MO_380272712420_001"
+  FeC: "openKIM:EAM_Dynamo_HepburnAckland_2008_FeC__MO_143977152728_005"
+  FeW: "openKIM:EAM_Dynamo_BonnyCastinBullens_2013_FeW__MO_737567242631_000"
+  FeNi: "openKIM:EAM_Dynamo_BonnyPasianotMalerba_2009_FeNi__MO_267721408934_005"
+  VFe: "openKIM:EAM_Dynamo_MendelevHanSon_2007_VFe__MO_249706810527_005"
+  CoFe: "openKIM:MEAM_LAMMPS_ChoiKimSeol_2017_CoFe__MO_179158257180_001"
+  PdFe: "openKIM:MEAM_LAMMPS_JeongParkDo_2018_PdFe__MO_924736622203_001"
+  PtFe: "openKIM:MEAM_LAMMPS_KimLee_2006_PtFe__MO_343168101490_001"
+  FeMn: "openKIM:MEAM_LAMMPS_KimShinLee_2009_FeMn__MO_058735400462_001"
+  FeP: "openKIM:MEAM_LAMMPS_KoJimLee_2012_FeP__MO_179420363944_001"
+  FeH: "openKIM:MEAM_LAMMPS_LeeJang_2007_FeH__MO_095610951957_001"
+  AlFe: "openKIM:MEAM_LAMMPS_LeeLee_2010_FeAl__MO_332211522050_001"
+  FeN: "openKIM:MEAM_LAMMPS_LeeLeeKim_2006_FeN__MO_432861766738_001"
+  FeTi: "openKIM:MEAM_LAMMPS_SaLee_2008_FeTi__MO_260546967793_001"
+  NbFe: "openKIM:MEAM_LAMMPS_SaLee_2008_NbFe__MO_162036141261_001"
+  NiFe: "openKIM:MEAM_LAMMPS_WuLeeSu_2017_NiFe__MO_321233176498_001"
+  AlPb: "openKIM:EAM_Dynamo_LandaWynblattSiegel_2000_AlPb__MO_699137396381_005"
+  AlMg: "openKIM:EAM_Dynamo_LiuAdams_1998_AlMg__MO_019873715786_000"
+  AlCo: "openKIM:EAM_Dynamo_VailheFarkas_1997_CoAl__MO_284963179498_005"
+  AlTi: "openKIM:EAM_Dynamo_ZopeMishin_2003_TiAl__MO_117656786760_005"
+  AlNi: "openKIM:MEAM_LAMMPS_CostaAgrenClavaguera_2007_AlNi__MO_131642768288_001"
+  AlPd: "openKIM:MEAM_LAMMPS_JeongParkDo_2018_PdAl__MO_616482358807_001"
+  AlH: "openKIM:MEAM_LAMMPS_KoShimLee_2011_AlH__MO_127847080751_001"
+  AlU: "openKIM:MEAM_LAMMPS_PascuetFernandez_2015_AlU__MO_596300673917_001"
+  AlLi: "openKIM:MEAM_LAMMPS_RoyDuttaChakraborti_2021_AlLi__MO_971738391444_000"
+  WRe: "openKIM:EAM_Dynamo_BonnyBakaevTerentyev_2017_WRe__MO_234187151804_000"
+  CoCr: "openKIM:MEAM_LAMMPS_ChoiKimSeol_2017_CoCr__MO_410167849923_001"
+  CrMn: "openKIM:MEAM_LAMMPS_ChoiKimSeol_2017_CrMn__MO_671124822359_001"
+  NiCr: "openKIM:MEAM_LAMMPS_WuLeeSu_2017_NiCr__MO_880803040302_001"
+  CoMn: "openKIM:MEAM_LAMMPS_ChoiKimSeol_2017_CoMn__MO_808662295149_001"
+  PdTi: "openKIM:MEAM_LAMMPS_JeongParkDo_2018_PdTi__MO_086900950763_001"
+  NiTi: "openKIM:MEAM_LAMMPS_KavousiNovakBaskes_2019_NiTi__MO_050461957184_001"
+  CoTi: "openKIM:MEAM_LAMMPS_OhSeolLee_2020_CoTi__MO_862371677648_001"
+  CaCd: "openKIM:EAM_IMD_BrommerGaehlerMihalkovic_2007_CaCd__MO_145183423516_003"
+  CdTe: "openKIM:SW_WangStroudMarkworth_1989_CdTe__MO_786496821446_001"
+  NiZr: "openKIM:EAM_Dynamo_MendelevKramerHao_2012_NiZr__MO_149104665840_005"
+  CuMg: "openKIM:EMT_Asap_MetalGlass_CuMgZr__MO_655725647552_002"
+  ZrH: "openKIM:MEAM_LAMMPS_LeeLee_2014_ZrH__MO_946208788356_001"
+  UZr: "openKIM:MEAM_LAMMPS_MooreBeelerDeo_2015_UZr__MO_453094726678_000"
+  TiN: "openKIM:MEAM_LAMMPS_KimLee_2008_TiN__MO_070542625990_001"
+  FeN: "openKIM:MEAM_LAMMPS_LeeLeeKim_2006_FeN__MO_432861766738_001"
+  GaN: "openKIM:SW_BereSerra_2006_GaN__MO_861114678890_001"
+  GaAs: "openKIM:Tersoff_LAMMPS_AlbeNordlundNord_2002_GaAs__MO_799020228312_004"
+  NiNb: "openKIM:EAM_Dynamo_ZhangAshcraftMendelev_2016_NiNb__MO_047308317761_000"
+  NbFe: "openKIM:MEAM_LAMMPS_SaLee_2008_NbFe__MO_162036141261_001"
+  default: "LJ"
+
+cells:
+  default: "FCC"
+
+scaled_positions:
+  default: [[0, 0, 0], [0.5, 0.5, 0.5]]

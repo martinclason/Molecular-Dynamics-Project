@@ -1,0 +1,53 @@
+elements:
+  - ["Cu", "Au", "Ag", "Al", "Pb", "Fe", "Cr", "Nb", "V"]
+  
+latticeconstants:
+  Cu: 3.615
+  Au: 4.07
+  Ag: 4.09
+  Al: 4.05
+  Pb: 4.95
+  Fe: 2.87
+  Cr: 2.91
+  Nb: 3.3
+  V: 3.03
+
+cells:
+  Ag: "fcc"
+  Al: "fcc"  
+  Au: "fcc"
+  Cu: "fcc"
+  Cr: "bcc"
+  Fe: "bcc"
+  Nb: "bcc"
+  Pb: "fcc"
+  V: "bcc"
+
+# sizes:
+#   Cu: 5
+#   Au: 5
+#   Ag: 5
+#   Al: 5
+#   Pb: 5
+#   Fe: 5
+#   Cr: 5
+#   Nb: 5
+#   V: 5
+
+potentials:
+  Ag: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Al: "openKIM:EAM_Dynamo_ZhouJohnsonWadley_2004NISTretabulation_Al__MO_060567868558_000"
+  Au: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Ca: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Ca__MO_159753408472_004"
+  Co: "openKIM:EAM_Dynamo_PunMishin_2012_Co__MO_885079680379_005"
+  Cr: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Cr__MO_859700307573_004"
+  Cu: "openKIM:Sim_ASAP_EMT_Rasmussen_AgAuCu__SM_847706399649_000"
+  Fe: "openKIM:EAM_Dynamo_AcklandBaconCalder_1997_Fe__MO_142799717516_005"
+  Mg: "openKIM:EAM_Dynamo_SunMendelevBecker_2006_Mg__MO_848345414202_005"
+  Mn: "openKIM:EAM_IMD_SchopfBrommerFrigan_2012_AlMnPd__MO_878712978062_003"
+  Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
+  Nb: "openKIM:EAM_Dynamo_FellingerParkWilkins_2010_Nb__MO_102133002179_005"
+  Pb: "openKIM:EAM_Dynamo_HoytGarvinWebb_2003_PbCu__MO_119135752160_005"
+  V: "openKIM:EAM_Dynamo_MendelevHanSon_2007_VFe__MO_249706810527_005"
+  W: "openKIM:EAM_Dynamo_Ackland_2003_W__MO_141627196590_005"
+  default: "openKIM:LJ_ElliottAkerson_2015_Universal__MO_959249795837_003"

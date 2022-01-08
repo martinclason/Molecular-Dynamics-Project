@@ -1,0 +1,33 @@
+#Run with config_min.yaml
+elements:
+  - ["Li", "Na", "K", "Rb", "Cs"]
+  
+latticeconstants:
+  Li: 3.51
+  Na: 4.29  
+  K: 5.33
+  Rb: 5.58
+  Cs: 6.14
+  #Fr: 
+
+temperatures:
+  Li: 20
+  Na: 20
+  K: 20
+  Rb: 20
+  Cs: 20
+
+cells:
+  Li: "bcc"
+  Na: "bcc"
+  K: "bcc"
+  Rb: "bcc"
+  Cs: "bcc"
+  #Fr: "bcc"
+
+potentials:
+  Li: "openKIM:SNAP_ZuoChenLi_2019quadratic_Li__MO_041269750353_000"
+  Na: "openKIM:EAM_Dynamo_Mendelev_2015_Na__MO_094065024556_000"
+  K: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_K__MO_836927321152_004"
+  Rb: "openKIM:Morse_Shifted_GirifalcoWeizer_1959HighCutoff_Rb__MO_908110223949_004"
+  Cs: "openKIM:EAM_Dynamo_NicholAckland_2016v2_Cs__MO_144828415103_000"
