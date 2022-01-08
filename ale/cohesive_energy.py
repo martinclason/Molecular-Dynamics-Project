@@ -6,11 +6,10 @@ import sys
 import os
 
 
-
 def cohesive_energy(options,atoms,iterations,file_output_path):
     """The cohesive_energy function takes argument atoms, that is the simulated material,
     and makes another simulation for the material at temperature 0 K.
-    It the looks extracts the potential energy which is the cohesive energy for the material"""
+    It then extracts the potential energy which is the cohesive energy for the material"""
     MaxwellBoltzmannDistribution(atoms, temperature_K=0, communicator='serial')
     Stationary(atoms)
     ZeroRotation(atoms)
@@ -29,6 +28,12 @@ def cohesive_energy(options,atoms,iterations,file_output_path):
     coh_traj.close()
 
 def retrieve_cohesive_energy(traj_file):
+    """This function reads a traj file containing a cohesive energy simulation
+    created by the function cohesive_energy. It reads the result of the
+    simulation from this file and returns the cohesive energy. If the traj file
+    can't be read it returns None.
+    """
+
     if not os.path.isfile(traj_file):
         return None
     traj_read_cohE = Trajectory(traj_file)
