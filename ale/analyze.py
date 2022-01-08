@@ -193,6 +193,7 @@ def MSD_data_calc(traj_read):
     return MSD_data
 
 def self_diffusion_coefficient_calc(options, traj_read):
+    """Calculates diffusion coefficients for all timesteps registered in the .traj file"""
     sdc = np.array([])
     for t in range(len(traj_read)):
         sdc = np.append(sdc,self_diffusion_coefficient(options, traj_read))
