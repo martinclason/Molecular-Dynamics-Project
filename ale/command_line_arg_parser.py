@@ -1,22 +1,44 @@
 import argparse
 from argparse import RawTextHelpFormatter
 
-# Adds parser so user can choose if to use asap or not with flags from terminal
 
 class CreateParser():
+    """Class thar parses the command line arguments  given to ale.
+    It handles sub commands that corresponds to different sub domains of the
+    ale software. This is realized with subparsers for each sub command.
+
+    :param default: function to call when no subcommand is specified.
+    :type default: lambda or function.
+
+    :param multi: function to call when multi subcommand is specified.
+    :type multi: lambda or function.
+
+    :param simulate: function to call when simulate subcommand is specified.
+    :type simulate: lambda or function.
+
+    :param analyze: function to call when analyze subcommand is specified.
+    :type analyze: lambda or function.
+
+    :param visualize: function to call when visualize subcommand is specified.
+    :type visualize: lambda or function.
+    """
+
     def __init__(self, default, multi, simulate, analyze, visualize):
+        """Creates parser object.
+        """
         description = "A program to run molecular dynamics calculations."
         self.parser = argparse.ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
         self.subparsers = self.parser.add_subparsers()
 
+        # Adds parser so user can choose if to use asap or not with flags from terminal
         self.parser.add_argument(
-                          '--asap', 
-                          dest='use_asap', 
+                          '--asap',
+                          dest='use_asap',
                           action='store_true',
                           help="use asap to greatly accelerate calculations (this is default)")
         self.parser.add_argument(
-                          '--no-asap', 
-                          dest='use_asap', 
+                          '--no-asap',
+                          dest='use_asap',
                           action='store_false',
                           help="don't use asap to accelerate calculations (useful if asap isn't available)")
         self.parser.set_defaults(use_asap=True)
@@ -42,7 +64,7 @@ class CreateParser():
                           dest='traj_file_name',
                           default=None,
                           help="""where to output the simulated trajectory data (default: <Symbol>.traj)
-The .traj-format is a binary format used by the ase library and contains 
+The .traj-format is a binary format used by the ase library and contains
 data about the atoms for time steps in the simulation.
                           """,
                           metavar='traj_file')
@@ -107,6 +129,13 @@ data about the atoms for time steps in the simulation.
               )
 
     def parse_args(self, args=None):
+        """This function runs the parser. If no arguments to parse are
+        specified it reads the arguments from the command line.
+
+        :param args: args to parse
+        :type args: list
+        """
+
         if args is not None:
             # Handle if caller passes explicit args list
             parsed_args = self.parser.parse_known_args(args)
