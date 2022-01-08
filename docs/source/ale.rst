@@ -100,14 +100,6 @@ ale.effective\_velocity module
    :undoc-members:
    :show-inheritance:
 
-ale.eos module
---------------
-
-.. automodule:: ale.eos
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 ale.equilibrium\_condition module
 ---------------------------------
 
