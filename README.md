@@ -99,6 +99,12 @@ It's probably better to try to install it as a package using `pip` though. That 
 
 Running `ale multi` currently requires `ale` to be installed with `pip`.
 
+## Running tests
+To run the unit tests and integrations tests with pytest run:
+```
+make test
+```
+
 # Documentation
 
 
@@ -112,12 +118,12 @@ sphinx-build . _build
 or:
 ```
 sphinx-apidoc -o docs/source/ ../ale
-make html
+make html-doc
 ```
 
 ## Read documentation
-To read the documentation cd to the docs directory and run:
+To read the documentation open the html-page in the build directory by running:
 ```
-<web-browser-name> _build/index.html
+<web-browser-name> docs/_build/html/index.html
 ```
 

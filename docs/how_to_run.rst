@@ -89,3 +89,16 @@ is the name of the output directory for the generated files:
   ale multi multi_config.yaml -c base_config.yaml out_dir
 
 |
+
+Running tests
+-----------------
+
+To run the unit tests and integrations tests with pytest run:
+::
+
+  make test
+
+|
+
+
+
