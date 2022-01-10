@@ -121,6 +121,14 @@ sphinx-apidoc -o docs/source/ ../ale
 make html-doc
 ```
 
+### Generate docs in PDF-format
+navigate to docs directory and run:
+```
+make latexpdf
+```
+The pdf should then be found at `docs/_build/latex/ale_md.pdf`.
+
+
 ## Read documentation
 To read the documentation open the html-page in the build directory by running:
 ```
