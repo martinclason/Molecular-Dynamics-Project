@@ -386,7 +386,7 @@ scaled_positions scaled_positions
 ================ ================
 
 These two files will therefore create two simulations when run with `ale multi`, one with an 
-aluminium and copper aloy at 17 K set in an FCC bravais lattice with the aluminium atoms place 
+aluminium and copper alloy at 17 K set in an FCC bravais lattice with the aluminium atoms place 
 in the origin of the unit cell and repeated from there and the copper atoms shiftet inwards in 
 the cell and and repeated in an FCC bravais lattice from there. The other simulation will be 
 copper and zirconium placed in two BCC bravias lattices with the copper lattice beginning at 
