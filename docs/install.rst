@@ -59,7 +59,7 @@ Install ASAP:
 .. |
 
 Install the software
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 To be able to run ale in the terminal in your current environment, download this git repository and navigate into it. Then run:
 ::
 
@@ -79,7 +79,7 @@ To develop without having to reinstall ale all the time you can instead run:
 
 This will install `ale` without dependencies and in editable mode so the source code can be edited.
 
-To test if this worked you can now run:
+To test if ale is installed correctly you can now run:
 ::
 
   $ ale -h
