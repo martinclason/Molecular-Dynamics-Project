@@ -11,9 +11,9 @@ analysis can be created from this file.
 Simulate:
 *********
 
-The user can specify a `latticeconstant` to use for the simulation but is this is left
-empty Ale will compute a lattice constant with the `guess_latticeconstant` as the
-initial value. If `guess_latticeconstant` is left empty Ale has a fallback value of 4
+The user can specify a ``latticeconstant`` to use for the simulation but is this is left
+empty Ale will compute a lattice constant with the ``guess_latticeconstant`` as the
+initial value. If ``guess_latticeconstant`` is left empty Ale has a fallback value of 4
 Å.
 ::
 
@@ -22,7 +22,7 @@ initial value. If `guess_latticeconstant` is left empty Ale has a fallback value
 
 |
 
-The field `cell` specifies the unit cell structure. The user can specify fcc or bcc bravais
+The field ``cell`` specifies the unit cell structure. The user can specify fcc or bcc bravais
 lattices but other lattices has to be specified with a base matrix. Ale only support single
 parameter cubic lattices.
 ::
@@ -31,9 +31,9 @@ parameter cubic lattices.
 
 |
 
-The field `cell` is the instruction on where to but different species of atoms relative to the
+The field ``cell`` is the instruction on where to but different species of atoms relative to the
 origin of the unit cell and the length scale is normalized to the unit cell size (to the lattice
-constant). This parameter is only important for multi element systems and  `[[0,0,0]]` should
+constant). This parameter is only important for multi element systems and  ``[[0,0,0]]`` should
 be used when simulating single element systems.
 ::
 
@@ -41,8 +41,8 @@ be used when simulating single element systems.
 
 |
 
-The field `symbol` specifies the element or a string of elements to be simulated such as `"Au"` for gold
-or `"CuK"` for a copper and potassium alloy. These elements are then placed at the `scaled_positions`
+The field ``symbol`` specifies the element or a string of elements to be simulated such as ``"Au"`` for gold
+or ``"CuK"`` for a copper and potassium alloy. These elements are then placed at the ``scaled_positions``
 in order.
 ::
 
@@ -50,14 +50,14 @@ in order.
 
 |
 
-To use periodic boundary conditions enter `True` in the `pbc` field.
+To use periodic boundary conditions enter ``True`` in the ``pbc`` field.
 ::
 
   pbc: <bool>
 
 |
 
-The field `size` specifies how many time to repeat the unit cell to a super cell in each
+The field ``size`` specifies how many time to repeat the unit cell to a super cell in each
 dimension (e.g. 2 -> 2^3 = 8 times as large).
 ::
 
@@ -80,8 +80,8 @@ This field specifies whether to run a simulation or not.
 
 |
 
-This field specifies which ensemble to simulate. Ale currently only supports `"NVT"` or
-`"NVE"` ensembles.
+This field specifies which ensemble to simulate. Ale currently only supports ``"NVT"`` or
+``"NVE"`` ensembles.
 ::
 
   ensemble: <string>
@@ -89,7 +89,7 @@ This field specifies which ensemble to simulate. Ale currently only supports `"N
 |
 
 This field specifies how hard the thermostat should correct the temperature. The friction
-number is usually `1E-4` to `1E-2`.
+number is usually ``1E-4`` to ``1E-2``.
 ::
 
   NVT_friction: <double>
@@ -97,7 +97,7 @@ number is usually `1E-4` to `1E-2`.
 |
 
 This field specifies the initial temperature of the simulation. If the temperature should
-remain close to the specified value enter `"NVT"` in the `ensemble` field.
+remain close to the specified value enter ``"NVT"`` in the ``ensemble`` field.
 ::
 
   temperature_K: <double [K]>
@@ -114,10 +114,10 @@ or when the check timeout is reached.
 |
 
 This field specifies which interatomic potential to use. The recommended potentials are those
-found in the openKIM_ library and these are designated with `"openKIM:<potential_name>"`, in
+found in the openKIM_ library and these are designated with ``"openKIM:<potential_name>"``, in
 this case sigma and epsilon aren't needed. Atomic number, sigma, epsilon (model parameters)
 and cutoff is only used if the built in Lennard Jones potential is used, this potential is
-specified with `"LJ"`.
+specified with ``"LJ"``.
 ::
 
   potential: <string>
@@ -207,7 +207,7 @@ The properties that can be calculated are:
 Visualize:
 **********
 
-This field specifies which properties to plot when `ale visualize` is run.
+This field specifies which properties to plot when ``ale visualize`` is run.
 ::
 
   visualize:
@@ -254,15 +254,15 @@ The properties that can be shown in a scatterplot are:
 |
 
 This field specifies the path to the directory the output properties for the materials that will
-be included in the scatterplot are relative to where `ale visualize` is run.
+be included in the scatterplot are relative to where ``ale visualize`` is run.
 ::
 
   scatter_dir: <string>
 
 |
 
-This field can be used to specified a subset of the files in the `scatter_dir` that should
-be used in the scatter plot. If this field is left empty `ale visualize` will look at all
+This field can be used to specified a subset of the files in the ``scatter_dir`` that should
+be used in the scatter plot. If this field is left empty ``ale visualize`` will look at all
 files.
 ::
 
@@ -285,17 +285,17 @@ Ale supports using several processes to start multiple simulations in parallel w
 run locally (on a machine with a multi core processor) or on a supercomputer.
 
 .. This is run using
-.. `multi` command such as
+.. ``multi`` command such as
 .. ```
 .. ale multi <multi_config> <output_dir> -c <base_config>
 .. ```
 
-The multi program then takes the fields in the `<multi_config>` and generates several simulations
-with the `<base_config>` as the base and substitutes the fields specified in the `<multi_config>`.
+The multi program then takes the fields in the ``<multi_config>`` and generates several simulations
+with the ``<base_config>`` as the base and substitutes the fields specified in the ``<multi_config>``.
 
 For example:
 
-`base_config.yaml`
+``base_config.yaml``
 ::
 
   #-----------Atoms Setup------------#
@@ -341,7 +341,7 @@ For example:
 
 |
 
-`multi_config.yaml`
+``multi_config.yaml``
 ::
 
   elements:
@@ -366,13 +366,13 @@ For example:
 
 |
 
-With these input files `ale multi` will read the `multi_config.yaml` and create as many
-simulations as there are entries in the `elements` list and substitute the fields in the
-`base_config.yaml` with the fields specified in the `multi_config.yaml`. This allows the
+With these input files ``ale multi`` will read the ``multi_config.yaml`` and create as many
+simulations as there are entries in the ``elements`` list and substitute the fields in the
+``base_config.yaml`` with the fields specified in the ``multi_config.yaml``. This allows the
 user to specify certain configurations for certain simulations and have a default setting
 in other cases to ease the configuration of a large number of simulations. The user can
 also define default values by specifying a value in the corresponding field in the
-`base_config.yaml`.
+``base_config.yaml``.
 
 The fields map as follows:
 
@@ -385,7 +385,7 @@ cells            cell
 scaled_positions scaled_positions
 ================ ================
 
-These two files will therefore create two simulations when run with `ale multi`, one with an
+These two files will therefore create two simulations when run with ``ale multi``, one with an
 aluminium and copper alloy at 17 K set in an FCC bravais lattice with the aluminium atoms place
 in the origin of the unit cell and repeated from there and the copper atoms shiftet inwards in
 the cell and and repeated in an FCC bravais lattice from there. The other simulation will be

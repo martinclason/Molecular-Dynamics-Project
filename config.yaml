@@ -49,6 +49,7 @@ output:
 visualize:
   - Temperature
   - Scatter
+  - Lattice
 scatter_type_d1: "Debye Temperature" #chooses which type of data to write to x-axis.
 scatter_type_d2: "Specific Heat Capacity" #chooses which type of data to write to y-axis.
 scatter_dir: out #Chooses which directory to read .json files from. Leave empty and it will search for .json files in the main dir.

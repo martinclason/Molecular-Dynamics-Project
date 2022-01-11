@@ -26,7 +26,7 @@ class CreateParser():
     def __init__(self, default, multi, simulate, analyze, visualize):
         """Creates parser object.
         """
-        description = "A program to run molecular dynamics calculations."
+        description = "A program to run molecular dynamics calculations at lowest effort."
         self.parser = argparse.ArgumentParser(description=description, formatter_class=RawTextHelpFormatter)
         self.subparsers = self.parser.add_subparsers()
 

@@ -1,7 +1,7 @@
 .. Molecular Dynamics Project documentation master file, created by
    sphinx-quickstart on Wed Nov  3 16:23:48 2021.
    You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+   contain the root ``toctree`` directive.
 
 .. _ASE: https://wiki.fysik.dtu.dk/ase/
 .. _ASAP: https://wiki.fysik.dtu.dk/asap

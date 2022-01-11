@@ -6,7 +6,7 @@
 Conda can be used to create an environment suitable for ale to run in. This environment could be called `my-md-env` for example.
 This oneliner could be executed to create the environment and install the packages in one go:
 ```
-conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
+conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py pytest openmpi
 ```
 Followed by:
 ```
