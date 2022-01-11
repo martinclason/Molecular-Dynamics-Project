@@ -9,8 +9,6 @@ Subpackages
 
    ale.plotting
 
-Submodules
-----------
 
 ale.MSD module
 --------------
