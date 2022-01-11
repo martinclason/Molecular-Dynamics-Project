@@ -2,7 +2,7 @@ Output
 ======
 
 Output from ``ale``
------------------
+-------------------
 
 The simulation output consists of three files (which can be placed in a directory
 if specified by the user), one called ``raw<element(s)>.traj`` (if the equilibrium check
@@ -19,7 +19,7 @@ since the computer only reads a single line into memory each time rather than th
 file. The unit on each calculated property is specified in the entry name of each property.
 
 Output from ``ale multi``
------------------------
+-------------------------
 
 The naming of the output files (of each simulation) is the same for ``ale multi`` as for
 the normal mode in ``ale`` but ``ale multi`` requires the user to specify an output directory
