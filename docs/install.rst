@@ -12,14 +12,12 @@ This oneliner could be executed to create the environment and install the packag
 
   $ conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py pytest openmpi
 
-|
 
 Followed by:
 ::
 
   $ conda activate my-md-env
 
-|
 
 Alternatively, the ``requirements.txt`` could be used instead:
 ::
@@ -28,7 +26,6 @@ Alternatively, the ``requirements.txt`` could be used instead:
   $ conda activate my-md-env
   $ conda install -c conda-forge --file requirements.txt
 
-|
 
 Using pip
 ^^^^^^^^^
@@ -39,14 +36,12 @@ Install ASE:
 
   $ pip install ase
 
-|
 
 Install ASAP:
 ::
 
   pip install asap3
 
-|
 
 Other packages will need to be installed. See contents of ``requirements.txt``.
 
@@ -67,7 +62,6 @@ To be able to run ale in the terminal in your current environment, download this
 
   $ python -m pip install .
 
-|
 
 This will read the script ``setup.py`` and pip will install ``ale`` as a command line tool. To test if this worked you can now run:
 
@@ -77,7 +71,6 @@ To develop without having to reinstall ale all the time you can instead run:
 
   $ python -m pip install --no-deps -e .
 
-|
 
 This will install ``ale`` without dependencies and in editable mode so the source code can be edited
 without having to reinstall ale for the changes to take effect.
@@ -87,7 +80,6 @@ To test if ale is installed correctly you can now run:
 
   $ ale -h
 
-|
 
 If it shows the help message the installation worked!
 

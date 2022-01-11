@@ -46,7 +46,6 @@ The fallback parameters for the Lennard Jones potential are:
   sigma = 3.40 # Å
   cutoff = 6.625 # Å
 
-|
 
 Lattice constant calculation
 ----------------------------

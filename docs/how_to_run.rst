@@ -8,21 +8,18 @@ Run ale help for ale and its various subcommands:
   $ ale analyze -h
   $ ale visualize -h
   $ ale multi -h
-|
 
 Run ale (both simulation and analyzation) using the default config file ``config.yaml``:
 ::
 
   $ ale
 
-|
 
 Without asap and with a special config (``--config`` can also be used):
 ::
 
   $ ale --no-asap -c my_config.yaml
 
-|
 
 All ale modules can be handed an output directory as a command line argument using the ``-d``
 or ``--dir`` flag together with the path to the output directory relative to the current
@@ -36,9 +33,8 @@ To only run a simulation:
 
   $ ale simulate -c my_config.yaml
 
-|
 
-Only run analyzation and calculate properties from existing output files. The user doesn't
+It's also possible to only run analyzation and calculate properties from existing output files. The user doesn't
 have to specify a trajectory file if ``ale analyze`` is started from a directory where both
 the config file and the corresponding trajectory file are located. The command looks
 as follows:
@@ -46,7 +42,6 @@ as follows:
 
   $ ale analyze -c my_config.yaml
 
-|
 
 However a safer approach is to specify both the config file and the corresponding trajectory
 file. Then the command is:
@@ -54,7 +49,6 @@ file. Then the command is:
 
   $ ale analyze -c my_config.yaml -t symbol.traj
 
-|
 
 In the config file the user can specify which quantities that should be plotted and in which
 directory the properties files for the scatter plot are located. The config file is specified
@@ -65,7 +59,6 @@ run visualization:
 
   $ ale visualize -c my_config.yaml -d out_dir -s scatter_dir
 
-|
 
 Running the software without installing it as a package
 -------------------------------------------------------
@@ -74,7 +67,6 @@ If you for some reason want to run the code without having to install it as a pa
 
   $ python -m ale
 
-|
 
 This line can be followed by the arguments, e.g. ``python -m ale -h``, as usual.
 
@@ -96,17 +88,23 @@ is the name of the output directory for the generated files:
 
   ale multi multi_config.yaml -c base_config.yaml out_dir
 
-|
 
 Running tests
------------------
+-------------
 
 To run the unit tests and integrations tests with pytest run:
 ::
 
-  make test
-
-|
+  $ make test
 
 
+Building documentation
+----------------------
 
+To build the documentation either navigate to docs and run sphinx own Makefile or trigger the build
+from the base directory by running:
+::
+
+  $ make html-doc
+
+To view the docs you then open the file ``docs/_build/html/index.html``.

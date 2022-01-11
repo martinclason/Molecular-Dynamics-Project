@@ -20,7 +20,6 @@ initial value. If ``guess_latticeconstant`` is left empty Ale has a fallback val
   latticeconstant: <double [Å]>
   guess_latticeconstant: <double>
 
-|
 
 The field ``cell`` specifies the unit cell structure. The user can specify fcc or bcc bravais
 lattices but other lattices has to be specified with a base matrix. Ale only support single
@@ -29,7 +28,6 @@ parameter cubic lattices.
 
   cell: <string or matrix>
 
-|
 
 The field ``cell`` is the instruction on where to but different species of atoms relative to the
 origin of the unit cell and the length scale is normalized to the unit cell size (to the lattice
@@ -39,7 +37,6 @@ be used when simulating single element systems.
 
   scaled_positions: <array of 3D positions>
 
-|
 
 The field ``symbol`` specifies the element or a string of elements to be simulated such as ``"Au"`` for gold
 or ``"CuK"`` for a copper and potassium alloy. These elements are then placed at the ``scaled_positions``
@@ -48,14 +45,12 @@ in order.
 
   symbol: <string>
 
-|
 
 To use periodic boundary conditions enter ``True`` in the ``pbc`` field.
 ::
 
   pbc: <bool>
 
-|
 
 The field ``size`` specifies how many time to repeat the unit cell to a super cell in each
 dimension (e.g. 2 -> 2^3 = 8 times as large).
@@ -63,7 +58,6 @@ dimension (e.g. 2 -> 2^3 = 8 times as large).
 
   size: <int>
 
-|
 
 This field specifies if Ale should output a trajectory file. A trajectory file is needed for
 Ale analyze to function.
@@ -71,14 +65,12 @@ Ale analyze to function.
 
   make_traj: <bool>
 
-|
 
 This field specifies whether to run a simulation or not.
 ::
 
   run_MD: <bool>
 
-|
 
 This field specifies which ensemble to simulate. Ale currently only supports ``"NVT"`` or
 ``"NVE"`` ensembles.
@@ -86,7 +78,6 @@ This field specifies which ensemble to simulate. Ale currently only supports ``"
 
   ensemble: <string>
 
-|
 
 This field specifies how hard the thermostat should correct the temperature. The friction
 number is usually ``1E-4`` to ``1E-2``.
@@ -94,7 +85,6 @@ number is usually ``1E-4`` to ``1E-2``.
 
   NVT_friction: <double>
 
-|
 
 This field specifies the initial temperature of the simulation. If the temperature should
 remain close to the specified value enter ``"NVT"`` in the ``ensemble`` field.
@@ -102,7 +92,6 @@ remain close to the specified value enter ``"NVT"`` in the ``ensemble`` field.
 
   temperature_K: <double [K]>
 
-|
 
 This field specifies whether Ale should check that the simulated system has reached equilibrium
 before writing to the output trajectory file. This check either terminates when equilibrium is
@@ -111,7 +100,6 @@ or when the check timeout is reached.
 
   checkForEquilibrium: <bool>
 
-|
 
 This field specifies which interatomic potential to use. The recommended potentials are those
 found in the openKIM_ library and these are designated with ``"openKIM:<potential_name>"``, in
@@ -126,14 +114,12 @@ specified with ``"LJ"``.
   cutoff: <double [Å]>
   atomic_number: <int [unit charge]>
 
-|
 
 This field specifies the timestep for the simulation in femtoseconds.
 ::
 
   dt: <int [fs]>
 
-|
 
 This field specifies the number of timesteps that should be taken in the simulation. In case
 the equilibrium check is enabled this is the number of iterations after equilibrium is reached
@@ -143,7 +129,6 @@ total number of iterations in the simulation.
 
   iterations: <int>
 
-|
 
 This field specifies how many timesteps that will be taken between each save of the simulation
 state to the trajectory file(s).
@@ -151,7 +136,6 @@ state to the trajectory file(s).
 
   interval: <int>
 
-|
 
 This field specifies if the Ale should calculate the cohesive energy of the system which is done
 after the system has reached equilibrium, or equilibrium timeout as long as the equilibrium
@@ -160,14 +144,12 @@ check is enabled.
 
   calculateCohesiveEnergy: <bool>
 
-|
 
 This field specifies how many iterations the cohesive energy calculation should run at most.
 ::
 
   max_iterations_coh_E:
 
-|
 
 Analyze:
 ********
@@ -178,7 +160,6 @@ This field specifies a list of properties that Ale will calculate in the analyse
   output:
     - <yaml list of strings>
 
-|
 
 The properties that can be calculated are:
 ::
@@ -202,7 +183,6 @@ The properties that can be calculated are:
   - Shear Modulus
   - Cohesive Energy
 
-|
 
 Visualize:
 **********
@@ -213,7 +193,6 @@ This field specifies which properties to plot when ``ale visualize`` is run.
   visualize:
     - <yaml list of strings>
 
-|
 
 The properties that can be visualized are:
 ::
@@ -221,7 +200,6 @@ The properties that can be visualized are:
   - Temperature
   - Scatter
 
-|
 
 These fields specify which two properties that will be plotted in a scatter plot with d1 on
 one axis and d2 on the other.
@@ -230,7 +208,6 @@ one axis and d2 on the other.
   scatter_type_d1: <string>
   scatter_type_d2: <string>
 
-|
 
 The properties that can be shown in a scatterplot are:
 ::
@@ -251,7 +228,6 @@ The properties that can be shown in a scatterplot are:
   Shear Modulus
   Cohesive Energy
 
-|
 
 This field specifies the path to the directory the output properties for the materials that will
 be included in the scatterplot are relative to where ``ale visualize`` is run.
@@ -259,7 +235,6 @@ be included in the scatterplot are relative to where ``ale visualize`` is run.
 
   scatter_dir: <string>
 
-|
 
 This field can be used to specified a subset of the files in the ``scatter_dir`` that should
 be used in the scatter plot. If this field is left empty ``ale visualize`` will look at all
@@ -268,7 +243,6 @@ files.
 
   scatter_files: <array of strings>
 
-|
 
 This field specifies if the mean square displacement should be plotted against time for the
 entire simulation.
@@ -276,7 +250,6 @@ entire simulation.
 
   run_MSD_plot: <bool>
 
-|
 
 Multi-config:
 -------------
@@ -339,7 +312,6 @@ For example:
   scatter_files: []
   run_MSD_plot: False
 
-|
 
 ``multi_config.yaml``
 ::
@@ -364,7 +336,6 @@ For example:
     AlCu: [[0, 0, 0], [0.17, 0.17, 0.17]]
     default: [[0, 0, 0], [0.5, 0.5, 0.5]]
 
-|
 
 With these input files ``ale multi`` will read the ``multi_config.yaml`` and create as many
 simulations as there are entries in the ``elements`` list and substitute the fields in the
