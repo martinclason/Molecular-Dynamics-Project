@@ -63,7 +63,7 @@ To be able to run ale in the terminal in your current environment, download this
   $ python -m pip install .
 
 
-This will read the script ``setup.py`` and pip will install ``ale`` as a command line tool. To test if this worked you can now run:
+This will read the script ``setup.py`` and pip will install ``ale`` as a command line tool. It will also install its dependencies but for this to work your environment must have installed ``kim-api``, ``openkim-models`` and ``openmpi``. These can be installed with e.g. conda.
 
 IMPORTANT:
 To develop without having to reinstall ale all the time you can instead run:

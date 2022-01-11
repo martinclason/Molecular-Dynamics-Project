@@ -50,8 +50,9 @@ file. Then the command is:
   $ ale analyze -c my_config.yaml -t symbol.traj
 
 
+It's also possible to visualize things like results from the simulations and the analysis. 
 In the config file the user can specify which quantities that should be plotted and in which
-directory the properties files for the scatter plot are located. The config file is specified
+directory the files containing properties for the scatter plot are located. The config file is specified
 with the flag ``-c``. The directory for the output files can be specified with the flag ``-d``. The
 directory containing the properties for the scatter can be specified with the flag ``-s``. To
 run visualization:
@@ -62,7 +63,7 @@ run visualization:
 
 Running the software without installing it as a package
 -------------------------------------------------------
-If you for some reason want to run the code without having to install it as a package with ``pip`` you can do the following this. Make sure you're in the project directory and run it as a python module with the following command:
+If you for some reason want to run the code without having to install it as a package with ``pip`` you can do the following. Make sure you're in the project directory, that all dependencies are installed and run it as a python module with the following command:
 ::
 
   $ python -m ale
@@ -71,8 +72,7 @@ If you for some reason want to run the code without having to install it as a pa
 This line can be followed by the arguments, e.g. ``python -m ale -h``, as usual.
 
 It's probably better to try to install it as a package using ``pip`` though. That way it will
-be possible to run ``ale`` from any directory (as long as you have activated your conda
-environment if you're using conda).
+be possible to run ``ale`` from any directory and the dependencies should automatically be installed by pip.
 
 Running ``ale multi`` currently requires ``ale`` to be installed with ``pip``.
 
