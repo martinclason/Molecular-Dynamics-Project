@@ -61,19 +61,6 @@ dimension (e.g. 2 -> 2^3 = 8 times as large).
   size: <int>
 
 
-This field specifies if Ale should output a trajectory file. A trajectory file is needed for
-Ale analyze to function.
-::
-
-  make_traj: <bool>
-
-
-This field specifies whether to run a simulation or not.
-::
-
-  run_MD: <bool>
-
-
 This field specifies which ensemble to simulate. Ale currently only supports ``"NVT"`` or
 ``"NVE"`` ensembles.
 ::
