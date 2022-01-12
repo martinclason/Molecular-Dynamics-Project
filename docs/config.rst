@@ -254,7 +254,7 @@ run locally (on a machine with a multi core processor) or on a supercomputer.
 .. ale multi <multi_config> <output_dir> -c <base_config>
 .. ```
 
-The multi program then takes the fields in the ``<multi_config>`` and generates several simulations
+The multi program takes the fields in the ``<multi_config>`` and generates several simulations
 with the ``<base_config>`` as the base and substitutes the fields specified in the ``<multi_config>``.
 
 For example:
@@ -347,10 +347,10 @@ cells            cell
 scaled_positions scaled_positions
 ================ ================
 
-These two files will therefore create two simulations when run with ``ale multi``, one with an
-aluminium and copper alloy at 17 K set in an FCC bravais lattice with the aluminium atoms place
-in the origin of the unit cell and repeated from there and the copper atoms shiftet inwards in
+These two files will therefore create two simulations when run with ``ale multi``. One with an
+aluminium and copper alloy at 17 K set in an FCC bravais lattice with the aluminium atoms placed
+in the origin of the unit cell and repeated from there and copper atoms shifted inwards in
 the cell and and repeated in an FCC bravais lattice from there. The other simulation will be
-copper and zirconium placed in two BCC bravias lattices with the copper lattice beginning at
-the origin and the zirconium lattice being shifted a half unit cell in all directions and all
+copper and zirconium placed in two BCC bravais lattices with the copper lattice beginning at
+the origin and the zirconium lattice being shifted a half unit cell in all directions. All
 of this will be simulated at 600 K.
