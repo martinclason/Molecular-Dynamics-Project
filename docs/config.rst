@@ -84,7 +84,7 @@ remain close to the specified value enter ``"NVT"`` in the ``ensemble`` field.
 
 This field specifies whether Ale should check that the simulated system has reached equilibrium
 before writing to the output trajectory file. This check either terminates when equilibrium is
-or when the check timeout is reached.
+obtained or when the check timeout is reached.
 ::
 
   checkForEquilibrium: <bool>
@@ -126,7 +126,7 @@ state to the trajectory file(s).
   interval: <int>
 
 
-This field specifies if the Ale should calculate the cohesive energy of the system which is done
+This field specifies if Ale should calculate the cohesive energy of the system which is done
 after the system has reached equilibrium, or equilibrium timeout as long as the equilibrium
 check is enabled.
 ::
@@ -134,7 +134,7 @@ check is enabled.
   calculateCohesiveEnergy: <bool>
 
 
-This field specifies how many iterations the cohesive energy calculation should run at most.
+This field specifies how many iterations the cohesive energy calculation should run for at most.
 ::
 
   max_iterations_coh_E:
@@ -176,19 +176,28 @@ The properties that can be calculated are:
 Visualize:
 **********
 
-This field specifies which properties to plot when ``ale visualize`` is run.
+This field specifies which visualizations to perform when ``ale visualize`` is run.
 ::
 
   visualize:
     - <yaml list of strings>
 
 
-The properties that can be visualized are:
+The visualizations that can be performed are:
 ::
 
+  - Lattice
   - Temperature
+  - MSD
   - Scatter
 
+``Lattice`` will use ASE gui to show initial positions of all atoms in the simulated lattice.
+
+``Temperature`` plots temperature over time for the simulation.
+
+``MSD`` plots the mean square displacement over time for the simulation.
+
+``Scatter`` makes scatter plots which have further options described below.
 
 These fields specify which two properties that will be plotted in a scatter plot with d1 on
 one axis and d2 on the other.
@@ -198,7 +207,7 @@ one axis and d2 on the other.
   scatter_type_d2: <string>
 
 
-The properties that can be shown in a scatterplot are:
+The properties that can be shown in a scatterplot are (not that the chosen data must be available for the scatterplot to work):
 ::
 
   Temperature
@@ -225,19 +234,12 @@ be included in the scatterplot are relative to where ``ale visualize`` is run.
   scatter_dir: <string>
 
 
-This field can be used to specified a subset of the files in the ``scatter_dir`` that should
+This field can be used to specify a subset of the files in the ``scatter_dir`` that should
 be used in the scatter plot. If this field is left empty ``ale visualize`` will look at all
 files.
 ::
 
   scatter_files: <array of strings>
-
-
-This field specifies if the mean square displacement should be plotted against time for the
-entire simulation.
-::
-
-  run_MSD_plot: <bool>
 
 
 Multi-config:
