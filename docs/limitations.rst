@@ -26,7 +26,7 @@ ale).
 
 A word of warning is that some potentials which are labeled in the
 openKIM_ library to function with any
-simulator are known to crash or not function anyway for an unknown reason. These non-function
+simulator are known to crash or not function anyway for an unknown reason. These non-functioning
 interatomic potentials have not been cataloged by the Ale team.
 
 Built in Lennard Jones potential
