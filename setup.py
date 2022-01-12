@@ -3,6 +3,12 @@ from setuptools import setup
 with open("README.md", 'r') as f:
     long_description = f.read()
 
+dependencies_unavailable_in_pip = [
+    'kim-api',
+    'openkim-models',
+    'openmpi',
+]
+
 setup(
    name='ale',
    version='0.1',
@@ -37,3 +43,10 @@ setup(
             'scripts/ale',
            ]
 )
+
+print(f"""
+IMPORTANT:
+    For this software to work as intended, make sure
+    you before installation have the following dependencies installed (e.g. with conda):
+    {dependencies_unavailable_in_pip}
+""")
