@@ -17,7 +17,7 @@ import logging
 
 
 def MD(options):
-    """The function 'MD()' runs defines the ASE and ASAP enviroment to run the
+    """The function 'MD()' runs defines the ASE and ASAP environment to run the
     molecular dynamics simulation with. The elements and configuration to run
     the MD simulation is defined in the 'config.yaml' file which needs to be
     present in the same directory as the MD program (the 'main.py' file)."""
@@ -139,7 +139,7 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
                          atoms, properties="energy, forces", master=True)
     dyn.attach(rawTraj.write, interval=interval)
 
-    # Condtions for equilibrium.
+    # Conditions for equilibrium.
     eqCheckInterval = 10
     initIterations = 2*interval*eqCheckInterval if(interval < 100) else 2000
     # Uses moving averages when checking for equilibrium
@@ -151,7 +151,7 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
     eqReached = False
     numberOfChecks = 0
 
-    # Runs for first couple of itterations
+    # Runs for first couple of iterations
     dyn.run(initIterations)
 
     while ((not eqReached) and (not (numberOfChecks > eqLimit))):
@@ -165,7 +165,7 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
         dyn.run(iterationsBetweenChecks)
 
     # When equilibrium is or isn't reached the elapsed time is calculated
-    # and a statement is written in the terminal on wheter the system reached
+    # and a statement is written in the terminal on whether the system reached
     # equilibrium and how long it took or how long the simulation waited.
     timeToEquilibrium = (initIterations + numberOfChecks *
                          iterationsBetweenChecks) / options["dt"]
@@ -174,7 +174,7 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
 
     # Writes meta data about the equilibrium to the output .json-file
     f = open(out_file_path, 'a')
-    equilibiriumProp = {
+    equilibriumProp = {
         'Equilibrium reached':
             output_single_property(
                 f,
@@ -189,13 +189,13 @@ def try_to_run_to_equilibrium(options, raw_trajectory_file_path, dyn, atoms, int
             )
     }
 
-    for prop in list(equilibiriumProp):
-        equilibiriumProp[prop]()
+    for prop in list(equilibriumProp):
+        equilibriumProp[prop]()
 
     f.close()
 
     if eqReached:
-        print("System reached equilibirium after", timeToEquilibrium, "fs")
+        print("System reached equilibrium after", timeToEquilibrium, "fs")
     else:
         print("Equilibriumcheck timeout after", timeToEquilibrium, "fs")
         print("Continues")
@@ -207,7 +207,7 @@ def run_simulation(options):
     """The 'run_simulation()' function runs the 'MD()' function which runs the simulation.
     'run_simulation()' also prints out the density or other properties of the material at
     hand (which is to be implemented in future versions of this program, as of
-    only density excists). What to print out during the run is defined in the
+    only density exists). What to print out during the run is defined in the
     'config.yaml' file."""
 
     MD(options)

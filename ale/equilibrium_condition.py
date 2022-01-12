@@ -12,7 +12,7 @@ def equilibrium_check(atomsTraj, numberOfAtoms, ensamble,checkInterval):
     is used.
 
     The condition is to have a low variance in the temperature/energy in the last
-    batch of itterations which will depend on the size of the system."""
+    batch of iterations which will depend on the size of the system."""
 
     traj = Trajectory(atomsTraj)
 

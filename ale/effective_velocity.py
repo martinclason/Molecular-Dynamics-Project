@@ -4,7 +4,7 @@ from ale.bulk_modulus import calc_lattice_constant
 
 def longitudinal_sound_wave_velocity(atoms_object, options, bulk_modulus) :
     """longitudinal_sound_wave_velocity takes two arguments,
-    an atoms objects and options (config-file). It calculates and 
+    an atoms objects and options (config-file). It calculates and
     returns the longitudinal velocity of a sound wave by calling bulk_modulus
     shear_modulus and density"""
     K = bulk_modulus * 1E9 #(1E9 since bulk modulus is returned in GPa)
@@ -16,8 +16,8 @@ def longitudinal_sound_wave_velocity(atoms_object, options, bulk_modulus) :
 
 def transversal_sound_wave_velocity(atoms_object, options) :
     """transversa_sound_wave_velocity takes two arguments,
-    an atoms objects and options (config-file). It calculates and 
-    returns the transversal velocity of a sound wave by calling 
+    an atoms objects and options (config-file). It calculates and
+    returns the transversal velocity of a sound wave by calling
     shear_modulus and density"""
     G = shear_modulus(options)
     rho = density(atoms_object) #g/cm3
@@ -31,7 +31,7 @@ def effective_velocity(atoms_object, options, bulk_modulus) :
     longitudinal_sound_wave_velocity."""
     c_l = longitudinal_sound_wave_velocity(atoms_object, options, bulk_modulus)
     c_t = transversal_sound_wave_velocity(atoms_object, options)
-    #sonic velocity from longtitudinal and transversal sound waves
+    #sonic velocity from longitudinal and transversal sound waves
     c_eff = (1/3 * c_l**(-3) + 2/3 * c_t**(-3))**(-1/3)
     return c_eff
 
