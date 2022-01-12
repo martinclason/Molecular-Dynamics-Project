@@ -6,8 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-#A help function to extract the .json files in the outfiles directory
 def find_json_files(options):
+    """A help function to extract the .json files in the outfiles directory.
+    Used by make_scatter_plotter below.
+    """
     file_list = []
     outdir = options.get("scatter_dir") if options.get("scatter_dir") is not None else os.getcwd()
 
