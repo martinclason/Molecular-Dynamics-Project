@@ -14,7 +14,7 @@ export NSC_MODULE_SILENT=1
 
 module load openmpi/.4.0.5-gcc-2020b-eb
 module load Anaconda/2020.07-nsc1
-conda activate tfya99
+conda activate my-md-env
 #conda list
 
 

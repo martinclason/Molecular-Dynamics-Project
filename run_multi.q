@@ -14,8 +14,8 @@ export OMP_NUM_THREADS=1
 
 module load openmpi/.4.0.5-gcc-2020b-eb
 module load Anaconda/2020.07-nsc1
-#conda activate /proj/tfya99/software/condaenv
-conda activate /home/x_marcl/.conda/envs/tfya99
+
+conda activate my-md-env
 #conda list
 time ./ale multi m_config.yaml out -c test/config_extra_short.yaml
 #time mpirun python3 parallel_mpi_script.py
