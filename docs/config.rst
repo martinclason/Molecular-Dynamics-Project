@@ -5,6 +5,7 @@ The config files
 
 Single run config file:
 ------------------------
+
 The stand-alone config file contains the following fields and an entire simulation and
 analysis can be created from this file.
 
@@ -29,8 +30,9 @@ parameter cubic lattices.
   cell: <string or matrix>
 
 
-The field ``cell`` is the instruction on where to but different species of atoms relative to the
-origin of the unit cell and the length scale is normalized to the unit cell size (to the lattice
+The field ``scaled_positions`` is the instruction on where to position different 
+species of atoms relative to the
+origin of the unit cell. The length scale is normalized to the unit cell size (to the lattice
 constant). This parameter is only important for multi element systems and  ``[[0,0,0]]`` should
 be used when simulating single element systems.
 ::
@@ -52,7 +54,7 @@ To use periodic boundary conditions enter ``True`` in the ``pbc`` field.
   pbc: <bool>
 
 
-The field ``size`` specifies how many time to repeat the unit cell to a super cell in each
+The field ``size`` specifies how many times to repeat the unit cell to a super cell in each
 dimension (e.g. 2 -> 2^3 = 8 times as large).
 ::
 
