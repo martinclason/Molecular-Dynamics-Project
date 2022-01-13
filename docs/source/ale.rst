@@ -9,8 +9,6 @@ Subpackages
 
    ale.plotting
 
-Submodules
-----------
 
 ale.MSD module
 --------------
@@ -148,13 +146,6 @@ ale.parallel\_mpi\_script module
    :undoc-members:
    :show-inheritance:
 
-ale.pickle\_options module
---------------------------
-
-.. automodule:: ale.pickle_options
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 ale.pressure module
 -------------------

@@ -38,8 +38,8 @@ def make_MSD_plotter(data,dt):
 def self_diffusion_coefficient(options, atom_list) :
     """The self_diffusion_coefficient(atom_list) function calculates and returns the
     self diffusion coefficient. The function takes an atom_list at different time steps
-    which it sends to the MSD(t,atom_list) function to retrieve the MSD. It also takes 
-    options to convert time_step to seconds (time_step lenth may vary).
+    which it sends to the MSD(t,atom_list) function to retrieve the MSD. It also takes
+    options to convert time_step to seconds (time_step length may vary).
     The lindemann_critertion() first checks if the element is a solid or liquid. For
     solids we approximate the self_diffusion_coefficient as 0 and for liquids the self
     diffusion coefficient is taken as the slope of the mean-square-displacement.
@@ -54,7 +54,7 @@ def self_diffusion_coefficient(options, atom_list) :
         return 0
 
 def lindemann_criterion(atom_list) :
-    """Checks if melting has occured. The functions takes a list of atoms at different time steps.
+    """Checks if melting has occurred. The functions takes a list of atoms at different time steps.
     The lindemann criterion states that melting happens when the the root mean vibration exceeds 10%
     of the nearest neighbor (NN) distance. The function checks this condition by calling MSD() and
     returns True if the condition is met"""
@@ -64,7 +64,7 @@ def lindemann_criterion(atom_list) :
     size = atom_list[0].get_tags()[0]
     super_cell_x = atom_list[0].cell[0]
     unit_cell_x = super_cell_x / size
-    #Nearest Neighbour distance from basis matrix
+    #Nearest Neighbor distance from basis matrix
     NN = (unit_cell_x[0]**2 + unit_cell_x[1]**2 + unit_cell_x[2]**2)**(1/2)
     t = len(atom_list) - 1 #Take the system at the last accessible time
     return bool(math.sqrt(MSD(t,atom_list)) > 0.1 * NN)

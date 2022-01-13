@@ -6,7 +6,7 @@
 Conda can be used to create an environment suitable for ale to run in. This environment could be called `my-md-env` for example.
 This oneliner could be executed to create the environment and install the packages in one go:
 ```
-conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py
+conda create -c conda-forge -n my-md-env python=3 ase asap3 kimpy kim-api openkim-models Cython numpy scipy matplotlib mpi4py pytest openmpi
 ```
 Followed by:
 ```
@@ -45,7 +45,7 @@ To be able to run ale in the terminal in your current environment, download this
 python -m pip install .
 ```
 
-This will read the script `setup.py` and pip will install `ale` as a command line tool. To test if this worked you can now run:
+This will read the script `setup.py` and pip will install `ale` as a command line tool. It will also install its dependencies but for this to work your environment must have installed `kim-api`, `openkim-models` and `openmpi`. These can be installed with e.g. conda. To test if `ale` was installed you can now run:
 
 IMPORTANT:
 To develop without having to reinstall ale all the time you can instead run:
@@ -120,6 +120,14 @@ or:
 sphinx-apidoc -o docs/source/ ../ale
 make html-doc
 ```
+
+### Generate docs in PDF-format
+navigate to docs directory and run:
+```
+make latexpdf
+```
+The pdf should then be found at `docs/_build/latex/ale_md.pdf`.
+
 
 ## Read documentation
 To read the documentation open the html-page in the build directory by running:

@@ -52,3 +52,24 @@ html_sidebars = { '**': ['globaltoc.html'] }
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+
+root_doc = 'index'
+latex_documents = [
+    (root_doc, 'ale_md.tex', u'ALE Molecular Dynamics Documentation',
+     r'Anton Olsson \and Daniel Stannelind \and Daniel Spegel-Lexne \and Martin Clason \and Gustaf Åhlgren', 'manual'),
+]
+
+latex_elements = {
+    'preamble' : r'''
+%Make author names appear on separate lines
+\DeclareRobustCommand{\and}{%
+   \end{tabular}\kern-\tabcolsep\\\begin{tabular}[t]{c}%
+}%
+
+    '''
+}

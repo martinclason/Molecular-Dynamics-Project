@@ -49,7 +49,7 @@ calc_lattice_constant_counter = 0
 
 @call_only_once
 def calc_lattice_constant(options):
-    """ This function takes a traj-file containing atom-objects wirh varying
+    """ This function takes a traj-file containing atom-objects with varying
     lattice constants, calculates the Bulk modulus B, optimal volume v0 and optimal
     lattice constant a0 through equation of state."""
     logging.debug("--------- In calc_lattice_constant, should only be called once no matter parameters")
